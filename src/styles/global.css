@@ -1,0 +1,380 @@
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/cormorant-garamond-light.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/cormorant-garamond-light-italic.woff2') format('woff2');
+}
+
+:root {
+  --font: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  --wall-bg: #707070;
+  --detail-dark: #0a0a0a;
+  --detail-light: #f0f0eb;
+  --detail-mid: #1a1a1a;
+  --text-light: #d4d4d0;
+  --text-dark: #1a1a1a;
+  --text-muted: #888;
+  --gap: 40px;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font);
+  font-weight: 300;
+  font-synthesis: none;
+  background: var(--wall-bg);
+  color: var(--text-light);
+  overflow-x: hidden;
+}
+
+/* ── Header ── */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1.4rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: opacity 0.5s ease;
+  pointer-events: auto;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0%, transparent 100%);
+
+  &.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.site-name {
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  gap: 2rem;
+
+  & a {
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.85;
+    transition: opacity 0.3s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+/* ── Gallery Wall ── */
+
+.gallery-wall {
+  padding: calc(60px + var(--gap)) var(--gap) var(--gap);
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+
+.gallery-item {
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 400px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+
+  & img {
+    display: block;
+    width: 100%;
+    max-height: 80dvh;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.01);
+  }
+
+  &.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &:nth-child(-n+6) {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Composed row span classes */
+.gi-span-12 { grid-column: span 12; }
+.gi-span-7 { grid-column: span 7; }
+.gi-span-6 { grid-column: span 6; }
+.gi-span-5 { grid-column: span 5; }
+.gi-span-4 { grid-column: span 4; }
+
+/* ── Detail View (native <dialog>) ── */
+
+.detail-overlay {
+  border: none;
+  padding: 0;
+  max-width: 100dvw;
+  max-height: 100dvh;
+  width: 100dvw;
+  height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--detail-dark);
+  transition: background-color 0.5s ease;
+  cursor: default;
+  overscroll-behavior: contain;
+
+  &[open] {
+    display: flex;
+  }
+
+  &::backdrop {
+    background: transparent;
+  }
+
+  &.tone-light {
+    & .detail-counter {
+      color: var(--text-dark);
+    }
+  }
+}
+
+.detail-image-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 3rem 2rem 5rem;
+
+  & img {
+    max-width: min(85dvw, 800px);
+    max-height: 75dvh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+
+    &.is-loaded {
+      opacity: 1;
+    }
+  }
+}
+
+/* Navigation zone buttons */
+.detail-nav-prev,
+.detail-nav-next {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 35%;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.detail-nav-prev {
+  left: 0;
+  cursor: w-resize;
+}
+
+.detail-nav-next {
+  right: 0;
+  cursor: e-resize;
+}
+
+.detail-counter {
+  position: absolute;
+  bottom: 1rem;
+  right: 2rem;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  opacity: 0.3;
+  color: var(--text-muted);
+}
+
+/* ── Footer ── */
+
+.site-footer {
+  padding: 3rem 2rem;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+/* ── About page ── */
+
+.page-content {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: calc(80px + 2rem) 2rem 4rem;
+  color: var(--text-light);
+
+  & h1 {
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    margin-bottom: 2rem;
+  }
+
+  & p {
+    font-size: 20px;
+    line-height: 1.75;
+    text-wrap: pretty;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* ── Reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  .gallery-item {
+    opacity: 1;
+    transform: none;
+  }
+
+  .gallery-item:hover img {
+    transform: none;
+  }
+}
+
+/* ── Responsive ── */
+
+@media (width <= 768px) {
+  :root {
+    --gap: 16px;
+  }
+
+  .site-header {
+    padding: 1rem 1.2rem;
+  }
+
+  .site-name {
+    font-size: 11px;
+  }
+
+  .site-nav {
+    gap: 1.2rem;
+
+    & a {
+      font-size: 10px;
+    }
+  }
+
+  .gallery-wall {
+    grid-template-columns: repeat(2, 1fr);
+    padding: calc(48px + var(--gap)) var(--gap) var(--gap);
+  }
+
+  .gi-span-4,
+  .gi-span-5,
+  .gi-span-6,
+  .gi-span-7 {
+    grid-column: span 1;
+  }
+
+  .gi-span-12 {
+    grid-column: 1 / -1;
+  }
+
+  .detail-image-wrap {
+    padding: 2rem 1rem 4rem;
+
+    & img {
+      max-width: 92dvw;
+      max-height: 70dvh;
+    }
+  }
+
+  .detail-counter {
+    right: 1rem;
+  }
+
+  .page-content {
+    padding: calc(60px + 1.5rem) 1.2rem 3rem;
+
+    & p {
+      font-size: 18px;
+    }
+  }
+}
+
+@media (width <= 480px) {
+  .gallery-wall {
+    grid-template-columns: 1fr;
+  }
+
+  .gi-span-4,
+  .gi-span-5,
+  .gi-span-6,
+  .gi-span-7,
+  .gi-span-12 {
+    grid-column: span 1;
+  }
+}
