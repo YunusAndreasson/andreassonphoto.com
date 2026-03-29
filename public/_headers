@@ -1,0 +1,22 @@
+# Cloudflare Pages Headers
+
+# Astro hashed assets - cache forever
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fonts - cache forever
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# Gallery images - cache 30 days
+/gallery_bw/*
+  Cache-Control: public, max-age=2592000
+
+# HTML pages - always revalidate
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains

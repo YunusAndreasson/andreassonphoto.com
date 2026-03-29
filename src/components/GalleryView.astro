@@ -18,7 +18,7 @@ const rows = composeRows(images);
       return (
         <div
           class={`gallery-item gi-span-${cell.span}`}
-          data-tone={img.tone}
+          data-bg={img.edgeColor}
           role="button"
           tabindex="0"
         >
@@ -38,21 +38,16 @@ const rows = composeRows(images);
 </main>
 
 <dialog class="detail-overlay" aria-label="Image view">
+  <button class="detail-close" id="detail-close" aria-label="Close" type="button">&times;</button>
   <div class="detail-image-wrap">
     <button class="detail-nav-prev" id="detail-prev" aria-label="Previous image" type="button"></button>
-    <img id="detail-img" src="" alt="" />
+    <img id="detail-img-a" class="detail-img is-active" src="" alt="" />
+    <img id="detail-img-b" class="detail-img" src="" alt="" />
     <button class="detail-nav-next" id="detail-next" aria-label="Next image" type="button"></button>
   </div>
-  <div class="detail-counter" id="detail-counter"></div>
 </dialog>
 
 <script>
-  const toneBg: Record<string, string> = {
-    light: 'var(--detail-light)',
-    dark: 'var(--detail-dark)',
-    mid: 'var(--detail-mid)',
-  };
-
   let controller: AbortController;
 
   document.addEventListener('astro:page-load', () => {
@@ -64,17 +59,19 @@ const rows = composeRows(images);
     const overlay = document.querySelector<HTMLDialogElement>('.detail-overlay');
     if (!wall || !overlay) return;
 
-    const detailImg = document.getElementById('detail-img') as HTMLImageElement;
-    const detailCounter = document.getElementById('detail-counter')!;
+    const imgA = document.getElementById('detail-img-a') as HTMLImageElement;
+    const imgB = document.getElementById('detail-img-b') as HTMLImageElement;
+    let activeImg = imgA;
+    let nextImg = imgB;
 
     const galleryItems = wall.querySelectorAll<HTMLElement>('.gallery-item');
     const itemIndex = new Map<Element, number>();
-    const navList: { tone: string; src: string }[] = [];
+    const navList: { bg: string; src: string }[] = [];
 
     for (const [i, el] of galleryItems.entries()) {
       itemIndex.set(el, i);
       navList.push({
-        tone: el.dataset.tone!,
+        bg: el.dataset.bg!,
         src: el.querySelector('img')!.src,
       });
     }
@@ -88,23 +85,46 @@ const rows = composeRows(images);
       new Image().src = navList[next].src;
     }
 
-    function showImage(data: (typeof navList)[number]) {
-      detailImg.classList.remove('is-loaded');
+    function showImage(data: (typeof navList)[number], isFirst = false) {
+      overlay.style.backgroundColor = data.bg;
 
-      overlay.classList.toggle('tone-light', data.tone === 'light');
-      overlay.style.backgroundColor = toneBg[data.tone] ?? toneBg.mid;
-
-      detailImg.src = data.src;
-      detailImg.addEventListener('load', () => {
-        detailImg.classList.add('is-loaded');
-        preloadAdjacent();
-      }, { once: true });
-      if (detailImg.complete) {
-        detailImg.classList.add('is-loaded');
-        preloadAdjacent();
+      if (isFirst) {
+        // First image: simple load into active
+        activeImg.src = data.src;
+        activeImg.classList.remove('is-loaded');
+        activeImg.classList.add('is-active');
+        nextImg.classList.remove('is-active', 'is-loaded');
+        activeImg.addEventListener('load', () => {
+          activeImg.classList.add('is-loaded');
+          preloadAdjacent();
+        }, { once: true });
+        if (activeImg.complete) {
+          activeImg.classList.add('is-loaded');
+          preloadAdjacent();
+        }
+        return;
       }
 
-      detailCounter.textContent = `${currentNav + 1}\u2009/\u2009${navList.length}`;
+      // Crossfade: load into the hidden image, then swap
+      nextImg.classList.remove('is-loaded', 'is-active');
+      nextImg.src = data.src;
+
+      const onLoad = () => {
+        // Fade in the new image on top
+        nextImg.classList.add('is-active', 'is-loaded');
+        // Fade out the old image behind
+        activeImg.classList.remove('is-active');
+
+        // Swap references
+        const tmp = activeImg;
+        activeImg = nextImg;
+        nextImg = tmp;
+
+        preloadAdjacent();
+      };
+
+      nextImg.addEventListener('load', onLoad, { once: true });
+      if (nextImg.complete) onLoad();
     }
 
     function navigate(dir: number) {
@@ -114,12 +134,11 @@ const rows = composeRows(images);
 
     function openDetail(idx: number) {
       currentNav = idx;
-      showImage(navList[currentNav]);
+      showImage(navList[currentNav], true);
       overlay.showModal();
       document.body.style.overflow = 'hidden';
     }
 
-    // Event delegation: single click + keydown on the gallery wall
     wall.addEventListener('click', (e) => {
       const item = (e.target as HTMLElement).closest('.gallery-item');
       if (!item) return;
@@ -138,12 +157,14 @@ const rows = composeRows(images);
       }
     }, { signal });
 
-    // Dialog close cleanup
     overlay.addEventListener('close', () => {
       document.body.style.overflow = '';
     }, { signal });
 
-    // Nav buttons
+    document.getElementById('detail-close')!.addEventListener('click', () => {
+      overlay.close();
+    }, { signal });
+
     document.getElementById('detail-prev')!.addEventListener('click', (e) => {
       e.stopPropagation();
       navigate(-1);
@@ -154,7 +175,6 @@ const rows = composeRows(images);
       navigate(1);
     }, { signal });
 
-    // Click backdrop to close
     overlay.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target === overlay || target.classList.contains('detail-image-wrap')) {
@@ -162,14 +182,12 @@ const rows = composeRows(images);
       }
     }, { signal });
 
-    // Arrow key navigation
     document.addEventListener('keydown', (e) => {
       if (!overlay.open) return;
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
       if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate(-1);
     }, { signal });
 
-    // Swipe gestures
     let startX = 0;
     let startY = 0;
 

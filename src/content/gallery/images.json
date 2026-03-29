@@ -9,7 +9,8 @@
     "width": 1024,
     "height": 1024,
     "featured": true,
-    "order": 10
+    "order": 10,
+    "edgeColor": "#090909"
   },
   {
     "file": "02_the_reader.jpg",
@@ -21,7 +22,8 @@
     "width": 1024,
     "height": 1024,
     "featured": true,
-    "order": 17
+    "order": 17,
+    "edgeColor": "#020202"
   },
   {
     "file": "03_the_lone_boat.jpg",
@@ -33,7 +35,8 @@
     "width": 1012,
     "height": 1518,
     "featured": true,
-    "order": 1
+    "order": 1,
+    "edgeColor": "#afafaf"
   },
   {
     "file": "04_drooping_bloom.jpg",
@@ -45,7 +48,8 @@
     "width": 1731,
     "height": 1736,
     "featured": false,
-    "order": 21
+    "order": 21,
+    "edgeColor": "#4c4c4c"
   },
   {
     "file": "05_forest_path.jpg",
@@ -57,7 +61,8 @@
     "width": 1024,
     "height": 1024,
     "featured": true,
-    "order": 17
+    "order": 17,
+    "edgeColor": "#050505"
   },
   {
     "file": "06_two_mushrooms.jpg",
@@ -69,7 +74,8 @@
     "width": 1365,
     "height": 2048,
     "featured": true,
-    "order": 3
+    "order": 3,
+    "edgeColor": "#060606"
   },
   {
     "file": "07_three_posts.jpg",
@@ -81,7 +87,8 @@
     "width": 1311,
     "height": 1311,
     "featured": true,
-    "order": 14
+    "order": 14,
+    "edgeColor": "#fafafa"
   },
   {
     "file": "08_night_restaurant.jpg",
@@ -93,7 +100,8 @@
     "width": 1024,
     "height": 1024,
     "featured": false,
-    "order": 22
+    "order": 22,
+    "edgeColor": "#030303"
   },
   {
     "file": "09_birds_on_lamp.jpg",
@@ -105,7 +113,8 @@
     "width": 1024,
     "height": 1024,
     "featured": true,
-    "order": 15
+    "order": 15,
+    "edgeColor": "#0a0a0a"
   },
   {
     "file": "10_barn_in_snow.jpg",
@@ -117,7 +126,8 @@
     "width": 1365,
     "height": 2048,
     "featured": true,
-    "order": 4
+    "order": 4,
+    "edgeColor": "#f7f7f7"
   },
   {
     "file": "11_two_posts.jpg",
@@ -129,7 +139,8 @@
     "width": 650,
     "height": 650,
     "featured": true,
-    "order": 16
+    "order": 16,
+    "edgeColor": "#0c0c0c"
   },
   {
     "file": "12_man_and_pigeons.jpg",
@@ -141,7 +152,8 @@
     "width": 1440,
     "height": 960,
     "featured": true,
-    "order": 5
+    "order": 5,
+    "edgeColor": "#252525"
   },
   {
     "file": "13_pastoral_hills.jpg",
@@ -153,7 +165,8 @@
     "width": 1024,
     "height": 1024,
     "featured": false,
-    "order": 23
+    "order": 23,
+    "edgeColor": "#0f0f0f"
   },
   {
     "file": "14_ethereal_bloom.jpg",
@@ -165,7 +178,8 @@
     "width": 1920,
     "height": 1280,
     "featured": true,
-    "order": 9
+    "order": 9,
+    "edgeColor": "#0c0c0c"
   },
   {
     "file": "15_two_trees.jpg",
@@ -177,7 +191,8 @@
     "width": 1365,
     "height": 2048,
     "featured": false,
-    "order": 24
+    "order": 24,
+    "edgeColor": "#fefefe"
   },
   {
     "file": "16_rocks_in_mist.jpg",
@@ -189,7 +204,8 @@
     "width": 1657,
     "height": 1105,
     "featured": true,
-    "order": 19
+    "order": 19,
+    "edgeColor": "#070707"
   },
   {
     "file": "17_ghost_flower.jpg",
@@ -201,7 +217,8 @@
     "width": 1920,
     "height": 1920,
     "featured": true,
-    "order": 6
+    "order": 6,
+    "edgeColor": "#7c7c7c"
   },
   {
     "file": "18_white_anemones.jpg",
@@ -213,7 +230,8 @@
     "width": 1920,
     "height": 1280,
     "featured": false,
-    "order": 25
+    "order": 25,
+    "edgeColor": "#131313"
   },
   {
     "file": "19_storm_over_mountains.jpg",
@@ -225,7 +243,8 @@
     "width": 1920,
     "height": 1280,
     "featured": true,
-    "order": 2
+    "order": 2,
+    "edgeColor": "#0b0b0b"
   },
   {
     "file": "20_morning_reflections.jpg",
@@ -237,7 +256,8 @@
     "width": 952,
     "height": 1428,
     "featured": false,
-    "order": 26
+    "order": 26,
+    "edgeColor": "#4d4d4d"
   },
   {
     "file": "21_the_old_alley.jpg",
@@ -249,7 +269,8 @@
     "width": 1024,
     "height": 1024,
     "featured": false,
-    "order": 27
+    "order": 27,
+    "edgeColor": "#1b1b1b"
   },
   {
     "file": "22_night_road.jpg",
@@ -261,7 +282,8 @@
     "width": 1024,
     "height": 1024,
     "featured": false,
-    "order": 28
+    "order": 28,
+    "edgeColor": "#010101"
   },
   {
     "file": "23_the_sleeper.jpg",
@@ -273,7 +295,8 @@
     "width": 1440,
     "height": 960,
     "featured": false,
-    "order": 29
+    "order": 29,
+    "edgeColor": "#0b0b0b"
   },
   {
     "file": "24_winter_reflections.jpg",
@@ -285,7 +308,8 @@
     "width": 1920,
     "height": 1280,
     "featured": true,
-    "order": 13
+    "order": 13,
+    "edgeColor": "#f3f3f3"
   },
   {
     "file": "25_the_winding_road.jpg",
@@ -297,7 +321,8 @@
     "width": 1335,
     "height": 2048,
     "featured": true,
-    "order": 8
+    "order": 8,
+    "edgeColor": "#2e2e2e"
   },
   {
     "file": "26_the_vessel.jpg",
@@ -309,7 +334,8 @@
     "width": 1365,
     "height": 2048,
     "featured": false,
-    "order": 30
+    "order": 30,
+    "edgeColor": "#212121"
   },
   {
     "file": "27_twin_minarets.jpg",
@@ -321,7 +347,8 @@
     "width": 1365,
     "height": 2048,
     "featured": false,
-    "order": 31
+    "order": 31,
+    "edgeColor": "#131313"
   },
   {
     "file": "28_mountain_village.jpg",
@@ -333,7 +360,8 @@
     "width": 1024,
     "height": 1024,
     "featured": false,
-    "order": 32
+    "order": 32,
+    "edgeColor": "#3c3c3c"
   },
   {
     "file": "29_no_fear.jpg",
@@ -345,7 +373,8 @@
     "width": 1024,
     "height": 1024,
     "featured": false,
-    "order": 33
+    "order": 33,
+    "edgeColor": "#050505"
   },
   {
     "file": "30_the_lone_tree.jpg",
@@ -357,7 +386,8 @@
     "width": 1920,
     "height": 1280,
     "featured": true,
-    "order": 7
+    "order": 7,
+    "edgeColor": "#2f2f2f"
   },
   {
     "file": "31_blooming_tree.jpg",
@@ -369,7 +399,8 @@
     "width": 1629,
     "height": 1629,
     "featured": false,
-    "order": 34
+    "order": 34,
+    "edgeColor": "#e1e1e1"
   },
   {
     "file": "32_breaking_light.jpg",
@@ -381,7 +412,8 @@
     "width": 1920,
     "height": 1280,
     "featured": false,
-    "order": 35
+    "order": 35,
+    "edgeColor": "#161616"
   },
   {
     "file": "33_surf_and_stone.jpg",
@@ -393,7 +425,8 @@
     "width": 1920,
     "height": 1280,
     "featured": false,
-    "order": 36
+    "order": 36,
+    "edgeColor": "#383838"
   },
   {
     "file": "34_misty_bog.jpg",
@@ -405,7 +438,8 @@
     "width": 1920,
     "height": 1280,
     "featured": true,
-    "order": 11
+    "order": 11,
+    "edgeColor": "#767676"
   },
   {
     "file": "35_mosque_silhouette.jpg",
@@ -417,7 +451,8 @@
     "width": 1365,
     "height": 2048,
     "featured": true,
-    "order": 12
+    "order": 12,
+    "edgeColor": "#3f3f3f"
   },
   {
     "file": "36_stormy_shore.jpg",
@@ -429,7 +464,8 @@
     "width": 1004,
     "height": 1004,
     "featured": false,
-    "order": 37
+    "order": 37,
+    "edgeColor": "#060606"
   },
   {
     "file": "37_town_at_night.jpg",
@@ -441,7 +477,8 @@
     "width": 1024,
     "height": 1024,
     "featured": false,
-    "order": 38
+    "order": 38,
+    "edgeColor": "#0b0b0b"
   },
   {
     "file": "38_the_lone_pole.jpg",
@@ -453,7 +490,8 @@
     "width": 1058,
     "height": 1587,
     "featured": false,
-    "order": 39
+    "order": 39,
+    "edgeColor": "#2e2e2e"
   },
   {
     "file": "39_sea_stones.jpg",
@@ -465,18 +503,85 @@
     "width": 1920,
     "height": 1280,
     "featured": false,
-    "order": 40
+    "order": 40,
+    "edgeColor": "#111111"
   },
   {
-    "file": "40_mountain_stream.jpg",
-    "title": "Mountain Stream",
+    "file": "41_water_lilies.jpg",
+    "title": "Water Lilies",
+    "city": "",
+    "country": "",
+    "tone": "dark",
+    "aspect": "landscape",
+    "width": 1620,
+    "height": 1080,
+    "featured": true,
+    "order": 20,
+    "edgeColor": "#000000"
+  },
+  {
+    "file": "42_single_anemone.jpg",
+    "title": "Single Anemone",
+    "city": "",
+    "country": "",
+    "tone": "dark",
+    "aspect": "landscape",
+    "width": 1920,
+    "height": 1280,
+    "featured": true,
+    "order": 18,
+    "edgeColor": "#0c0c0c"
+  },
+  {
+    "file": "43_misty_island.jpg",
+    "title": "Misty Island",
+    "city": "",
+    "country": "",
+    "tone": "light",
+    "aspect": "square",
+    "width": 1260,
+    "height": 1260,
+    "featured": true,
+    "order": 10,
+    "edgeColor": "#d4d4d4"
+  },
+  {
+    "file": "44_sleeping_cat.jpg",
+    "title": "Sleeping Cat",
     "city": "",
     "country": "",
     "tone": "mid",
+    "aspect": "square",
+    "width": 1024,
+    "height": 1024,
+    "featured": true,
+    "order": 28,
+    "edgeColor": "#3e3e3e"
+  },
+  {
+    "file": "45_light_in_alley.jpg",
+    "title": "Light in Alley",
+    "city": "",
+    "country": "",
+    "tone": "dark",
     "aspect": "landscape",
-    "width": 700,
-    "height": 525,
-    "featured": false,
-    "order": 41
+    "width": 1440,
+    "height": 960,
+    "featured": true,
+    "order": 32,
+    "edgeColor": "#1d1d1d"
+  },
+  {
+    "file": "46_winter_mirror.jpg",
+    "title": "Winter Mirror",
+    "city": "",
+    "country": "",
+    "tone": "light",
+    "aspect": "landscape",
+    "width": 1920,
+    "height": 1280,
+    "featured": true,
+    "order": 15,
+    "edgeColor": "#f1f1f1"
   }
 ]

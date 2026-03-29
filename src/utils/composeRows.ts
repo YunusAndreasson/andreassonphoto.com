@@ -4,6 +4,7 @@ export interface GalleryImage {
   city: string;
   country: string;
   tone: string;
+  edgeColor: string;
   aspect: string;
   width: number;
   height: number;
@@ -17,30 +18,41 @@ export interface Cell {
 
 export type Row = Cell[];
 
+// Pairing strategy:
+// Same aspect or square+landscape → 6/6 (equal or intentionally different)
+// Portrait + non-portrait → 5/7 (clear dynamic tension at 30%+)
+// The 5/7 split with square+landscape creates a 5% near-miss that looks like
+// an error, so we treat them as "close enough" for equal spans.
+function makePair(a: GalleryImage, b: GalleryImage, aLeft: boolean): Row {
+  const hasPortrait = a.aspect === 'portrait' || b.aspect === 'portrait';
+
+  if (!hasPortrait || a.aspect === b.aspect) {
+    return [{ span: 6, img: a }, { span: 6, img: b }];
+  }
+
+  // One is portrait, the other isn't — portrait gets span 5
+  if (a.aspect === 'portrait') {
+    return aLeft
+      ? [{ span: 5, img: a }, { span: 7, img: b }]
+      : [{ span: 7, img: b }, { span: 5, img: a }];
+  }
+  return aLeft
+    ? [{ span: 7, img: a }, { span: 5, img: b }]
+    : [{ span: 5, img: b }, { span: 7, img: a }];
+}
+
 type Pattern = (items: GalleryImage[]) => { row: Row; used: number } | null;
 
 const patterns: Pattern[] = [
-  // Pair: equal spans for same aspect, wider for landscape/narrower for portrait when mixed
+  // Pair: wider aspect on left
   (items) => {
     if (items.length < 2) return null;
-    const [a, b] = items;
-    if (a.aspect === b.aspect) {
-      return { row: [{ span: 6, img: a }, { span: 6, img: b }], used: 2 };
-    }
-    return a.aspect === 'portrait'
-      ? { row: [{ span: 5, img: a }, { span: 7, img: b }], used: 2 }
-      : { row: [{ span: 7, img: a }, { span: 5, img: b }], used: 2 };
+    return { row: makePair(items[0], items[1], true), used: 2 };
   },
-  // Pair reversed
+  // Pair reversed: wider aspect on right
   (items) => {
     if (items.length < 2) return null;
-    const [a, b] = items;
-    if (a.aspect === b.aspect) {
-      return { row: [{ span: 6, img: a }, { span: 6, img: b }], used: 2 };
-    }
-    return b.aspect === 'portrait'
-      ? { row: [{ span: 7, img: a }, { span: 5, img: b }], used: 2 }
-      : { row: [{ span: 5, img: a }, { span: 7, img: b }], used: 2 };
+    return { row: makePair(items[0], items[1], false), used: 2 };
   },
   // Anchor: full width for landscape/square, pair fallback for portrait
   (items) => {
@@ -48,23 +60,26 @@ const patterns: Pattern[] = [
       return { row: [{ span: 12, img: items[0] }], used: 1 };
     }
     if (items.length >= 2) {
-      return items[0].aspect === items[1].aspect
-        ? { row: [{ span: 6, img: items[0] }, { span: 6, img: items[1] }], used: 2 }
-        : { row: [{ span: 5, img: items[0] }, { span: 7, img: items[1] }], used: 2 };
+      return { row: makePair(items[0], items[1], true), used: 2 };
     }
     return { row: [{ span: 12, img: items[0] }], used: 1 };
   },
-  // Triple
+  // Triple: same aspect only, otherwise fall back to pair
   (items) => {
-    if (items.length < 3) return null;
-    return {
-      row: [
-        { span: 4, img: items[0] },
-        { span: 4, img: items[1] },
-        { span: 4, img: items[2] },
-      ],
-      used: 3,
-    };
+    if (items.length >= 3 && items[0].aspect === items[1].aspect && items[0].aspect === items[2].aspect) {
+      return {
+        row: [
+          { span: 4, img: items[0] },
+          { span: 4, img: items[1] },
+          { span: 4, img: items[2] },
+        ],
+        used: 3,
+      };
+    }
+    if (items.length >= 2) {
+      return { row: makePair(items[0], items[1], false), used: 2 };
+    }
+    return null;
   },
 ];
 

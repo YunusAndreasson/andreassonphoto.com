@@ -1,28 +1,52 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
 
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
 }
 
+const siteName = 'Andrèasson Photo';
+const siteOrigin = Astro.site?.origin ?? 'https://andreassonphoto.com';
+
 const {
-  title = 'Andreasson Photo',
-  description = 'Black & white fine art photography',
+  title = siteName,
+  description = 'Quiet observations in black and white',
+  ogImage = '/gallery_bw/30_the_lone_tree.jpg',
 } = Astro.props;
 
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://andreassonphoto.com');
+const canonicalUrl = new URL(Astro.url.pathname, siteOrigin);
+const ogImageUrl = new URL(ogImage, siteOrigin).href;
 ---
 
+<!-- Perhaps, if we take the time to look beyond the obvious, we find beauty in what at first glance slipped quietly by. -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#707070" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1920" />
+    <meta property="og:image:height" content="1280" />
+    <meta property="og:locale" content="en_GB" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <link rel="canonical" href={canonicalUrl} />
     <link rel="preload" href="/fonts/cormorant-garamond-light.woff2" as="font" type="font/woff2" crossorigin />
@@ -31,44 +55,42 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://andreass
   </head>
   <body>
     <header class="site-header">
-      <a href="/" class="site-name">Andreasson Photo</a>
+      <a href="/" class="site-name">{siteName}</a>
       <nav class="site-nav">
-        <a href="/">Gallery</a>
-        <a href="/about">About</a>
+        <a href="/">Work</a>
+        <a href="/about">Words</a>
       </nav>
     </header>
 
     <slot />
 
-    <footer class="site-footer">
-      &copy; {new Date().getFullYear()} Andreasson Photo
-    </footer>
+    <script>
+      let lastScrollY = 0;
+
+      document.addEventListener('astro:page-load', () => {
+        const header = document.querySelector('.site-header') as HTMLElement;
+        if (!header) return;
+
+        lastScrollY = window.scrollY;
+        header.classList.remove('is-hidden');
+
+        window.addEventListener('scroll', () => {
+          const y = window.scrollY;
+          if (y > lastScrollY && y > 80) {
+            header.classList.add('is-hidden');
+          } else {
+            header.classList.remove('is-hidden');
+          }
+          lastScrollY = y;
+        }, { passive: true });
+      });
+    </script>
 
     <script>
-      let controller: AbortController;
       let observer: IntersectionObserver;
 
       document.addEventListener('astro:page-load', () => {
-        controller?.abort();
         observer?.disconnect();
-
-        controller = new AbortController();
-        const { signal } = controller;
-
-        const header = document.querySelector('.site-header');
-        if (!header) return;
-
-        let lastScroll = 0;
-
-        window.addEventListener('scroll', () => {
-          const current = window.scrollY;
-          if (current < lastScroll || current < 100) {
-            header.classList.remove('is-hidden');
-          } else if (current > lastScroll && current > 100) {
-            header.classList.add('is-hidden');
-          }
-          lastScroll = current;
-        }, { passive: true, signal });
 
         observer = new IntersectionObserver((entries) => {
           for (const entry of entries) {
