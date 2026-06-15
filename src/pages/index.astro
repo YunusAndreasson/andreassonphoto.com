@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import GalleryView from '../components/GalleryView.astro';
-import images from '../content/gallery/images.json';
+import { getCollection } from 'astro:content';
 
-const allImages = [...images].sort((a, b) => a.order - b.order);
+const allImages = (await getCollection('gallery'))
+  .map((entry) => entry.data)
+  .sort((a, b) => a.order - b.order);
 ---
 
 <BaseLayout title="Andrèasson Photo">

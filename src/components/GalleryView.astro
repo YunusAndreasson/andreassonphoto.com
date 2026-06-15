@@ -1,4 +1,6 @@
 ---
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import { composeRows, type GalleryImage } from '../utils/composeRows';
 
 interface Props {
@@ -7,33 +9,87 @@ interface Props {
 
 const { images } = Astro.props;
 const rows = composeRows(images);
+
+// Optimized binaries, resolved by filename from the gallery asset folder.
+const imageModules = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/gallery_bw/*.{jpg,jpeg}',
+);
+
+// `sizes` per grid span so each image downloads at its real rendered width.
+// Container is max-width:1200px / 12-col; spans collapse to 2-col (≤768px)
+// then 1-col (≤480px) — see global.css.
+const SPAN_SIZES: Record<number, string> = {
+  12: '(max-width: 768px) 100vw, 1200px',
+  7: '(max-width: 480px) 100vw, (max-width: 768px) 50vw, 680px',
+  6: '(max-width: 480px) 100vw, (max-width: 768px) 50vw, 580px',
+  5: '(max-width: 480px) 100vw, (max-width: 768px) 50vw, 480px',
+  4: '(max-width: 480px) 100vw, (max-width: 768px) 50vw, 373px',
+};
+
+// Generate 1x / 1.5x / 2x widths, never upscaling past the source.
+const SPAN_BASE: Record<number, number> = { 12: 1200, 7: 680, 6: 580, 5: 480, 4: 373 };
+function widthsFor(span: number, intrinsic: number): number[] {
+  const base = SPAN_BASE[span] ?? 600;
+  const set = new Set<number>();
+  for (const w of [base, base * 1.5, base * 2]) {
+    set.add(Math.min(Math.round(w), intrinsic));
+  }
+  return [...set].sort((a, b) => a - b);
+}
+
+async function metaFor(file: string): Promise<ImageMetadata> {
+  const loader = imageModules[`/src/assets/gallery_bw/${file}`];
+  if (!loader) throw new Error(`Gallery image not found: src/assets/gallery_bw/${file}`);
+  return (await loader()).default;
+}
+
+// Pre-resolve metadata + a high-res variant (for the fullscreen detail view).
+const cells = await Promise.all(
+  rows.map((row, ri) =>
+    Promise.all(
+      row.map(async (cell) => {
+        const meta = await metaFor(cell.img.file);
+        const full = await getImage({
+          src: meta,
+          width: Math.min(1600, meta.width),
+          format: 'avif',
+        });
+        return {
+          ...cell,
+          meta,
+          fullSrc: full.src,
+          widths: widthsFor(cell.span, meta.width),
+          sizes: SPAN_SIZES[cell.span] ?? '100vw',
+          isEarly: ri < 3,
+        };
+      }),
+    ),
+  ),
+);
 ---
 
 <main class="gallery-wall">
-  {rows.map((row, ri) =>
-    row.map((cell) => {
-      const img = cell.img;
-      const src = `/gallery_bw/${img.file}`;
-      const isEarly = ri < 3;
-      return (
-        <div
-          class={`gallery-item gi-span-${cell.span}`}
-          data-bg={img.edgeColor}
-          role="button"
-          tabindex="0"
-        >
-          <img
-            src={src}
-            alt=""
-            width={img.width}
-            height={img.height}
-            loading={isEarly ? 'eager' : 'lazy'}
-            decoding={isEarly ? 'sync' : 'async'}
-            fetchpriority={isEarly ? 'high' : undefined}
-          />
-        </div>
-      );
-    })
+  {cells.map((row) =>
+    row.map((cell) => (
+      <div
+        class={`gallery-item gi-span-${cell.span}`}
+        data-bg={cell.img.edgeColor}
+        data-full={cell.fullSrc}
+        role="button"
+        tabindex="0"
+      >
+        <Image
+          src={cell.meta}
+          alt={cell.img.title}
+          widths={cell.widths}
+          sizes={cell.sizes}
+          format="avif"
+          loading={cell.isEarly ? 'eager' : 'lazy'}
+          decoding={cell.isEarly ? 'sync' : 'async'}
+          fetchpriority={cell.isEarly ? 'high' : undefined}
+        />
+      </div>
+    )),
   )}
 </main>
 
@@ -66,13 +122,14 @@ const rows = composeRows(images);
 
     const galleryItems = wall.querySelectorAll<HTMLElement>('.gallery-item');
     const itemIndex = new Map<Element, number>();
-    const navList: { bg: string; src: string }[] = [];
+    const navList: { bg: string; src: string; alt: string }[] = [];
 
     for (const [i, el] of galleryItems.entries()) {
       itemIndex.set(el, i);
       navList.push({
         bg: el.dataset.bg!,
-        src: el.querySelector('img')!.src,
+        src: el.dataset.full!,
+        alt: el.querySelector('img')!.alt,
       });
     }
 
@@ -86,11 +143,12 @@ const rows = composeRows(images);
     }
 
     function showImage(data: (typeof navList)[number], isFirst = false) {
-      overlay.style.backgroundColor = data.bg;
+      overlay!.style.backgroundColor = data.bg;
 
       if (isFirst) {
         // First image: simple load into active
         activeImg.src = data.src;
+        activeImg.alt = data.alt;
         activeImg.classList.remove('is-loaded');
         activeImg.classList.add('is-active');
         nextImg.classList.remove('is-active', 'is-loaded');
@@ -108,6 +166,7 @@ const rows = composeRows(images);
       // Crossfade: load into the hidden image, then swap
       nextImg.classList.remove('is-loaded', 'is-active');
       nextImg.src = data.src;
+      nextImg.alt = data.alt;
 
       const onLoad = () => {
         // Fade in the new image on top
@@ -135,8 +194,7 @@ const rows = composeRows(images);
     function openDetail(idx: number) {
       currentNav = idx;
       showImage(navList[currentNav], true);
-      overlay.showModal();
-      document.body.style.overflow = 'hidden';
+      overlay!.showModal();
     }
 
     wall.addEventListener('click', (e) => {
@@ -155,10 +213,6 @@ const rows = composeRows(images);
         e.preventDefault();
         openDetail(idx);
       }
-    }, { signal });
-
-    overlay.addEventListener('close', () => {
-      document.body.style.overflow = '';
     }, { signal });
 
     document.getElementById('detail-close')!.addEventListener('click', () => {

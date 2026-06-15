@@ -1,15 +1,8 @@
-export interface GalleryImage {
-  file: string;
-  title: string;
-  city: string;
-  country: string;
-  tone: string;
-  edgeColor: string;
-  aspect: string;
-  width: number;
-  height: number;
-  order: number;
-}
+import type { CollectionEntry } from 'astro:content';
+
+// Single source of truth: inferred from the gallery collection schema
+// (src/content.config.ts). composeRows only relies on `aspect`.
+export type GalleryImage = CollectionEntry<'gallery'>['data'];
 
 export interface Cell {
   span: number;

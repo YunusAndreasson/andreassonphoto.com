@@ -1,0 +1,7 @@
+minimumReleaseAgeExclude:
+  - astro@6.4.7
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - workerd
+verifyDepsBeforeRun: false
