@@ -47,9 +47,11 @@ const patterns: Pattern[] = [
     if (items.length < 2) return null;
     return { row: makePair(items[0], items[1], false), used: 2 };
   },
-  // Anchor: full width for landscape/square, pair fallback for portrait
+  // Anchor: full width for landscape only — a square or portrait can't fill a
+  // 12-col row, so it would shrink to the 80dvh cap and float with empty side
+  // margins (and upscale past its source). Those pair instead.
   (items) => {
-    if (items[0].aspect !== 'portrait') {
+    if (items[0].aspect === 'landscape') {
       return { row: [{ span: 12, img: items[0] }], used: 1 };
     }
     if (items.length >= 2) {

@@ -14,20 +14,56 @@
   src: url('/fonts/cormorant-garamond-light-italic.woff2') format('woff2');
 }
 
+/* Body text is set in EB Garamond, not Cormorant. Cormorant is a *display*
+   face — very high stroke contrast whose hairlines vanish at reading sizes, so
+   it stays wispy as prose at any weight. EB Garamond is the same Garamond
+   lineage but drawn for text (sturdier, lower-contrast strokes), so the Words
+   page actually reads. Cormorant stays for the display/header. */
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/eb-garamond-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/eb-garamond-italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/eb-garamond-medium.woff2') format('woff2');
+}
+
 :root {
   --font: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  --font-prose: 'EB Garamond', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
 
-  /* Single neutral museum scheme — derived tones, no dark/light toggle */
-  --wall-bg: #707070;
-  --ink: #d4d4d0;
-  --nav-fg: #fff;
-  --prose-ink: #e8e8e4;
+  /* Single neutral museum scheme — warm gallery grey, no dark/light toggle.
+     Kept near 18% mid-grey so B&W tonal values stay perceptually neutral. */
+  --wall-bg: #73716c;
+  --wall-glow: #807e78; /* overhead-light tone for the faint top gradient */
+  --ink: #d6d4ce;
+  --nav-fg: #f4f2ec;
+  --prose-ink: #f7f5f0; /* near-white: prose needs more contrast on the grey wall */
   --detail-bg: #0a0a0a;
   --header-bg: color-mix(in oklab, #000 40%, transparent);
   --focus-ring: color-mix(in oklab, var(--ink) 80%, transparent);
 
+  /* Soft-shadow lift — each print raised gently off the wall, lit not glossy */
+  --print-shadow: 0 12px 32px -10px rgb(0 0 0 / 0.45), 0 2px 8px -4px rgb(0 0 0 / 0.30);
+  --print-shadow-hover: 0 22px 48px -12px rgb(0 0 0 / 0.55), 0 4px 12px -6px rgb(0 0 0 / 0.38);
+
   /* Fluid spacing — replaces the old per-breakpoint magic numbers */
-  --gap: clamp(16px, 2.5vw, 40px);
+  --gap: clamp(20px, 3vw, 56px);
 }
 
 @layer reset, base, components;
@@ -55,7 +91,10 @@
     font-kerning: normal;
     font-variant-ligatures: common-ligatures contextual;
     text-rendering: optimizeLegibility;
-    background: var(--wall-bg);
+    background-color: var(--wall-bg);
+    background-image: linear-gradient(180deg, var(--wall-glow) 0%, var(--wall-bg) 45dvh);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     color: var(--ink);
     overflow-x: hidden;
     padding-left: env(safe-area-inset-left);
@@ -133,7 +172,7 @@
   /* ── Gallery Wall ── */
 
   .gallery-wall {
-    padding: calc(60px + var(--gap)) var(--gap) var(--gap);
+    padding: calc(72px + var(--gap)) var(--gap) calc(var(--gap) * 1.5);
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
@@ -151,7 +190,11 @@
     content-visibility: auto;
     contain-intrinsic-size: auto 400px;
     opacity: 0;
-    transition: opacity 1s ease;
+    /* Shadow lives on the item, not the <img>: the item's own box-shadow is
+       drawn outside its box and is clipped by neither overflow:hidden nor the
+       paint containment from content-visibility — a shadow on the child would be. */
+    box-shadow: var(--print-shadow);
+    transition: opacity 1s ease, box-shadow 0.5s ease, transform 0.5s ease;
 
     & img {
       display: block;
@@ -175,12 +218,28 @@
     }
   }
 
+  @media (hover: hover) {
+    .gallery-item:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--print-shadow-hover);
+    }
+  }
+
   /* Composed row span classes */
   .gi-span-12 { grid-column: span 12; }
   .gi-span-7 { grid-column: span 7; }
   .gi-span-6 { grid-column: span 6; }
   .gi-span-5 { grid-column: span 5; }
   .gi-span-4 { grid-column: span 4; }
+
+  /* Safeguard: a square/portrait should never be stretched across a full-width
+     row (composeRows reserves span 12 for landscapes, but a lone trailing image
+     can still fall back to it). Present it as a centered print, not a letterbox. */
+  .gallery-item.gi-span-12[data-aspect='square'] img,
+  .gallery-item.gi-span-12[data-aspect='portrait'] img {
+    width: auto;
+    max-width: min(100%, 600px);
+  }
 
   /* ── Detail View (native <dialog>) ── */
 
@@ -342,12 +401,14 @@
     margin: 0 auto;
     padding: calc(80px + 2rem) 2rem 4rem;
     color: var(--prose-ink);
+    font-family: var(--font-prose);
+    font-weight: 400;
 
     & .invocation {
-      font-size: 14px;
+      font-size: clamp(1.1rem, 1rem + 0.4vw, 1.25rem);
       font-style: italic;
-      line-height: 1.75;
-      opacity: 0.5;
+      line-height: 1.8;
+      opacity: 0.72;
       margin-bottom: 3rem;
     }
 
@@ -355,26 +416,31 @@
       margin-bottom: 1.5rem;
 
       & p {
-        font-size: clamp(1.125rem, 1rem + 0.5vw, 1.25rem);
-        line-height: 1.75;
+        font-weight: 400;
+        font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.45rem);
+        line-height: 1.7;
         text-wrap: pretty;
         margin-bottom: 1.2em;
       }
     }
 
     & p {
-      font-size: clamp(1.125rem, 1rem + 0.5vw, 1.25rem);
-      line-height: 1.75;
+      font-weight: 400;
+      font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.45rem);
+      line-height: 1.7;
       text-wrap: pretty;
       margin-bottom: 1.5rem;
     }
 
     & .about-signature {
       margin-top: 5rem;
-      font-size: 15px;
+      /* Cormorant retained here: EB Garamond's latin subset lacks the ū in the
+         name; Cormorant italic carries both ū and è. */
+      font-family: var(--font);
+      font-size: 17px;
       font-style: italic;
       letter-spacing: 0.05em;
-      opacity: 0.7;
+      opacity: 0.82;
     }
   }
 

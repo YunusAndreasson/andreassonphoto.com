@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/prune-orphan-images.mjs",
     "check": "astro check",
     "preview": "astro preview",
-    "deploy": "astro build && npx wrangler pages deploy --branch main"
+    "deploy": "npm run build && npx wrangler pages deploy --branch main"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

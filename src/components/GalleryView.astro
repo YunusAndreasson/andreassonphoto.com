@@ -73,8 +73,10 @@ const cells = await Promise.all(
     row.map((cell) => (
       <div
         class={`gallery-item gi-span-${cell.span}`}
+        data-aspect={cell.img.aspect}
         data-bg={cell.img.edgeColor}
         data-full={cell.fullSrc}
+        style={`background-color:${cell.img.edgeColor}`}
         role="button"
         tabindex="0"
       >
