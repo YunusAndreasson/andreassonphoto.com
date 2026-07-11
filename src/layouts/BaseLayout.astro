@@ -19,6 +19,37 @@ const {
 
 const canonicalUrl = new URL(Astro.url.pathname, siteOrigin);
 const ogImageUrl = new URL(ogImage, siteOrigin).href;
+
+// Current page, so the nav can show "you are here" (Nielsen #1 / aria-current).
+const navPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+
+// The maker's identity node — canonical across every site Yunus builds; this
+// personal site is the hub, so the Person stands alone (no Organization node).
+// Same @id everywhere lets crawlers fold the mentions into one entity.
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': 'https://andreassonphoto.com/#person',
+  name: 'Yunus Andreasson',
+  alternateName: ['Jonas Yūnus Andrèasson'],
+  url: 'https://andreassonphoto.com',
+  jobTitle: 'Photographer & software developer',
+  description:
+    'Photographer working quietly in black and white, and an independent software developer building Islamic knowledge and prayer-time apps.',
+  knowsAbout: [
+    'Photography',
+    'Black and white photography',
+    'Islamic knowledge apps',
+    'Software development',
+    'Arabic',
+  ],
+  sameAs: [
+    'https://github.com/YunusAndreasson',
+    'https://x.com/YunusAndreasson',
+    'https://www.instagram.com/andreasson.photo/',
+    'https://www.linkedin.com/in/yunusandreasson/',
+  ],
+};
 ---
 
 <!-- Perhaps, if we take the time to look beyond the obvious, we find beauty in what at first glance slipped quietly by. -->
@@ -27,6 +58,7 @@ const ogImageUrl = new URL(ogImage, siteOrigin).href;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />
+    <meta name="author" content="Yunus Andreasson" />
     <meta name="theme-color" content="#73716c" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -42,6 +74,8 @@ const ogImageUrl = new URL(ogImage, siteOrigin).href;
     <meta property="og:locale" content="en_GB" />
 
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@YunusAndreasson" />
+    <meta name="twitter:creator" content="@YunusAndreasson" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
@@ -51,18 +85,31 @@ const ogImageUrl = new URL(ogImage, siteOrigin).href;
     <link rel="canonical" href={canonicalUrl} />
     <link rel="preload" href="/fonts/cormorant-garamond-light.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/cormorant-garamond-light-italic.woff2" as="font" type="font/woff2" crossorigin />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
+    <slot name="head" />
     <ClientRouter />
   </head>
   <body>
     <header class="site-header">
       <a href="/" class="site-name">{siteName}</a>
       <nav class="site-nav">
-        <a href="/">Work</a>
-        <a href="/about">Words</a>
+        <a href="/" class:list={{ 'is-current': navPath === '/' }} aria-current={navPath === '/' ? 'page' : undefined}>Work</a>
+        <a href="/about" class:list={{ 'is-current': navPath === '/about' }} aria-current={navPath === '/about' ? 'page' : undefined}>Words</a>
       </nav>
     </header>
 
     <slot />
+
+    <footer class="site-footer">
+      <a href="/about" class="footer-byline">Yunus Andreasson</a>
+      <p class="footer-note">Quiet observations in black and white.</p>
+      <nav class="contact-links footer-social" aria-label="Elsewhere">
+        <a href="https://github.com/YunusAndreasson" rel="me noopener noreferrer" target="_blank">GitHub</a>
+        <a href="https://x.com/YunusAndreasson" rel="me noopener noreferrer" target="_blank">X</a>
+        <a href="https://www.instagram.com/andreasson.photo/" rel="me noopener noreferrer" target="_blank">Instagram</a>
+        <a href="https://www.linkedin.com/in/yunusandreasson/" rel="me noopener noreferrer" target="_blank">LinkedIn</a>
+      </nav>
+    </footer>
 
     <script>
       let lastScrollY = 0;

@@ -53,9 +53,10 @@
   --wall-glow: #807e78; /* overhead-light tone for the faint top gradient */
   --ink: #d6d4ce;
   --nav-fg: #f4f2ec;
-  --prose-ink: #f7f5f0; /* near-white: prose needs more contrast on the grey wall */
+  /* near-white prose: nudged up so body text clears WCAG AA (4.5:1) on the
+     mid-grey wall — #f7f5f0 measured 4.47:1 (just under); this reads 4.75:1. */
+  --prose-ink: #fdfcf9;
   --detail-bg: #0a0a0a;
-  --header-bg: color-mix(in oklab, #000 40%, transparent);
   --focus-ring: color-mix(in oklab, var(--ink) 80%, transparent);
 
   /* Soft-shadow lift — each print raised gently off the wall, lit not glossy */
@@ -64,6 +65,15 @@
 
   /* Fluid spacing — replaces the old per-breakpoint magic numbers */
   --gap: clamp(20px, 3vw, 56px);
+
+  /* Modular type scale — minor third (1.2) on a 16px base. The hand-tuned
+     sizes already landed almost exactly on this ratio (11≈11.1, 13≈13.3,
+     23≈23.04), so every size now derives from one formula. */
+  --fs--2: 0.694rem; /* 11.1px — labels: nav, contact */
+  --fs--1: 0.833rem; /* 13.3px — site name */
+  --fs-0: 1rem; /*    16px   — signature */
+  --fs-1: 1.2rem; /*  19.2px — prose (min) */
+  --fs-2: 1.44rem; /* 23.0px — prose (max), detail close */
 }
 
 @layer reset, base, components;
@@ -110,17 +120,25 @@
 @layer components {
   /* ── Header ── */
 
+  /* Fixed header floats over the prints — including high-key (near-white)
+     images. A top-down scrim gradient + text-shadow keep the nav above WCAG AA
+     over any photo (a flat 40% fill measured 2.5:1 over a light image). */
   .site-header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 100;
-    padding: 1.4rem 2rem;
+    padding: 1.4rem 2rem 2.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--header-bg);
+    background: linear-gradient(
+      180deg,
+      rgb(0 0 0 / 0.62) 0%,
+      rgb(0 0 0 / 0.5) 45%,
+      rgb(0 0 0 / 0) 100%
+    );
     transition: opacity 0.4s ease;
   }
 
@@ -130,12 +148,14 @@
   }
 
   .site-name {
-    font-size: 13px;
+    font-size: var(--fs--1);
     font-weight: 300;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--nav-fg);
     text-decoration: none;
+    text-shadow: 0 1px 3px rgb(0 0 0 / 0.55);
+    padding-block: 0.4rem; /* ≥24px touch target (WCAG 2.5.8) */
 
     &:focus-visible {
       outline: 2px solid currentColor;
@@ -148,17 +168,29 @@
     gap: 2rem;
 
     & a {
-      font-size: 11px;
+      font-size: var(--fs--2);
       font-weight: 300;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--nav-fg);
       text-decoration: none;
+      text-shadow: 0 1px 3px rgb(0 0 0 / 0.55);
       opacity: 0.85;
+      padding-block: 0.4rem; /* ≥24px touch target (WCAG 2.5.8) */
       transition: opacity 0.3s;
 
       &:hover {
         opacity: 1;
+      }
+
+      /* "You are here": the current page reads at full strength with a quiet
+         underline so the active section is unambiguous (Nielsen #1). */
+      &.is-current {
+        opacity: 1;
+        text-decoration: underline;
+        text-underline-offset: 6px;
+        text-decoration-thickness: 1px;
+        text-decoration-color: color-mix(in oklab, currentColor 55%, transparent);
       }
 
       &:focus-visible {
@@ -175,13 +207,29 @@
     padding: calc(72px + var(--gap)) var(--gap) calc(var(--gap) * 1.5);
     max-width: 1200px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: var(--gap);
-    align-items: center;
+  }
+
+  /* Each row sizes its images from real aspect ratios (flex-grow = ratio, see
+     GalleryView) so they resolve to a common height. Wide rows fill the wall;
+     tall/sparse rows are capped + centered (.gallery-row--center) for museum
+     breathing room; a hero is a single full-bleed print (.gallery-row--hero). */
+  .gallery-row {
+    display: flex;
+    gap: var(--gap);
+    align-items: flex-start;
+  }
+
+  .gallery-row--center {
+    margin-inline: auto;
+    justify-content: center;
   }
 
   .gallery-item {
+    flex: 1 1 0;
+    min-width: 0;
     cursor: pointer;
     overflow: hidden;
     display: flex;
@@ -208,7 +256,10 @@
       opacity: 1;
     }
 
-    &:nth-child(-n+6) {
+    /* Above-the-fold rows show immediately (no-JS / pre-observer fallback).
+       Rows are wrapped now, so the old :nth-child(-n+6) would misfire — the
+       first ~2 rows are tagged .is-early in GalleryView instead. */
+    &.is-early {
       opacity: 1;
     }
 
@@ -225,20 +276,10 @@
     }
   }
 
-  /* Composed row span classes */
-  .gi-span-12 { grid-column: span 12; }
-  .gi-span-7 { grid-column: span 7; }
-  .gi-span-6 { grid-column: span 6; }
-  .gi-span-5 { grid-column: span 5; }
-  .gi-span-4 { grid-column: span 4; }
-
-  /* Safeguard: a square/portrait should never be stretched across a full-width
-     row (composeRows reserves span 12 for landscapes, but a lone trailing image
-     can still fall back to it). Present it as a centered print, not a letterbox. */
-  .gallery-item.gi-span-12[data-aspect='square'] img,
-  .gallery-item.gi-span-12[data-aspect='portrait'] img {
-    width: auto;
-    max-width: min(100%, 600px);
+  /* A hero is the only full-bleed print; cap its height so a tall one never
+     overflows a short viewport (object-fit:contain mats it with the edge color). */
+  .gallery-row--hero .gallery-item img {
+    max-height: 78dvh;
   }
 
   /* ── Detail View (native <dialog>) ── */
@@ -337,12 +378,14 @@
     top: 0.8rem;
     right: 1rem;
     color: var(--nav-fg);
-    font-size: 22px;
+    font-size: var(--fs-2);
     font-weight: 300;
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: pointer;
     z-index: 10;
-    padding: 0.5rem;
+    padding: 0.6rem;
+    min-width: 44px; /* ≥44px touch target (Fitts / WCAG 2.5.5) */
+    min-height: 44px;
     line-height: 1;
     display: none;
   }
@@ -372,18 +415,22 @@
     gap: 2rem;
     margin-top: 1.5rem;
 
+    /* Functional social links: kept legible (≥AA on the wall) rather than the
+       old 0.5 opacity (~2.3:1). Restraint comes from size + tracking, not from
+       low contrast. */
     & a {
-      font-size: 11px;
+      font-size: var(--fs--2);
       font-weight: 300;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: inherit;
       text-decoration: none;
-      opacity: 0.5;
-      transition: opacity 0.3s;
+      opacity: 1; /* full near-white = 4.75:1 (AA); 0.92 fell to 4.3:1 */
+      padding-block: 0.6rem; /* generous touch target (Fitts / WCAG 2.5.5) */
+      transition: opacity 0.3s, color 0.3s;
 
       &:hover {
-        opacity: 1;
+        color: #ffffff;
       }
 
       &:focus-visible {
@@ -392,6 +439,59 @@
         opacity: 1;
       }
     }
+  }
+
+  /* ── Site footer ──
+     A quiet signature closing every page: the maker's name (to the hub /about),
+     a one-line note, and the four social links. Restraint from size + tracking +
+     whitespace, echoing the header/contact treatment — no rules, badges, icons. */
+
+  .site-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: calc(var(--gap) * 1.6) var(--gap) calc(var(--gap) * 1.8);
+    border-top: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+    margin-top: var(--gap);
+  }
+
+  .footer-byline {
+    font-family: var(--font);
+    font-size: var(--fs--1);
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--nav-fg);
+    text-decoration: none;
+    padding-block: 0.4rem; /* ≥24px touch target (WCAG 2.5.8) */
+    transition: opacity 0.3s;
+
+    &:hover {
+      opacity: 0.82;
+    }
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 4px;
+    }
+  }
+
+  .footer-note {
+    font-family: var(--font-prose);
+    font-size: var(--fs--2);
+    font-style: italic;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    max-width: 42ch;
+    margin-top: 0.5rem;
+  }
+
+  /* Reuse .contact-links; just centre it and let it wrap on narrow screens. */
+  .footer-social {
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.2rem;
   }
 
   /* ── About page ── */
@@ -405,10 +505,11 @@
     font-weight: 400;
 
     & .invocation {
-      font-size: clamp(1.1rem, 1rem + 0.4vw, 1.25rem);
+      font-size: clamp(var(--fs-0), 0.9rem + 0.5vw, var(--fs-1));
       font-style: italic;
       line-height: 1.8;
-      opacity: 0.72;
+      /* Full strength: a quiet lead-in held to WCAG AA (4.75:1) via size + italic,
+         not low contrast (0.72 opacity measured 3.2:1 — failed AA). */
       margin-bottom: 3rem;
     }
 
@@ -417,7 +518,7 @@
 
       & p {
         font-weight: 400;
-        font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.45rem);
+        font-size: clamp(var(--fs-1), 1rem + 0.7vw, var(--fs-2));
         line-height: 1.7;
         text-wrap: pretty;
         margin-bottom: 1.2em;
@@ -426,7 +527,7 @@
 
     & p {
       font-weight: 400;
-      font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.45rem);
+      font-size: clamp(var(--fs-1), 1rem + 0.7vw, var(--fs-2));
       line-height: 1.7;
       text-wrap: pretty;
       margin-bottom: 1.5rem;
@@ -437,10 +538,75 @@
       /* Cormorant retained here: EB Garamond's latin subset lacks the ū in the
          name; Cormorant italic carries both ū and è. */
       font-family: var(--font);
-      font-size: 17px;
+      font-size: var(--fs-0);
       font-style: italic;
       letter-spacing: 0.05em;
-      opacity: 0.82;
+      /* Held to AA (4.75:1); restraint comes from size + italic, not 0.82 opacity
+         (which measured 3.6:1). */
+    }
+  }
+
+  /* ── Also building ──
+     A hub list of the other things Yunus makes. Same quiet register as the
+     contact links: a small uppercase label, serif names, muted italic notes. */
+
+  .also-building {
+    margin-top: 4.5rem;
+  }
+
+  .section-label {
+    font-family: var(--font);
+    font-size: var(--fs--2);
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 1.6rem;
+  }
+
+  .project-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+
+    & li {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    & a {
+      width: fit-content;
+      font-family: var(--font);
+      font-size: var(--fs-1);
+      font-weight: 300;
+      letter-spacing: 0.03em;
+      color: var(--prose-ink);
+      text-decoration: none;
+      padding-block: 0.15rem;
+      transition: color 0.3s;
+
+      &:hover {
+        color: #ffffff;
+        text-decoration: underline;
+        text-underline-offset: 5px;
+        text-decoration-thickness: 1px;
+        text-decoration-color: color-mix(in oklab, currentColor 55%, transparent);
+      }
+
+      &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 4px;
+      }
+    }
+
+    & .project-desc {
+      font-family: var(--font-prose);
+      font-size: var(--fs--2);
+      font-style: italic;
+      letter-spacing: 0.01em;
+      color: var(--ink);
     }
   }
 
@@ -455,6 +621,26 @@
     }
 
     .gallery-item {
+      opacity: 1;
+    }
+  }
+
+  /* ── High contrast ──
+     The muted museum palette (faint invocation/signature, near-white prose on a
+     mid-grey wall) is intentional but sits near the WCAG floor. For users whose
+     OS asks for more contrast, drop the dimming and deepen the wall so all text
+     clears AA comfortably (~6:1) — without changing the default look. */
+  @media (prefers-contrast: more) {
+    :root {
+      --wall-bg: #595855;
+      --wall-glow: #5f5e5a;
+      --prose-ink: #ffffff;
+    }
+
+    .page-content .invocation,
+    .page-content .about-signature,
+    .contact-links a,
+    .site-nav a {
       opacity: 1;
     }
   }
@@ -479,19 +665,25 @@
     }
 
     .gallery-wall {
-      grid-template-columns: repeat(2, 1fr);
       padding: calc(48px + var(--gap)) var(--gap) var(--gap);
     }
 
-    .gi-span-4,
-    .gi-span-5,
-    .gi-span-6,
-    .gi-span-7 {
-      grid-column: span 1;
+    /* On phones, stack every print full-width — rows become a single column,
+       so heights no longer need to match across a row. */
+    .gallery-row,
+    .gallery-row--center {
+      flex-direction: column;
+      max-width: none;
     }
 
-    .gi-span-12 {
-      grid-column: 1 / -1;
+    /* width:100% fills the (now non-stretching) cross axis; flex-basis:auto is
+       essential — the desktop `flex:1 1 0` puts basis 0 on what is now the
+       vertical axis, and because the item is overflow:hidden its auto min-height
+       collapses to 0, clipping the image to nothing. Auto basis sizes the item
+       to the image height instead. */
+    .gallery-row > .gallery-item {
+      width: 100%;
+      flex-basis: auto;
     }
 
     .detail-image-wrap {
@@ -510,20 +702,6 @@
 
     .page-content {
       padding: calc(60px + 1.5rem) 1.2rem 3rem;
-    }
-  }
-
-  @media (width <= 480px) {
-    .gallery-wall {
-      grid-template-columns: 1fr;
-    }
-
-    .gi-span-4,
-    .gi-span-5,
-    .gi-span-6,
-    .gi-span-7,
-    .gi-span-12 {
-      grid-column: span 1;
     }
   }
 }
