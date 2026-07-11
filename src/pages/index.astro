@@ -8,6 +8,9 @@ const allImages = (await getCollection('gallery'))
   .sort((a, b) => a.order - b.order);
 ---
 
-<BaseLayout title="Andrèasson Photo">
+<BaseLayout
+  title="Yunus Andreasson — Black-and-White Landscape Photography"
+  description="Black-and-white photographs by Yunus Andreasson — quiet observations of landscape, light, and the beauty that at first glance slips quietly by."
+>
   <GalleryView images={allImages} />
 </BaseLayout>
