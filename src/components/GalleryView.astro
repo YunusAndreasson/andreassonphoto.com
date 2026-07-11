@@ -1,41 +1,18 @@
 ---
 import { Image, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import { composeRows, type GalleryImage } from '../utils/composeRows';
+import { composeRows, type GalleryImage, type Item } from '../utils/composeRows';
 
 interface Props {
   images: GalleryImage[];
 }
 
 const { images } = Astro.props;
-const rows = composeRows(images);
 
 // Optimized binaries, resolved by filename from the gallery asset folder.
 const imageModules = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/gallery_bw/*.{jpg,jpeg}',
 );
-
-// `sizes` per grid span so each image downloads at its real rendered width.
-// Container is max-width:1200px / 12-col; spans collapse to 2-col (≤768px)
-// then 1-col (≤480px) — see global.css.
-const SPAN_SIZES: Record<number, string> = {
-  12: '(max-width: 768px) 100vw, 1200px',
-  7: '(max-width: 480px) 100vw, (max-width: 768px) 50vw, 680px',
-  6: '(max-width: 480px) 100vw, (max-width: 768px) 50vw, 580px',
-  5: '(max-width: 480px) 100vw, (max-width: 768px) 50vw, 480px',
-  4: '(max-width: 480px) 100vw, (max-width: 768px) 50vw, 373px',
-};
-
-// Generate 1x / 1.5x / 2x widths, never upscaling past the source.
-const SPAN_BASE: Record<number, number> = { 12: 1200, 7: 680, 6: 580, 5: 480, 4: 373 };
-function widthsFor(span: number, intrinsic: number): number[] {
-  const base = SPAN_BASE[span] ?? 600;
-  const set = new Set<number>();
-  for (const w of [base, base * 1.5, base * 2]) {
-    set.add(Math.min(Math.round(w), intrinsic));
-  }
-  return [...set].sort((a, b) => a - b);
-}
 
 async function metaFor(file: string): Promise<ImageMetadata> {
   const loader = imageModules[`/src/assets/gallery_bw/${file}`];
@@ -43,56 +20,110 @@ async function metaFor(file: string): Promise<ImageMetadata> {
   return (await loader()).default;
 }
 
-// Pre-resolve metadata + a high-res variant (for the fullscreen detail view).
-const cells = await Promise.all(
-  rows.map((row, ri) =>
-    Promise.all(
-      row.map(async (cell) => {
-        const meta = await metaFor(cell.img.file);
+// Resolve real dimensions FIRST: the justified layout sizes every row from true
+// aspect ratios so each row fills the full width at a common height — see
+// composeRows.
+const metas = await Promise.all(images.map((img) => metaFor(img.file)));
+const items: Item[] = images.map((img, k) => ({
+  img,
+  ar: metas[k].width / metas[k].height,
+  isHero: false,
+}));
+const rows = composeRows(items);
+
+// Mirror composeRows' constants only to estimate the px width each image
+// renders at, so `sizes`/`widths` request a right-sized resolution.
+const CONTENT_W = 1120;
+const GAP = 40;
+const metaByFile = new Map(images.map((img, k) => [img.file, metas[k]] as const));
+
+function renderedWidth(row: (typeof rows)[number], ar: number): number {
+  if (row.mode === 'hero') return CONTENT_W;
+  const sum = row.cells.reduce((s, c) => s + c.ar, 0);
+  const rowW = row.mode === 'center' ? (row.maxWidthPx ?? CONTENT_W) : CONTENT_W;
+  const avail = rowW - (row.cells.length - 1) * GAP;
+  return Math.max(1, Math.round((ar / sum) * avail));
+}
+
+// 1x / 1.5x / 2x widths, never upscaling past the source.
+function widthsFor(px: number, intrinsic: number): number[] {
+  const set = new Set<number>();
+  for (const w of [px, px * 1.5, px * 2]) set.add(Math.min(Math.round(w), intrinsic));
+  return [...set].sort((a, b) => a - b);
+}
+
+// Pre-resolve a high-res variant (for the fullscreen detail view) + responsive
+// data per cell.
+const renderRows = await Promise.all(
+  rows.map(async (row, ri) => {
+    const cells = await Promise.all(
+      row.cells.map(async (cell) => {
+        const meta = metaByFile.get(cell.img.file)!;
         const full = await getImage({
           src: meta,
           width: Math.min(1600, meta.width),
           format: 'avif',
         });
+        const px = renderedWidth(row, cell.ar);
         return {
-          ...cell,
+          img: cell.img,
           meta,
+          grow: cell.grow,
           fullSrc: full.src,
-          widths: widthsFor(cell.span, meta.width),
-          sizes: SPAN_SIZES[cell.span] ?? '100vw',
+          widths: widthsFor(px, meta.width),
+          sizes:
+            row.mode === 'hero'
+              ? '(max-width: 768px) 100vw, 1120px'
+              : `(max-width: 768px) 100vw, ${px}px`,
           isEarly: ri < 3,
         };
       }),
-    ),
-  ),
+    );
+    // Reserve each row's REAL rendered height for off-screen items (they are
+    // content-visibility:auto). A flat estimate makes the scroll position jump
+    // as rows render in — matching the true height keeps CLS ~0 (Web Vitals).
+    const sumAr = row.cells.reduce((s, c) => s + c.ar, 0);
+    const rowW = row.mode === 'center' ? (row.maxWidthPx ?? CONTENT_W) : CONTENT_W;
+    const intrinsicH = Math.round((rowW - (row.cells.length - 1) * GAP) / sumAr);
+    return { mode: row.mode, maxWidthPx: row.maxWidthPx, intrinsicH, cells };
+  }),
 );
 ---
 
 <main class="gallery-wall">
-  {cells.map((row) =>
-    row.map((cell) => (
-      <div
-        class={`gallery-item gi-span-${cell.span}`}
-        data-aspect={cell.img.aspect}
-        data-bg={cell.img.edgeColor}
-        data-full={cell.fullSrc}
-        style={`background-color:${cell.img.edgeColor}`}
-        role="button"
-        tabindex="0"
-      >
-        <Image
-          src={cell.meta}
-          alt={cell.img.title}
-          widths={cell.widths}
-          sizes={cell.sizes}
-          format="avif"
-          loading={cell.isEarly ? 'eager' : 'lazy'}
-          decoding={cell.isEarly ? 'sync' : 'async'}
-          fetchpriority={cell.isEarly ? 'high' : undefined}
-        />
-      </div>
-    )),
-  )}
+  {renderRows.map((row) => (
+    <div
+      class:list={[
+        'gallery-row',
+        row.mode === 'center' && 'gallery-row--center',
+        row.mode === 'hero' && 'gallery-row--hero',
+      ]}
+      style={row.mode === 'center' && row.maxWidthPx ? `max-width:${row.maxWidthPx}px` : undefined}
+    >
+      {row.cells.map((cell) => (
+        <div
+          class:list={['gallery-item', cell.isEarly && 'is-early']}
+          data-aspect={cell.img.aspect}
+          data-bg={cell.img.edgeColor}
+          data-full={cell.fullSrc}
+          style={`flex-grow:${cell.grow.toFixed(4)};background-color:${cell.img.edgeColor};contain-intrinsic-size:auto ${row.intrinsicH}px`}
+          role="button"
+          tabindex="0"
+        >
+          <Image
+            src={cell.meta}
+            alt={cell.img.title}
+            widths={cell.widths}
+            sizes={cell.sizes}
+            format="avif"
+            loading={cell.isEarly ? 'eager' : 'lazy'}
+            decoding={cell.isEarly ? 'sync' : 'async'}
+            fetchpriority={cell.isEarly ? 'high' : undefined}
+          />
+        </div>
+      ))}
+    </div>
+  ))}
 </main>
 
 <dialog class="detail-overlay" aria-label="Image view">
@@ -107,6 +138,21 @@ const cells = await Promise.all(
 
 <script>
   let controller: AbortController;
+
+  // Fullscreen backdrop: derive a neutral ground from the print's edge tone, but
+  // shift it clear of that tone (lighter for a dark print, darker for a light one)
+  // so the image never sinks into a same-tone background. Deterministic per image.
+  function detailBackdrop(hex: string): string {
+    const n = parseInt(hex.replace('#', ''), 16);
+    const lum = Math.round(
+      0.2126 * ((n >> 16) & 255) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255),
+    );
+    const GAP = 42;
+    const shifted = lum < 128 ? lum + GAP : lum - GAP;
+    const b = Math.max(18, Math.min(232, shifted));
+    const h = b.toString(16).padStart(2, '0');
+    return `#${h}${h}${h}`;
+  }
 
   document.addEventListener('astro:page-load', () => {
     controller?.abort();
@@ -129,7 +175,7 @@ const cells = await Promise.all(
     for (const [i, el] of galleryItems.entries()) {
       itemIndex.set(el, i);
       navList.push({
-        bg: el.dataset.bg!,
+        bg: detailBackdrop(el.dataset.bg!),
         src: el.dataset.full!,
         alt: el.querySelector('img')!.alt,
       });

@@ -1,100 +1,132 @@
 import type { CollectionEntry } from 'astro:content';
 
 // Single source of truth: inferred from the gallery collection schema
-// (src/content.config.ts). composeRows only relies on `aspect`.
+// (src/content.config.ts).
 export type GalleryImage = CollectionEntry<'gallery'>['data'];
 
-export interface Cell {
-  span: number;
+// An image paired with its real aspect ratio (width / height, from
+// astro:assets ImageMetadata). `isHero` is retained for type compatibility with
+// the view layer but the layout now reads the content `hero` flag directly.
+export interface Item {
   img: GalleryImage;
+  ar: number;
+  isHero: boolean;
 }
 
-export type Row = Cell[];
-
-// Pairing strategy:
-// Same aspect or square+landscape → 6/6 (equal or intentionally different)
-// Portrait + non-portrait → 5/7 (clear dynamic tension at 30%+)
-// The 5/7 split with square+landscape creates a 5% near-miss that looks like
-// an error, so we treat them as "close enough" for equal spans.
-function makePair(a: GalleryImage, b: GalleryImage, aLeft: boolean): Row {
-  const hasPortrait = a.aspect === 'portrait' || b.aspect === 'portrait';
-
-  if (!hasPortrait || a.aspect === b.aspect) {
-    return [{ span: 6, img: a }, { span: 6, img: b }];
-  }
-
-  // One is portrait, the other isn't — portrait gets span 5
-  if (a.aspect === 'portrait') {
-    return aLeft
-      ? [{ span: 5, img: a }, { span: 7, img: b }]
-      : [{ span: 7, img: b }, { span: 5, img: a }];
-  }
-  return aLeft
-    ? [{ span: 7, img: a }, { span: 5, img: b }]
-    : [{ span: 5, img: b }, { span: 7, img: a }];
+export interface Cell {
+  img: GalleryImage;
+  ar: number;
+  // flex-grow within the row: proportional to aspect ratio so every image in
+  // the row resolves to the SAME height (height = rowWidth / Σar).
+  grow: number;
 }
 
-type Pattern = (items: GalleryImage[]) => { row: Row; used: number } | null;
+// Every row is laid out full-bleed ('fill'); the union is kept so the view can
+// stay defensive, but the justified layout never emits 'center'/'hero'.
+export type RowMode = 'fill' | 'center' | 'hero';
 
-const patterns: Pattern[] = [
-  // Pair: wider aspect on left
-  (items) => {
-    if (items.length < 2) return null;
-    return { row: makePair(items[0], items[1], true), used: 2 };
-  },
-  // Pair reversed: wider aspect on right
-  (items) => {
-    if (items.length < 2) return null;
-    return { row: makePair(items[0], items[1], false), used: 2 };
-  },
-  // Anchor: full width for landscape only — a square or portrait can't fill a
-  // 12-col row, so it would shrink to the 80dvh cap and float with empty side
-  // margins (and upscale past its source). Those pair instead.
-  (items) => {
-    if (items[0].aspect === 'landscape') {
-      return { row: [{ span: 12, img: items[0] }], used: 1 };
-    }
-    if (items.length >= 2) {
-      return { row: makePair(items[0], items[1], true), used: 2 };
-    }
-    return { row: [{ span: 12, img: items[0] }], used: 1 };
-  },
-  // Triple: same aspect only, otherwise fall back to pair
-  (items) => {
-    if (items.length >= 3 && items[0].aspect === items[1].aspect && items[0].aspect === items[2].aspect) {
-      return {
-        row: [
-          { span: 4, img: items[0] },
-          { span: 4, img: items[1] },
-          { span: 4, img: items[2] },
-        ],
-        used: 3,
-      };
-    }
-    if (items.length >= 2) {
-      return { row: makePair(items[0], items[1], false), used: 2 };
-    }
-    return null;
-  },
-];
+export interface Row {
+  cells: Cell[];
+  mode: RowMode;
+  maxWidthPx?: number;
+}
 
-export function composeRows(imgs: GalleryImage[]): Row[] {
+// ── Layout tuning ──────────────────────────────────────────────────────────
+// Approximate: flex-grow does the exact pixel work in the browser at the live
+// viewport width. These only steer how the curated order is broken into rows.
+const CONTENT_W = 1120; // ~1200px max-width minus the wall padding
+const GAP = 40; // representative --gap (clamp(20px, 3vw, 56px))
+const TARGET_H = 500; // preferred print height — every row is justified toward this
+const MAX_PER_ROW = 3; // keep prints large; never cram a row
+
+// Height a row of n images (aspect-ratio sum `sumAr`) renders at when it fills
+// the full content width — which EVERY row now does, so the left and right
+// edges of the wall are perfectly straight verticals from top to bottom.
+function rowHeight(sumAr: number, n: number): number {
+  return (CONTENT_W - (n - 1) * GAP) / sumAr;
+}
+
+/**
+ * Lay the curated order out as a fully-justified grid.
+ *
+ * Never reorders. Every row spans the full content width, so the wall's outer
+ * edges are dead-straight top to bottom (a premium museum hang) — there are no
+ * centered/inset rows and no lone floating prints. Row breaks are chosen by
+ * dynamic programming to minimise the total squared deviation of each row's
+ * height from TARGET_H, so heights stay tight and balanced and nothing is
+ * crammed. An image explicitly flagged `hero` in the content is honoured as its
+ * own full-width print (still straight-edged); otherwise the grid is uniform.
+ */
+export function composeRows(items: Item[]): Row[] {
   const rows: Row[] = [];
-  let i = 0;
-  let patIdx = 0;
+  let segment: Item[] = [];
 
-  while (i < imgs.length) {
-    const remaining = imgs.slice(i);
-    const pattern = patterns[patIdx % patterns.length];
-    const result = pattern(remaining);
-    if (result) {
-      rows.push(result.row);
-      i += result.used;
+  const flushSegment = () => {
+    if (segment.length) rows.push(...justify(segment));
+    segment = [];
+  };
+
+  for (const it of items) {
+    if (it.img.hero) {
+      flushSegment();
+      rows.push({ cells: [{ img: it.img, ar: it.ar, grow: it.ar }], mode: 'fill' });
     } else {
-      rows.push([{ span: 12, img: remaining[0] }]);
-      i += 1;
+      segment.push(it);
     }
-    patIdx++;
+  }
+  flushSegment();
+
+  return rows;
+}
+
+/**
+ * Optimal justified break-up of one run of images.
+ *
+ * dp[j] = least total cost to lay out items[0..j); the last row of that optimum
+ * starts at back[j]. Cost of a row is the squared gap between its full-width
+ * render height and TARGET_H — so a too-tall lone portrait or a too-short
+ * three-wide row are both heavily penalised and avoided whenever the order
+ * allows. Rows are capped at MAX_PER_ROW.
+ */
+function justify(items: Item[]): Row[] {
+  const n = items.length;
+
+  // Prefix sums of aspect ratios for O(1) row-width math.
+  const prefix = [0];
+  for (let k = 0; k < n; k++) prefix.push(prefix[k] + items[k].ar);
+  const sumAr = (a: number, b: number) => prefix[b] - prefix[a];
+
+  const cost = (a: number, b: number): number => {
+    if (b - a > MAX_PER_ROW) return Infinity;
+    const d = rowHeight(sumAr(a, b), b - a) - TARGET_H;
+    return d * d;
+  };
+
+  const dp = new Array<number>(n + 1).fill(Infinity);
+  const back = new Array<number>(n + 1).fill(0);
+  dp[0] = 0;
+  for (let j = 1; j <= n; j++) {
+    for (let a = Math.max(0, j - MAX_PER_ROW); a < j; a++) {
+      const c = dp[a] + cost(a, j);
+      if (c < dp[j]) {
+        dp[j] = c;
+        back[j] = a;
+      }
+    }
+  }
+
+  // Walk the back-pointers to recover row boundaries.
+  const cuts: number[] = [];
+  for (let j = n; j > 0; j = back[j]) cuts.push(j);
+  cuts.push(0);
+  cuts.reverse();
+
+  const rows: Row[] = [];
+  for (let r = 0; r < cuts.length - 1; r++) {
+    const a = cuts[r];
+    const b = cuts[r + 1];
+    const cells: Cell[] = items.slice(a, b).map((it) => ({ img: it.img, ar: it.ar, grow: it.ar }));
+    rows.push({ cells, mode: 'fill' });
   }
   return rows;
 }

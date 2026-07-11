@@ -448,5 +448,75 @@
     "featured": true,
     "order": 15,
     "edgeColor": "#f1f1f1"
+  },
+  {
+    "id": "47_silver_tide",
+    "file": "47_silver_tide.jpg",
+    "title": "Silver Tide",
+    "tone": "mid",
+    "aspect": "square",
+    "featured": true,
+    "order": 16,
+    "edgeColor": "#6c6c6c"
+  },
+  {
+    "id": "48_the_cape",
+    "file": "48_the_cape.jpg",
+    "title": "The Cape",
+    "tone": "mid",
+    "aspect": "square",
+    "featured": false,
+    "order": 31,
+    "edgeColor": "#6e6e6e"
+  },
+  {
+    "id": "49_the_sentinels",
+    "file": "49_the_sentinels.jpg",
+    "title": "The Sentinels",
+    "tone": "dark",
+    "aspect": "square",
+    "featured": true,
+    "order": 19,
+    "edgeColor": "#383838"
+  },
+  {
+    "id": "50_valley_light",
+    "file": "50_valley_light.jpg",
+    "title": "Valley Light",
+    "tone": "dark",
+    "aspect": "square",
+    "featured": false,
+    "order": 24,
+    "edgeColor": "#474747"
+  },
+  {
+    "id": "51_last_light",
+    "file": "51_last_light.jpg",
+    "title": "Last Light",
+    "tone": "dark",
+    "aspect": "landscape",
+    "featured": true,
+    "order": 3,
+    "edgeColor": "#272727"
+  },
+  {
+    "id": "52_quiet_shore",
+    "file": "52_quiet_shore.jpg",
+    "title": "Quiet Shore",
+    "tone": "dark",
+    "aspect": "landscape",
+    "featured": true,
+    "order": 13,
+    "edgeColor": "#161616"
+  },
+  {
+    "id": "53_black_sand",
+    "file": "53_black_sand.jpg",
+    "title": "Black Sand",
+    "tone": "mid",
+    "aspect": "square",
+    "featured": true,
+    "order": 18,
+    "edgeColor": "#363636"
   }
 ]
