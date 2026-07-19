@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "build": "astro build && node scripts/prune-orphan-images.mjs",
     "check": "astro check",
+    "verify": "npm run check && npm run build",
     "preview": "astro preview",
     "deploy": "npm run build && npx wrangler pages deploy --branch main"
   },
