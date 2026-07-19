@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// A quiet index of the software Yunus builds alongside the photography. This is
+// the single page every app links back to ("Made by Yunus Andreasson"), so the
+// apps themselves stay uncluttered — the full list lives here, not in each app.
+// CollectionPage whose author is the canonical Person defined in BaseLayout.
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Projects — Yunus Andreasson',
+  url: 'https://andreassonphoto.com/projects',
+  author: { '@id': 'https://andreassonphoto.com/#person' },
+};
+
+// One entry per project. `external` names appear as the visible link text; the
+// note is the same quiet italic register as the contact links.
+const projects = [
+  { name: 'islam.se', url: 'https://islam.se', desc: 'Prayer times and Islamic reading, in Swedish' },
+  { name: 'open-arabic', url: 'https://openarabic.io', desc: 'A place to learn to read Arabic' },
+  { name: 'al-ibadah', url: 'https://al-ibadah.com', desc: 'Islamic texts to read, in Swedish' },
+  { name: 'zuhd.news', url: 'https://zuhd.news', desc: 'World news, kept brief and calm' },
+  { name: 'qamar360', url: 'https://qamar360.com', desc: 'A companion for daily prayers' },
+  { name: 'edenmind', url: 'https://edenmind.com', desc: 'Flashcards you review out loud' },
+  { name: 'mygjakova', url: 'https://mygjakova.com', desc: 'A small guide to Gjakova, Kosovo' },
+];
+---
+
+<BaseLayout title="Andrèasson Photo — Projects" description="Software Yunus Andreasson builds alongside the photography">
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(collectionSchema)} slot="head" />
+  <div class="page-content">
+    <p class="invocation">
+      Alongside the photography, a handful of small, quiet apps —<br>
+      mostly for reading, remembering, and prayer.
+    </p>
+
+    <section class="also-building" aria-labelledby="projects-heading">
+      <h2 id="projects-heading" class="section-label">Projects</h2>
+      <ul class="project-list">
+        {projects.map((project) => (
+          <li>
+            <a href={project.url} rel="noopener noreferrer" target="_blank">{project.name}</a>
+            <span class="project-desc">{project.desc}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
