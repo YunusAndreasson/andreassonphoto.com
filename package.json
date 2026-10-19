@@ -11,12 +11,12 @@
     "deploy": "npm run build && npx wrangler pages deploy --branch main"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.3",
-    "astro": "^6.4.7"
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.0"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.9",
+    "@astrojs/check": "^0.9.10",
     "typescript": "^6.0.3",
-    "wrangler": "^4.100.0"
+    "wrangler": "^4.151.1"
   }
 }
