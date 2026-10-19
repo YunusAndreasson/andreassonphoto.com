@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// The Sweden list, set as museum labels rather than a spreadsheet: every species
+// Yunus has seen in Sweden, in taxonomic order, grouped by family. The Förekomst
+// code that came with the list is kept as `regular` — so the page can quietly
+// mark which of these were the rarities rather than the residents.
+const species = (await getCollection('birds'))
+  .map((entry) => entry.data)
+  .sort((a, b) => a.order - b.order);
+
+const total = species.length;
+const rarities = species.filter((b) => !b.regular).length;
+
+// Families in order of first appearance; species keep their list order within.
+const groups: { name: string; birds: typeof species; rare: number }[] = [];
+for (const bird of species) {
+  let group = groups.find((g) => g.name === bird.group);
+  if (!group) {
+    group = { name: bird.group, birds: [], rare: 0 };
+    groups.push(group);
+  }
+  group.birds.push(bird);
+  if (!bird.regular) group.rare += 1;
+}
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Birds seen in Sweden — Yunus Andreasson',
+  url: 'https://andreassonphoto.com/birds',
+  description: `The ${total} bird species Yunus Andreasson has seen in Sweden, in taxonomic order.`,
+  author: { '@id': 'https://andreassonphoto.com/#person' },
+};
+---
+
+<BaseLayout
+  title="Andrèasson Photo — Birds Seen in Sweden"
+  description={`${total} bird species seen in Sweden, kept in taxonomic order — ${rarities} of them rarities or vagrants.`}
+>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(collectionSchema)} slot="head" />
+  <main class="page-content">
+    <h1 class="sr-only">Birds seen in Sweden</h1>
+    <p class="invocation">
+      Every bird I have seen in Sweden.<br>
+      Most of them heard before they were seen,<br>
+      and gone before the camera was up &mdash;<br>
+      so they are kept here instead, as a list.
+    </p>
+
+    <section class="bird-tally" aria-label="Tally">
+      <div class="bird-tally-cell">
+        <span class="bird-tally-figure">{total}</span>
+        <span class="bird-tally-caption">Seen in Sweden</span>
+      </div>
+      <div class="bird-tally-cell">
+        <span class="bird-tally-figure">{groups.length}</span>
+        <span class="bird-tally-caption">Families</span>
+      </div>
+      <div class="bird-tally-cell">
+        <span class="bird-tally-figure">{rarities}</span>
+        <span class="bird-tally-caption">Rarities &amp; vagrants</span>
+      </div>
+    </section>
+
+    <div class="bird-toggle">
+      <label class="bird-toggle-label" for="rarities-only">
+        <input type="checkbox" id="rarities-only" class="sr-only" />
+        <span class="bird-toggle-dot" aria-hidden="true"></span>
+        <span>Show only the {rarities} rarities</span>
+      </label>
+      <p class="bird-legend">A rarity or vagrant is a bird that turns up in Sweden, rather than one that lives here.</p>
+    </div>
+
+    <div class="bird-ledger">
+      {groups.map((group) => (
+        <section class="bird-group">
+          <h2 class="section-label">
+            {group.name}
+            <span class="bird-group-count">
+              <span class="bird-count-all">{group.birds.length}<span class="sr-only"> species</span></span>
+              <span class="bird-count-rare">{group.rare}<span class="sr-only"> rarities</span></span>
+            </span>
+          </h2>
+          <ul class="bird-list">
+            {group.birds.map((bird) => (
+              <li class:list={['bird', { 'is-rare': !bird.regular }]}>
+                <span class="bird-sv">{bird.sv}{!bird.regular && <span class="sr-only"> (a rarity)</span>}</span>
+                <span class="bird-meta">{bird.en}<i>{bird.la}</i></span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+
+    <p class="bird-source">
+      Swedish names and taxonomic order follow the Swedish list. Rarities are marked with an open circle.
+    </p>
+  </main>
+</BaseLayout>

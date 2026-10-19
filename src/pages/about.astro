@@ -14,7 +14,8 @@ const profilePageSchema = {
 
 <BaseLayout title="Andrèasson Photo — Words" description="Finding beauty in what at first glance slipped quietly by">
   <script type="application/ld+json" is:inline set:html={JSON.stringify(profilePageSchema)} slot="head" />
-  <div class="page-content">
+  <main class="page-content">
+    <h1 class="sr-only">Words</h1>
     <p class="invocation">
       In the name of God,<br>
       the Most Gracious, the Most Merciful.
@@ -47,5 +48,5 @@ const profilePageSchema = {
     <p class="about-signature">
       Jonas Yu&#x0304;nus Andr&egrave;asson
     </p>
-  </div>
+  </main>
 </BaseLayout>

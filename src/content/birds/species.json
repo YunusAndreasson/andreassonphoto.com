@@ -1,0 +1,3142 @@
+[
+  {
+    "id": "anser-indicus",
+    "order": 1,
+    "sv": "Stripgås",
+    "en": "Bar-headed Goose",
+    "la": "Anser indicus",
+    "group": "Wildfowl",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "branta-bernicla",
+    "order": 2,
+    "sv": "Prutgås",
+    "en": "Brant Goose",
+    "la": "Branta bernicla",
+    "group": "Wildfowl",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "branta-ruficollis",
+    "order": 3,
+    "sv": "Rödhalsad gås",
+    "en": "Red-breasted Goose",
+    "la": "Branta ruficollis",
+    "group": "Wildfowl",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "branta-canadensis",
+    "order": 4,
+    "sv": "Kanadagås",
+    "en": "Canada Goose",
+    "la": "Branta canadensis",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "branta-leucopsis",
+    "order": 5,
+    "sv": "Vitkindad gås",
+    "en": "Barnacle Goose",
+    "la": "Branta leucopsis",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "anser-anser",
+    "order": 6,
+    "sv": "Grågås",
+    "en": "Greylag Goose",
+    "la": "Anser anser",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "anser-fabalis",
+    "order": 7,
+    "sv": "Sädgås",
+    "en": "Bean Goose",
+    "la": "Anser fabalis",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "anser-brachyrhynchus",
+    "order": 8,
+    "sv": "Spetsbergsgås",
+    "en": "Pink-footed Goose",
+    "la": "Anser brachyrhynchus",
+    "group": "Wildfowl",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "anser-albifrons",
+    "order": 9,
+    "sv": "Bläsgås",
+    "en": "Greater White-fronted Goose",
+    "la": "Anser albifrons",
+    "group": "Wildfowl",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "anser-erythropus",
+    "order": 10,
+    "sv": "Fjällgås",
+    "en": "Lesser White-fronted Goose",
+    "la": "Anser erythropus",
+    "group": "Wildfowl",
+    "status": "!",
+    "regular": false
+  },
+  {
+    "id": "cygnus-olor",
+    "order": 11,
+    "sv": "Knölsvan",
+    "en": "Mute Swan",
+    "la": "Cygnus olor",
+    "group": "Wildfowl",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "cygnus-columbianus",
+    "order": 12,
+    "sv": "Mindre sångsvan",
+    "en": "Tundra Swan",
+    "la": "Cygnus columbianus",
+    "group": "Wildfowl",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "cygnus-cygnus",
+    "order": 13,
+    "sv": "Sångsvan",
+    "en": "Whooper Swan",
+    "la": "Cygnus cygnus",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "alopochen-aegyptiaca",
+    "order": 14,
+    "sv": "Nilgås",
+    "en": "Egyptian Goose",
+    "la": "Alopochen aegyptiaca",
+    "group": "Wildfowl",
+    "status": "C",
+    "regular": true
+  },
+  {
+    "id": "aix-galericulata",
+    "order": 15,
+    "sv": "Mandarinand",
+    "en": "Mandarin Duck",
+    "la": "Aix galericulata",
+    "group": "Wildfowl",
+    "status": "C",
+    "regular": true
+  },
+  {
+    "id": "tadorna-ferruginea",
+    "order": 16,
+    "sv": "Rostand",
+    "en": "Ruddy Shelduck",
+    "la": "Tadorna ferruginea",
+    "group": "Wildfowl",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "tadorna-tadorna",
+    "order": 17,
+    "sv": "Gravand",
+    "en": "Common Shelduck",
+    "la": "Tadorna tadorna",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "mareca-penelope",
+    "order": 18,
+    "sv": "Bläsand",
+    "en": "Eurasian Wigeon",
+    "la": "Mareca penelope",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "mareca-americana",
+    "order": 19,
+    "sv": "Amerikansk bläsand",
+    "en": "American Wigeon",
+    "la": "Mareca americana",
+    "group": "Wildfowl",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "mareca-strepera",
+    "order": 20,
+    "sv": "Snatterand",
+    "en": "Gadwall",
+    "la": "Mareca strepera",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "anas-crecca",
+    "order": 21,
+    "sv": "Kricka",
+    "en": "Eurasian Teal",
+    "la": "Anas crecca",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "anas-platyrhynchos",
+    "order": 22,
+    "sv": "Gräsand",
+    "en": "Mallard",
+    "la": "Anas platyrhynchos",
+    "group": "Wildfowl",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "anas-acuta",
+    "order": 23,
+    "sv": "Stjärtand",
+    "en": "Northern Pintail",
+    "la": "Anas acuta",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "spatula-querquedula",
+    "order": 24,
+    "sv": "Årta",
+    "en": "Garganey",
+    "la": "Spatula querquedula",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "spatula-clypeata",
+    "order": 25,
+    "sv": "Skedand",
+    "en": "Northern Shoveler",
+    "la": "Spatula clypeata",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "aythya-ferina",
+    "order": 26,
+    "sv": "Brunand",
+    "en": "Common Pochard",
+    "la": "Aythya ferina",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "aythya-collaris",
+    "order": 27,
+    "sv": "Ringand",
+    "en": "Ring-necked Duck",
+    "la": "Aythya collaris",
+    "group": "Wildfowl",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "aythya-fuligula",
+    "order": 28,
+    "sv": "Vigg",
+    "en": "Tufted Duck",
+    "la": "Aythya fuligula",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "aythya-marila",
+    "order": 29,
+    "sv": "Bergand",
+    "en": "Greater Scaup",
+    "la": "Aythya marila",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "somateria-mollissima",
+    "order": 30,
+    "sv": "Ejder",
+    "en": "Common Eider",
+    "la": "Somateria mollissima",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "somateria-spectabilis",
+    "order": 31,
+    "sv": "Praktejder",
+    "en": "King Eider",
+    "la": "Somateria spectabilis",
+    "group": "Wildfowl",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "polysticta-stelleri",
+    "order": 32,
+    "sv": "Alförrädare",
+    "en": "Steller's Eider",
+    "la": "Polysticta stelleri",
+    "group": "Wildfowl",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "clangula-hyemalis",
+    "order": 33,
+    "sv": "Alfågel",
+    "en": "Long-tailed Duck",
+    "la": "Clangula hyemalis",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "melanitta-nigra",
+    "order": 34,
+    "sv": "Sjöorre",
+    "en": "Common Scoter",
+    "la": "Melanitta nigra",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "melanitta-fusca",
+    "order": 35,
+    "sv": "Svärta",
+    "en": "Velvet Scoter",
+    "la": "Melanitta fusca",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "melanitta-perspicillata",
+    "order": 36,
+    "sv": "Vitnackad svärta",
+    "en": "Surf Scoter",
+    "la": "Melanitta perspicillata",
+    "group": "Wildfowl",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "bucephala-clangula",
+    "order": 37,
+    "sv": "Knipa",
+    "en": "Common Goldeneye",
+    "la": "Bucephala clangula",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "mergellus-albellus",
+    "order": 38,
+    "sv": "Salskrake",
+    "en": "Smew",
+    "la": "Mergellus albellus",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "mergus-serrator",
+    "order": 39,
+    "sv": "Småskrake",
+    "en": "Red-breasted Merganser",
+    "la": "Mergus serrator",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "mergus-merganser",
+    "order": 40,
+    "sv": "Storskrake",
+    "en": "Common Merganser",
+    "la": "Mergus merganser",
+    "group": "Wildfowl",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "oxyura-jamaicensis",
+    "order": 41,
+    "sv": "Amerikansk kopparand",
+    "en": "Ruddy Duck",
+    "la": "Oxyura jamaicensis",
+    "group": "Wildfowl",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "netta-rufina",
+    "order": 42,
+    "sv": "Rödhuvad dykand",
+    "en": "Red-crested Pochard",
+    "la": "Netta rufina",
+    "group": "Wildfowl",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "lagopus-lagopus",
+    "order": 43,
+    "sv": "Dalripa",
+    "en": "Willow Ptarmigan",
+    "la": "Lagopus lagopus",
+    "group": "Gamebirds",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "lyrurus-tetrix",
+    "order": 44,
+    "sv": "Orre",
+    "en": "Black Grouse",
+    "la": "Lyrurus tetrix",
+    "group": "Gamebirds",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "tetrao-urogallus",
+    "order": 45,
+    "sv": "Tjäder",
+    "en": "Western Capercaillie",
+    "la": "Tetrao urogallus",
+    "group": "Gamebirds",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "perdix-perdix",
+    "order": 46,
+    "sv": "Rapphöna",
+    "en": "Grey Partridge",
+    "la": "Perdix perdix",
+    "group": "Gamebirds",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "coturnix-coturnix",
+    "order": 47,
+    "sv": "Vaktel",
+    "en": "Common Quail",
+    "la": "Coturnix coturnix",
+    "group": "Gamebirds",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "phasianus-colchicus",
+    "order": 48,
+    "sv": "Fasan",
+    "en": "Common Pheasant",
+    "la": "Phasianus colchicus",
+    "group": "Gamebirds",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "gavia-stellata",
+    "order": 49,
+    "sv": "Smålom",
+    "en": "Red-throated Loon",
+    "la": "Gavia stellata",
+    "group": "Divers",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "gavia-arctica",
+    "order": 50,
+    "sv": "Storlom",
+    "en": "Black-throated Loon",
+    "la": "Gavia arctica",
+    "group": "Divers",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "gavia-immer",
+    "order": 51,
+    "sv": "Svartnäbbad islom",
+    "en": "Common Loon",
+    "la": "Gavia immer",
+    "group": "Divers",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "tachybaptus-ruficollis",
+    "order": 52,
+    "sv": "Smådopping",
+    "en": "Little Grebe",
+    "la": "Tachybaptus ruficollis",
+    "group": "Grebes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "podiceps-cristatus",
+    "order": 53,
+    "sv": "Skäggdopping",
+    "en": "Great Crested Grebe",
+    "la": "Podiceps cristatus",
+    "group": "Grebes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "podiceps-grisegena",
+    "order": 54,
+    "sv": "Gråhakedopping",
+    "en": "Red-necked Grebe",
+    "la": "Podiceps grisegena",
+    "group": "Grebes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "podiceps-auritus",
+    "order": 55,
+    "sv": "Svarthakedopping",
+    "en": "Horned Grebe",
+    "la": "Podiceps auritus",
+    "group": "Grebes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "podiceps-nigricollis",
+    "order": 56,
+    "sv": "Svarthalsad dopping",
+    "en": "Black-necked Grebe",
+    "la": "Podiceps nigricollis",
+    "group": "Grebes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "fulmarus-glacialis",
+    "order": 57,
+    "sv": "Stormfågel",
+    "en": "Northern Fulmar",
+    "la": "Fulmarus glacialis",
+    "group": "Petrels & Albatrosses",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "ardenna-grisea",
+    "order": 58,
+    "sv": "Grålira",
+    "en": "Sooty Shearwater",
+    "la": "Ardenna grisea",
+    "group": "Petrels & Albatrosses",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "thalassarche-melanophris",
+    "order": 59,
+    "sv": "Svartbrynad albatross",
+    "en": "Black-browed Albatross",
+    "la": "Thalassarche melanophris",
+    "group": "Petrels & Albatrosses",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "morus-bassanus",
+    "order": 60,
+    "sv": "Havssula",
+    "en": "Northern Gannet",
+    "la": "Morus bassanus",
+    "group": "Gannets & Cormorants",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "phalacrocorax-carbo",
+    "order": 61,
+    "sv": "Storskarv",
+    "en": "Great Cormorant",
+    "la": "Phalacrocorax carbo",
+    "group": "Gannets & Cormorants",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "phalacrocorax-aristotelis",
+    "order": 62,
+    "sv": "Toppskarv",
+    "en": "European Shag",
+    "la": "Phalacrocorax aristotelis",
+    "group": "Gannets & Cormorants",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "plegadis-falcinellus",
+    "order": 63,
+    "sv": "Bronsibis",
+    "en": "Glossy Ibis",
+    "la": "Plegadis falcinellus",
+    "group": "Herons, Storks & Ibises",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "neophron-percnopterus",
+    "order": 64,
+    "sv": "Smutsgam",
+    "en": "Egyptian Vulture",
+    "la": "Neophron percnopterus",
+    "group": "Birds of Prey",
+    "status": "T",
+    "regular": false
+  },
+  {
+    "id": "botaurus-stellaris",
+    "order": 65,
+    "sv": "Rördrom",
+    "en": "Eurasian Bittern",
+    "la": "Botaurus stellaris",
+    "group": "Herons, Storks & Ibises",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "egretta-garzetta",
+    "order": 66,
+    "sv": "Silkeshäger",
+    "en": "Little Egret",
+    "la": "Egretta garzetta",
+    "group": "Herons, Storks & Ibises",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "ardea-purpurea",
+    "order": 67,
+    "sv": "Purpurhäger",
+    "en": "Purple Heron",
+    "la": "Ardea purpurea",
+    "group": "Herons, Storks & Ibises",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "ardea-alba",
+    "order": 68,
+    "sv": "Ägretthäger",
+    "en": "Great Egret",
+    "la": "Ardea alba",
+    "group": "Herons, Storks & Ibises",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "ardea-cinerea",
+    "order": 69,
+    "sv": "Gråhäger",
+    "en": "Grey Heron",
+    "la": "Ardea cinerea",
+    "group": "Herons, Storks & Ibises",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "ciconia-nigra",
+    "order": 70,
+    "sv": "Svart stork",
+    "en": "Black Stork",
+    "la": "Ciconia nigra",
+    "group": "Herons, Storks & Ibises",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "ciconia-ciconia",
+    "order": 71,
+    "sv": "Vit stork",
+    "en": "White Stork",
+    "la": "Ciconia ciconia",
+    "group": "Herons, Storks & Ibises",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "grus-grus",
+    "order": 72,
+    "sv": "Trana",
+    "en": "Common Crane",
+    "la": "Grus grus",
+    "group": "Cranes & Rails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "milvus-migrans",
+    "order": 73,
+    "sv": "Brun glada",
+    "en": "Black Kite",
+    "la": "Milvus migrans",
+    "group": "Birds of Prey",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "milvus-milvus",
+    "order": 74,
+    "sv": "Röd glada",
+    "en": "Red Kite",
+    "la": "Milvus milvus",
+    "group": "Birds of Prey",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "circus-aeruginosus",
+    "order": 75,
+    "sv": "Brun kärrhök",
+    "en": "Western Marsh Harrier",
+    "la": "Circus aeruginosus",
+    "group": "Birds of Prey",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "circus-cyaneus",
+    "order": 76,
+    "sv": "Blå kärrhök",
+    "en": "Hen Harrier",
+    "la": "Circus cyaneus",
+    "group": "Birds of Prey",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "circus-pygargus",
+    "order": 77,
+    "sv": "Ängshök",
+    "en": "Montagu's Harrier",
+    "la": "Circus pygargus",
+    "group": "Birds of Prey",
+    "status": "h",
+    "regular": true
+  },
+  {
+    "id": "accipiter-gentilis",
+    "order": 78,
+    "sv": "Duvhök",
+    "en": "Northern Goshawk",
+    "la": "Accipiter gentilis",
+    "group": "Birds of Prey",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "accipiter-nisus",
+    "order": 79,
+    "sv": "Sparvhök",
+    "en": "Eurasian Sparrowhawk",
+    "la": "Accipiter nisus",
+    "group": "Birds of Prey",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "pernis-apivorus",
+    "order": 80,
+    "sv": "Bivråk",
+    "en": "European Honey Buzzard",
+    "la": "Pernis apivorus",
+    "group": "Birds of Prey",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "buteo-buteo",
+    "order": 81,
+    "sv": "Ormvråk",
+    "en": "Common Buzzard",
+    "la": "Buteo buteo",
+    "group": "Birds of Prey",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "buteo-lagopus",
+    "order": 82,
+    "sv": "Fjällvråk",
+    "en": "Rough-legged Buzzard",
+    "la": "Buteo lagopus",
+    "group": "Birds of Prey",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "haliaeetus-albicilla",
+    "order": 83,
+    "sv": "Havsörn",
+    "en": "White-tailed Eagle",
+    "la": "Haliaeetus albicilla",
+    "group": "Birds of Prey",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "aquila-chrysaetos",
+    "order": 84,
+    "sv": "Kungsörn",
+    "en": "Golden Eagle",
+    "la": "Aquila chrysaetos",
+    "group": "Birds of Prey",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "clanga-clanga",
+    "order": 85,
+    "sv": "Större skrikörn",
+    "en": "Greater Spotted Eagle",
+    "la": "Clanga clanga",
+    "group": "Birds of Prey",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "pandion-haliaetus",
+    "order": 86,
+    "sv": "Fiskgjuse",
+    "en": "Western Osprey",
+    "la": "Pandion haliaetus",
+    "group": "Birds of Prey",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "falco-tinnunculus",
+    "order": 87,
+    "sv": "Tornfalk",
+    "en": "Common Kestrel",
+    "la": "Falco tinnunculus",
+    "group": "Falcons",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "falco-vespertinus",
+    "order": 88,
+    "sv": "Aftonfalk",
+    "en": "Red-footed Falcon",
+    "la": "Falco vespertinus",
+    "group": "Falcons",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "falco-columbarius",
+    "order": 89,
+    "sv": "Stenfalk",
+    "en": "Merlin",
+    "la": "Falco columbarius",
+    "group": "Falcons",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "falco-subbuteo",
+    "order": 90,
+    "sv": "Lärkfalk",
+    "en": "Eurasian Hobby",
+    "la": "Falco subbuteo",
+    "group": "Falcons",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "falco-peregrinus",
+    "order": 91,
+    "sv": "Pilgrimsfalk",
+    "en": "Peregrine Falcon",
+    "la": "Falco peregrinus",
+    "group": "Falcons",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "rallus-aquaticus",
+    "order": 92,
+    "sv": "Vattenrall",
+    "en": "Water Rail",
+    "la": "Rallus aquaticus",
+    "group": "Cranes & Rails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "porzana-porzana",
+    "order": 93,
+    "sv": "Småfläckig sumphöna",
+    "en": "Spotted Crake",
+    "la": "Porzana porzana",
+    "group": "Cranes & Rails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "crex-crex",
+    "order": 94,
+    "sv": "Kornknarr",
+    "en": "Corn Crake",
+    "la": "Crex crex",
+    "group": "Cranes & Rails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "gallinula-chloropus",
+    "order": 95,
+    "sv": "Rörhöna",
+    "en": "Common Moorhen",
+    "la": "Gallinula chloropus",
+    "group": "Cranes & Rails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "fulica-atra",
+    "order": 96,
+    "sv": "Sothöna",
+    "en": "Eurasian Coot",
+    "la": "Fulica atra",
+    "group": "Cranes & Rails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "haematopus-ostralegus",
+    "order": 97,
+    "sv": "Strandskata",
+    "en": "Eurasian Oystercatcher",
+    "la": "Haematopus ostralegus",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "recurvirostra-avosetta",
+    "order": 98,
+    "sv": "Skärfläcka",
+    "en": "Pied Avocet",
+    "la": "Recurvirostra avosetta",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "charadrius-dubius",
+    "order": 99,
+    "sv": "Mindre strandpipare",
+    "en": "Little Ringed Plover",
+    "la": "Charadrius dubius",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "charadrius-hiaticula",
+    "order": 100,
+    "sv": "Större strandpipare",
+    "en": "Common Ringed Plover",
+    "la": "Charadrius hiaticula",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "charadrius-alexandrinus",
+    "order": 101,
+    "sv": "Svartbent strandpipare",
+    "en": "Kentish Plover",
+    "la": "Charadrius alexandrinus",
+    "group": "Waders",
+    "status": "h",
+    "regular": true
+  },
+  {
+    "id": "charadrius-morinellus",
+    "order": 102,
+    "sv": "Fjällpipare",
+    "en": "Eurasian Dotterel",
+    "la": "Charadrius morinellus",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "pluvialis-apricaria",
+    "order": 103,
+    "sv": "Ljungpipare",
+    "en": "European Golden Plover",
+    "la": "Pluvialis apricaria",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "pluvialis-squatarola",
+    "order": 104,
+    "sv": "Kustpipare",
+    "en": "Grey Plover",
+    "la": "Pluvialis squatarola",
+    "group": "Waders",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "vanellus-vanellus",
+    "order": 105,
+    "sv": "Tofsvipa",
+    "en": "Northern Lapwing",
+    "la": "Vanellus vanellus",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "calidris-canutus",
+    "order": 106,
+    "sv": "Kustsnäppa",
+    "en": "Red Knot",
+    "la": "Calidris canutus",
+    "group": "Waders",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "calidris-alba",
+    "order": 107,
+    "sv": "Sandlöpare",
+    "en": "Sanderling",
+    "la": "Calidris alba",
+    "group": "Waders",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "calidris-minuta",
+    "order": 108,
+    "sv": "Småsnäppa",
+    "en": "Little Stint",
+    "la": "Calidris minuta",
+    "group": "Waders",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "calidris-temminckii",
+    "order": 109,
+    "sv": "Mosnäppa",
+    "en": "Temminck's Stint",
+    "la": "Calidris temminckii",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "calidris-melanotos",
+    "order": 110,
+    "sv": "Tuvsnäppa",
+    "en": "Pectoral Sandpiper",
+    "la": "Calidris melanotos",
+    "group": "Waders",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "calidris-ferruginea",
+    "order": 111,
+    "sv": "Spovsnäppa",
+    "en": "Curlew Sandpiper",
+    "la": "Calidris ferruginea",
+    "group": "Waders",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "calidris-acuminata",
+    "order": 112,
+    "sv": "Spetsstjärtad snäppa",
+    "en": "Sharp-tailed Sandpiper",
+    "la": "Calidris acuminata",
+    "group": "Waders",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "calidris-maritima",
+    "order": 113,
+    "sv": "Skärsnäppa",
+    "en": "Purple Sandpiper",
+    "la": "Calidris maritima",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "calidris-alpina",
+    "order": 114,
+    "sv": "Kärrsnäppa",
+    "en": "Dunlin",
+    "la": "Calidris alpina",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "calidris-falcinellus",
+    "order": 115,
+    "sv": "Myrsnäppa",
+    "en": "Broad-billed Sandpiper",
+    "la": "Calidris falcinellus",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "calidris-pugnax",
+    "order": 116,
+    "sv": "Brushane",
+    "en": "Ruff",
+    "la": "Calidris pugnax",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "limnodromus-scolopaceus",
+    "order": 117,
+    "sv": "Större beckasinsnäppa",
+    "en": "Long-billed Dowitcher",
+    "la": "Limnodromus scolopaceus",
+    "group": "Waders",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "lymnocryptes-minimus",
+    "order": 118,
+    "sv": "Dvärgbeckasin",
+    "en": "Jack Snipe",
+    "la": "Lymnocryptes minimus",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "gallinago-gallinago",
+    "order": 119,
+    "sv": "Enkelbeckasin",
+    "en": "Common Snipe",
+    "la": "Gallinago gallinago",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "gallinago-media",
+    "order": 120,
+    "sv": "Dubbelbeckasin",
+    "en": "Great Snipe",
+    "la": "Gallinago media",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "scolopax-rusticola",
+    "order": 121,
+    "sv": "Morkulla",
+    "en": "Eurasian Woodcock",
+    "la": "Scolopax rusticola",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "limosa-limosa",
+    "order": 122,
+    "sv": "Rödspov",
+    "en": "Black-tailed Godwit",
+    "la": "Limosa limosa",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "limosa-lapponica",
+    "order": 123,
+    "sv": "Myrspov",
+    "en": "Bar-tailed Godwit",
+    "la": "Limosa lapponica",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "numenius-phaeopus",
+    "order": 124,
+    "sv": "Småspov",
+    "en": "Whimbrel",
+    "la": "Numenius phaeopus",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "numenius-arquata",
+    "order": 125,
+    "sv": "Storspov",
+    "en": "Eurasian Curlew",
+    "la": "Numenius arquata",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "tringa-erythropus",
+    "order": 126,
+    "sv": "Svartsnäppa",
+    "en": "Spotted Redshank",
+    "la": "Tringa erythropus",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "tringa-totanus",
+    "order": 127,
+    "sv": "Rödbena",
+    "en": "Common Redshank",
+    "la": "Tringa totanus",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "tringa-stagnatilis",
+    "order": 128,
+    "sv": "Dammsnäppa",
+    "en": "Marsh Sandpiper",
+    "la": "Tringa stagnatilis",
+    "group": "Waders",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "tringa-nebularia",
+    "order": 129,
+    "sv": "Gluttsnäppa",
+    "en": "Common Greenshank",
+    "la": "Tringa nebularia",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "tringa-ochropus",
+    "order": 130,
+    "sv": "Skogssnäppa",
+    "en": "Green Sandpiper",
+    "la": "Tringa ochropus",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "tringa-glareola",
+    "order": 131,
+    "sv": "Grönbena",
+    "en": "Wood Sandpiper",
+    "la": "Tringa glareola",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "actitis-hypoleucos",
+    "order": 132,
+    "sv": "Drillsnäppa",
+    "en": "Common Sandpiper",
+    "la": "Actitis hypoleucos",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "arenaria-interpres",
+    "order": 133,
+    "sv": "Roskarl",
+    "en": "Ruddy Turnstone",
+    "la": "Arenaria interpres",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "glareola-maldivarum",
+    "order": 134,
+    "sv": "Orientvadarsvala",
+    "en": "Oriental Pratincole",
+    "la": "Glareola maldivarum",
+    "group": "Waders",
+    "status": "T",
+    "regular": false
+  },
+  {
+    "id": "calidris-subruficollis",
+    "order": 135,
+    "sv": "Prärielöpare",
+    "en": "Buff-breasted Sandpiper",
+    "la": "Calidris subruficollis",
+    "group": "Waders",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "phalaropus-lobatus",
+    "order": 136,
+    "sv": "Smalnäbbad simsnäppa",
+    "en": "Red-necked Phalarope",
+    "la": "Phalaropus lobatus",
+    "group": "Waders",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "phalaropus-fulicarius",
+    "order": 137,
+    "sv": "Brednäbbad simsnäppa",
+    "en": "Red Phalarope",
+    "la": "Phalaropus fulicarius",
+    "group": "Waders",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "pluvialis-fulva",
+    "order": 138,
+    "sv": "Sibirisk tundrapipare",
+    "en": "Pacific Golden Plover",
+    "la": "Pluvialis fulva",
+    "group": "Waders",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "stercorarius-pomarinus",
+    "order": 139,
+    "sv": "Bredstjärtad labb",
+    "en": "Pomarine Jaeger",
+    "la": "Stercorarius pomarinus",
+    "group": "Skuas",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "stercorarius-parasiticus",
+    "order": 140,
+    "sv": "Kustlabb",
+    "en": "Parasitic Jaeger",
+    "la": "Stercorarius parasiticus",
+    "group": "Skuas",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "stercorarius-longicaudus",
+    "order": 141,
+    "sv": "Fjällabb",
+    "en": "Long-tailed Jaeger",
+    "la": "Stercorarius longicaudus",
+    "group": "Skuas",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "stercorarius-skua",
+    "order": 142,
+    "sv": "Storlabb",
+    "en": "Great Skua",
+    "la": "Stercorarius skua",
+    "group": "Skuas",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "ichthyaetus-melanocephalus",
+    "order": 143,
+    "sv": "Svarthuvad mås",
+    "en": "Mediterranean Gull",
+    "la": "Ichthyaetus melanocephalus",
+    "group": "Gulls & Terns",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "hydrocoloeus-minutus",
+    "order": 144,
+    "sv": "Dvärgmås",
+    "en": "Little Gull",
+    "la": "Hydrocoloeus minutus",
+    "group": "Gulls & Terns",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "xema-sabini",
+    "order": 145,
+    "sv": "Tärnmås",
+    "en": "Sabine's Gull",
+    "la": "Xema sabini",
+    "group": "Gulls & Terns",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "rissa-tridactyla",
+    "order": 146,
+    "sv": "Tretåig mås",
+    "en": "Black-legged Kittiwake",
+    "la": "Rissa tridactyla",
+    "group": "Gulls & Terns",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "rhodostethia-rosea",
+    "order": 147,
+    "sv": "Rosenmås",
+    "en": "Ross's Gull",
+    "la": "Rhodostethia rosea",
+    "group": "Gulls & Terns",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "larus-delawarensis",
+    "order": 148,
+    "sv": "Ringnäbbad mås",
+    "en": "Ring-billed Gull",
+    "la": "Larus delawarensis",
+    "group": "Gulls & Terns",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "chroicocephalus-philadelphia",
+    "order": 149,
+    "sv": "Trädmås",
+    "en": "Bonaparte's Gull",
+    "la": "Chroicocephalus philadelphia",
+    "group": "Gulls & Terns",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "chroicocephalus-ridibundus",
+    "order": 150,
+    "sv": "Skrattmås",
+    "en": "Black-headed Gull",
+    "la": "Chroicocephalus ridibundus",
+    "group": "Gulls & Terns",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "larus-canus",
+    "order": 151,
+    "sv": "Fiskmås",
+    "en": "Mew Gull",
+    "la": "Larus canus",
+    "group": "Gulls & Terns",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "larus-fuscus",
+    "order": 152,
+    "sv": "Silltrut",
+    "en": "Lesser Black-backed Gull",
+    "la": "Larus fuscus",
+    "group": "Gulls & Terns",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "larus-argentatus",
+    "order": 153,
+    "sv": "Gråtrut",
+    "en": "European Herring Gull",
+    "la": "Larus argentatus",
+    "group": "Gulls & Terns",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "larus-michahellis",
+    "order": 154,
+    "sv": "Medelhavstrut",
+    "en": "Yellow-legged Gull",
+    "la": "Larus michahellis",
+    "group": "Gulls & Terns",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "larus-glaucoides",
+    "order": 155,
+    "sv": "Vitvingad trut",
+    "en": "Iceland Gull",
+    "la": "Larus glaucoides",
+    "group": "Gulls & Terns",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "larus-hyperboreus",
+    "order": 156,
+    "sv": "Vittrut",
+    "en": "Glaucous Gull",
+    "la": "Larus hyperboreus",
+    "group": "Gulls & Terns",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "larus-marinus",
+    "order": 157,
+    "sv": "Havstrut",
+    "en": "Great Black-backed Gull",
+    "la": "Larus marinus",
+    "group": "Gulls & Terns",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "hydroprogne-caspia",
+    "order": 158,
+    "sv": "Skräntärna",
+    "en": "Caspian Tern",
+    "la": "Hydroprogne caspia",
+    "group": "Gulls & Terns",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "thalasseus-sandvicensis",
+    "order": 159,
+    "sv": "Kentsk tärna",
+    "en": "Sandwich Tern",
+    "la": "Thalasseus sandvicensis",
+    "group": "Gulls & Terns",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "sterna-hirundo",
+    "order": 160,
+    "sv": "Fisktärna",
+    "en": "Common Tern",
+    "la": "Sterna hirundo",
+    "group": "Gulls & Terns",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "sterna-paradisaea",
+    "order": 161,
+    "sv": "Silvertärna",
+    "en": "Arctic Tern",
+    "la": "Sterna paradisaea",
+    "group": "Gulls & Terns",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "sternula-albifrons",
+    "order": 162,
+    "sv": "Småtärna",
+    "en": "Little Tern",
+    "la": "Sternula albifrons",
+    "group": "Gulls & Terns",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "chlidonias-niger",
+    "order": 163,
+    "sv": "Svarttärna",
+    "en": "Black Tern",
+    "la": "Chlidonias niger",
+    "group": "Gulls & Terns",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "chlidonias-leucopterus",
+    "order": 164,
+    "sv": "Vitvingad tärna",
+    "en": "White-winged Tern",
+    "la": "Chlidonias leucopterus",
+    "group": "Gulls & Terns",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "uria-aalge",
+    "order": 165,
+    "sv": "Sillgrissla",
+    "en": "Common Murre",
+    "la": "Uria aalge",
+    "group": "Auks",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "alca-torda",
+    "order": 166,
+    "sv": "Tordmule",
+    "en": "Razorbill",
+    "la": "Alca torda",
+    "group": "Auks",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "cepphus-grylle",
+    "order": 167,
+    "sv": "Tobisgrissla",
+    "en": "Black Guillemot",
+    "la": "Cepphus grylle",
+    "group": "Auks",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "alle-alle",
+    "order": 168,
+    "sv": "Alkekung",
+    "en": "Little Auk",
+    "la": "Alle alle",
+    "group": "Auks",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "columba-livia",
+    "order": 169,
+    "sv": "Tamduva",
+    "en": "Rock Dove",
+    "la": "Columba livia",
+    "group": "Pigeons & Doves",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "columba-oenas",
+    "order": 170,
+    "sv": "Skogsduva",
+    "en": "Stock Dove",
+    "la": "Columba oenas",
+    "group": "Pigeons & Doves",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "columba-palumbus",
+    "order": 171,
+    "sv": "Ringduva",
+    "en": "Common Wood Pigeon",
+    "la": "Columba palumbus",
+    "group": "Pigeons & Doves",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "streptopelia-decaocto",
+    "order": 172,
+    "sv": "Turkduva",
+    "en": "Eurasian Collared Dove",
+    "la": "Streptopelia decaocto",
+    "group": "Pigeons & Doves",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "streptopelia-turtur",
+    "order": 173,
+    "sv": "Turturduva",
+    "en": "European Turtle Dove",
+    "la": "Streptopelia turtur",
+    "group": "Pigeons & Doves",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "cuculus-canorus",
+    "order": 174,
+    "sv": "Gök",
+    "en": "Common Cuckoo",
+    "la": "Cuculus canorus",
+    "group": "Cuckoos & Nightjars",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "caprimulgus-europaeus",
+    "order": 175,
+    "sv": "Nattskärra",
+    "en": "European Nightjar",
+    "la": "Caprimulgus europaeus",
+    "group": "Cuckoos & Nightjars",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "otus-scops",
+    "order": 176,
+    "sv": "Dvärguv",
+    "en": "Eurasian Scops Owl",
+    "la": "Otus scops",
+    "group": "Owls",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "bubo-bubo",
+    "order": 177,
+    "sv": "Berguv",
+    "en": "Eurasian Eagle-Owl",
+    "la": "Bubo bubo",
+    "group": "Owls",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "surnia-ulula",
+    "order": 178,
+    "sv": "Hökuggla",
+    "en": "Northern Hawk-Owl",
+    "la": "Surnia ulula",
+    "group": "Owls",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "glaucidium-passerinum",
+    "order": 179,
+    "sv": "Sparvuggla",
+    "en": "Eurasian Pygmy Owl",
+    "la": "Glaucidium passerinum",
+    "group": "Owls",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "strix-aluco",
+    "order": 180,
+    "sv": "Kattuggla",
+    "en": "Tawny Owl",
+    "la": "Strix aluco",
+    "group": "Owls",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "strix-uralensis",
+    "order": 181,
+    "sv": "Slaguggla",
+    "en": "Ural Owl",
+    "la": "Strix uralensis",
+    "group": "Owls",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "strix-nebulosa",
+    "order": 182,
+    "sv": "Lappuggla",
+    "en": "Great Grey Owl",
+    "la": "Strix nebulosa",
+    "group": "Owls",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "asio-otus",
+    "order": 183,
+    "sv": "Hornuggla",
+    "en": "Long-eared Owl",
+    "la": "Asio otus",
+    "group": "Owls",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "asio-flammeus",
+    "order": 184,
+    "sv": "Jorduggla",
+    "en": "Short-eared Owl",
+    "la": "Asio flammeus",
+    "group": "Owls",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "aegolius-funereus",
+    "order": 185,
+    "sv": "Pärluggla",
+    "en": "Boreal Owl",
+    "la": "Aegolius funereus",
+    "group": "Owls",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "apus-apus",
+    "order": 186,
+    "sv": "Tornseglare",
+    "en": "Common Swift",
+    "la": "Apus apus",
+    "group": "Swifts, Kingfishers & Rollers",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "alcedo-atthis",
+    "order": 187,
+    "sv": "Kungsfiskare",
+    "en": "Common Kingfisher",
+    "la": "Alcedo atthis",
+    "group": "Swifts, Kingfishers & Rollers",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "merops-apiaster",
+    "order": 188,
+    "sv": "Biätare",
+    "en": "European Bee-eater",
+    "la": "Merops apiaster",
+    "group": "Swifts, Kingfishers & Rollers",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "upupa-epops",
+    "order": 189,
+    "sv": "Härfågel",
+    "en": "Eurasian Hoopoe",
+    "la": "Upupa epops",
+    "group": "Swifts, Kingfishers & Rollers",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "coracias-garrulus",
+    "order": 190,
+    "sv": "Blåkråka",
+    "en": "European Roller",
+    "la": "Coracias garrulus",
+    "group": "Swifts, Kingfishers & Rollers",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "jynx-torquilla",
+    "order": 191,
+    "sv": "Göktyta",
+    "en": "Eurasian Wryneck",
+    "la": "Jynx torquilla",
+    "group": "Woodpeckers",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "picus-canus",
+    "order": 192,
+    "sv": "Gråspett",
+    "en": "Grey-headed Woodpecker",
+    "la": "Picus canus",
+    "group": "Woodpeckers",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "picus-viridis",
+    "order": 193,
+    "sv": "Gröngöling",
+    "en": "European Green Woodpecker",
+    "la": "Picus viridis",
+    "group": "Woodpeckers",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "dryocopus-martius",
+    "order": 194,
+    "sv": "Spillkråka",
+    "en": "Black Woodpecker",
+    "la": "Dryocopus martius",
+    "group": "Woodpeckers",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "dendrocopos-major",
+    "order": 195,
+    "sv": "Större hackspett",
+    "en": "Great Spotted Woodpecker",
+    "la": "Dendrocopos major",
+    "group": "Woodpeckers",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "dryobates-minor",
+    "order": 196,
+    "sv": "Mindre hackspett",
+    "en": "Lesser Spotted Woodpecker",
+    "la": "Dryobates minor",
+    "group": "Woodpeckers",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "picoides-tridactylus",
+    "order": 197,
+    "sv": "Tretåig hackspett",
+    "en": "Eurasian Three-toed Woodpecker",
+    "la": "Picoides tridactylus",
+    "group": "Woodpeckers",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "calandrella-brachydactyla",
+    "order": 198,
+    "sv": "Korttålärka",
+    "en": "Greater Short-toed Lark",
+    "la": "Calandrella brachydactyla",
+    "group": "Larks",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "galerida-cristata",
+    "order": 199,
+    "sv": "Tofslärka",
+    "en": "Crested Lark",
+    "la": "Galerida cristata",
+    "group": "Larks",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "lullula-arborea",
+    "order": 200,
+    "sv": "Trädlärka",
+    "en": "Woodlark",
+    "la": "Lullula arborea",
+    "group": "Larks",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "alauda-arvensis",
+    "order": 201,
+    "sv": "Sånglärka",
+    "en": "Eurasian Skylark",
+    "la": "Alauda arvensis",
+    "group": "Larks",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "eremophila-alpestris",
+    "order": 202,
+    "sv": "Berglärka",
+    "en": "Horned Lark",
+    "la": "Eremophila alpestris",
+    "group": "Larks",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "riparia-riparia",
+    "order": 203,
+    "sv": "Backsvala",
+    "en": "Sand Martin",
+    "la": "Riparia riparia",
+    "group": "Swallows & Martins",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "hirundo-rustica",
+    "order": 204,
+    "sv": "Ladusvala",
+    "en": "Barn Swallow",
+    "la": "Hirundo rustica",
+    "group": "Swallows & Martins",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "delichon-urbicum",
+    "order": 205,
+    "sv": "Hussvala",
+    "en": "Common House Martin",
+    "la": "Delichon urbicum",
+    "group": "Swallows & Martins",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "cecropis-daurica",
+    "order": 206,
+    "sv": "Rostgumpsvala",
+    "en": "Red-rumped Swallow",
+    "la": "Cecropis daurica",
+    "group": "Swallows & Martins",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "anthus-richardi",
+    "order": 207,
+    "sv": "Större piplärka",
+    "en": "Richard's Pipit",
+    "la": "Anthus richardi",
+    "group": "Pipits & Wagtails",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "anthus-godlewskii",
+    "order": 208,
+    "sv": "Mongolpiplärka",
+    "en": "Blyth's Pipit",
+    "la": "Anthus godlewskii",
+    "group": "Pipits & Wagtails",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "anthus-trivialis",
+    "order": 209,
+    "sv": "Trädpiplärka",
+    "en": "Tree Pipit",
+    "la": "Anthus trivialis",
+    "group": "Pipits & Wagtails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "anthus-campestris",
+    "order": 210,
+    "sv": "Fältpiplärka",
+    "en": "Tawny Pipit",
+    "la": "Anthus campestris",
+    "group": "Pipits & Wagtails",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "anthus-pratensis",
+    "order": 211,
+    "sv": "Ängspiplärka",
+    "en": "Meadow Pipit",
+    "la": "Anthus pratensis",
+    "group": "Pipits & Wagtails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "anthus-cervinus",
+    "order": 212,
+    "sv": "Rödstrupig piplärka",
+    "en": "Red-throated Pipit",
+    "la": "Anthus cervinus",
+    "group": "Pipits & Wagtails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "anthus-petrosus",
+    "order": 213,
+    "sv": "Skärpiplärka",
+    "en": "Eurasian Rock Pipit",
+    "la": "Anthus petrosus",
+    "group": "Pipits & Wagtails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "anthus-spinoletta",
+    "order": 214,
+    "sv": "Vattenpiplärka",
+    "en": "Water Pipit",
+    "la": "Anthus spinoletta",
+    "group": "Pipits & Wagtails",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "motacilla-flava",
+    "order": 215,
+    "sv": "Gulärla",
+    "en": "Yellow Wagtail",
+    "la": "Motacilla flava",
+    "group": "Pipits & Wagtails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "motacilla-citreola",
+    "order": 216,
+    "sv": "Citronärla",
+    "en": "Citrine Wagtail",
+    "la": "Motacilla citreola",
+    "group": "Pipits & Wagtails",
+    "status": "h",
+    "regular": true
+  },
+  {
+    "id": "motacilla-cinerea",
+    "order": 217,
+    "sv": "Forsärla",
+    "en": "Grey Wagtail",
+    "la": "Motacilla cinerea",
+    "group": "Pipits & Wagtails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "motacilla-alba",
+    "order": 218,
+    "sv": "Sädesärla",
+    "en": "White Wagtail",
+    "la": "Motacilla alba",
+    "group": "Pipits & Wagtails",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "bombycilla-garrulus",
+    "order": 219,
+    "sv": "Sidensvans",
+    "en": "Bohemian Waxwing",
+    "la": "Bombycilla garrulus",
+    "group": "Waxwing, Dipper, Wren & Accentor",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "cinclus-cinclus",
+    "order": 220,
+    "sv": "Strömstare",
+    "en": "White-throated Dipper",
+    "la": "Cinclus cinclus",
+    "group": "Waxwing, Dipper, Wren & Accentor",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "troglodytes-troglodytes",
+    "order": 221,
+    "sv": "Gärdsmyg",
+    "en": "Eurasian Wren",
+    "la": "Troglodytes troglodytes",
+    "group": "Waxwing, Dipper, Wren & Accentor",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "prunella-modularis",
+    "order": 222,
+    "sv": "Järnsparv",
+    "en": "Dunnock",
+    "la": "Prunella modularis",
+    "group": "Waxwing, Dipper, Wren & Accentor",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "erithacus-rubecula",
+    "order": 223,
+    "sv": "Rödhake",
+    "en": "European Robin",
+    "la": "Erithacus rubecula",
+    "group": "Chats & Thrushes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "luscinia-luscinia",
+    "order": 224,
+    "sv": "Näktergal",
+    "en": "Thrush Nightingale",
+    "la": "Luscinia luscinia",
+    "group": "Chats & Thrushes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "luscinia-svecica",
+    "order": 225,
+    "sv": "Blåhake",
+    "en": "Bluethroat",
+    "la": "Luscinia svecica",
+    "group": "Chats & Thrushes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "phoenicurus-ochruros",
+    "order": 226,
+    "sv": "Svart rödstjärt",
+    "en": "Black Redstart",
+    "la": "Phoenicurus ochruros",
+    "group": "Chats & Thrushes",
+    "status": "h",
+    "regular": true
+  },
+  {
+    "id": "phoenicurus-phoenicurus",
+    "order": 227,
+    "sv": "Rödstjärt",
+    "en": "Common Redstart",
+    "la": "Phoenicurus phoenicurus",
+    "group": "Chats & Thrushes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "saxicola-rubetra",
+    "order": 228,
+    "sv": "Buskskvätta",
+    "en": "Whinchat",
+    "la": "Saxicola rubetra",
+    "group": "Chats & Thrushes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "saxicola-rubicola",
+    "order": 229,
+    "sv": "Svarthakad buskskvätta",
+    "en": "European Stonechat",
+    "la": "Saxicola rubicola",
+    "group": "Chats & Thrushes",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "saxicola-maurus",
+    "order": 230,
+    "sv": "Vitgumpad buskskvätta",
+    "en": "Siberian Stonechat",
+    "la": "Saxicola maurus",
+    "group": "Chats & Thrushes",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "oenanthe-pleschanka",
+    "order": 231,
+    "sv": "Nunnestenskvätta",
+    "en": "Pied Wheatear",
+    "la": "Oenanthe pleschanka",
+    "group": "Chats & Thrushes",
+    "status": "T",
+    "regular": false
+  },
+  {
+    "id": "oenanthe-oenanthe",
+    "order": 232,
+    "sv": "Stenskvätta",
+    "en": "Northern Wheatear",
+    "la": "Oenanthe oenanthe",
+    "group": "Chats & Thrushes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "turdus-torquatus",
+    "order": 233,
+    "sv": "Ringtrast",
+    "en": "Ring Ouzel",
+    "la": "Turdus torquatus",
+    "group": "Chats & Thrushes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "turdus-merula",
+    "order": 234,
+    "sv": "Koltrast",
+    "en": "Common Blackbird",
+    "la": "Turdus merula",
+    "group": "Chats & Thrushes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "turdus-pilaris",
+    "order": 235,
+    "sv": "Björktrast",
+    "en": "Fieldfare",
+    "la": "Turdus pilaris",
+    "group": "Chats & Thrushes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "turdus-atrogularis",
+    "order": 236,
+    "sv": "Svarthalsad trast",
+    "en": "Black-throated Thrush",
+    "la": "Turdus atrogularis",
+    "group": "Chats & Thrushes",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "turdus-philomelos",
+    "order": 237,
+    "sv": "Taltrast",
+    "en": "Song Thrush",
+    "la": "Turdus philomelos",
+    "group": "Chats & Thrushes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "turdus-iliacus",
+    "order": 238,
+    "sv": "Rödvingetrast",
+    "en": "Redwing",
+    "la": "Turdus iliacus",
+    "group": "Chats & Thrushes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "turdus-viscivorus",
+    "order": 239,
+    "sv": "Dubbeltrast",
+    "en": "Mistle Thrush",
+    "la": "Turdus viscivorus",
+    "group": "Chats & Thrushes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "cisticola-juncidis",
+    "order": 240,
+    "sv": "Grässångare",
+    "en": "Zitting Cisticola",
+    "la": "Cisticola juncidis",
+    "group": "Warblers & Kinglets",
+    "status": "T",
+    "regular": false
+  },
+  {
+    "id": "iduna-caligata",
+    "order": 241,
+    "sv": "Stäppsångare",
+    "en": "Booted Warbler",
+    "la": "Iduna caligata",
+    "group": "Warblers & Kinglets",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "locustella-naevia",
+    "order": 242,
+    "sv": "Gräshoppsångare",
+    "en": "Common Grasshopper Warbler",
+    "la": "Locustella naevia",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "locustella-fluviatilis",
+    "order": 243,
+    "sv": "Flodsångare",
+    "en": "River Warbler",
+    "la": "Locustella fluviatilis",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "locustella-luscinioides",
+    "order": 244,
+    "sv": "Vassångare",
+    "en": "Savi's Warbler",
+    "la": "Locustella luscinioides",
+    "group": "Warblers & Kinglets",
+    "status": "h",
+    "regular": true
+  },
+  {
+    "id": "acrocephalus-schoenobaenus",
+    "order": 245,
+    "sv": "Sävsångare",
+    "en": "Sedge Warbler",
+    "la": "Acrocephalus schoenobaenus",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "acrocephalus-palustris",
+    "order": 246,
+    "sv": "Kärrsångare",
+    "en": "Marsh Warbler",
+    "la": "Acrocephalus palustris",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "acrocephalus-scirpaceus",
+    "order": 247,
+    "sv": "Rörsångare",
+    "en": "Eurasian Reed Warbler",
+    "la": "Acrocephalus scirpaceus",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "acrocephalus-arundinaceus",
+    "order": 248,
+    "sv": "Trastsångare",
+    "en": "Great Reed Warbler",
+    "la": "Acrocephalus arundinaceus",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "hippolais-icterina",
+    "order": 249,
+    "sv": "Härmsångare",
+    "en": "Icterine Warbler",
+    "la": "Hippolais icterina",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "sylvia-nisoria",
+    "order": 250,
+    "sv": "Höksångare",
+    "en": "Barred Warbler",
+    "la": "Sylvia nisoria",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "sylvia-cantillans",
+    "order": 251,
+    "sv": "Rödstrupig sångare",
+    "en": "Eastern Subalpine Warbler",
+    "la": "Sylvia cantillans",
+    "group": "Warblers & Kinglets",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "sylvia-curruca",
+    "order": 252,
+    "sv": "Ärtsångare",
+    "en": "Lesser Whitethroat",
+    "la": "Sylvia curruca",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "sylvia-communis",
+    "order": 253,
+    "sv": "Törnsångare",
+    "en": "Common Whitethroat",
+    "la": "Sylvia communis",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "sylvia-borin",
+    "order": 254,
+    "sv": "Trädgårdssångare",
+    "en": "Garden Warbler",
+    "la": "Sylvia borin",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "sylvia-atricapilla",
+    "order": 255,
+    "sv": "Svarthätta",
+    "en": "Eurasian Blackcap",
+    "la": "Sylvia atricapilla",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "phylloscopus-trochiloides",
+    "order": 256,
+    "sv": "Lundsångare",
+    "en": "Greenish Warbler",
+    "la": "Phylloscopus trochiloides",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "phylloscopus-proregulus",
+    "order": 257,
+    "sv": "Kungsfågelsångare",
+    "en": "Pallas's Leaf Warbler",
+    "la": "Phylloscopus proregulus",
+    "group": "Warblers & Kinglets",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "phylloscopus-inornatus",
+    "order": 258,
+    "sv": "Tajgasångare",
+    "en": "Yellow-browed Warbler",
+    "la": "Phylloscopus inornatus",
+    "group": "Warblers & Kinglets",
+    "status": "R",
+    "regular": true
+  },
+  {
+    "id": "phylloscopus-sibilatrix",
+    "order": 259,
+    "sv": "Grönsångare",
+    "en": "Wood Warbler",
+    "la": "Phylloscopus sibilatrix",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "phylloscopus-collybita",
+    "order": 260,
+    "sv": "Gransångare",
+    "en": "Common Chiffchaff",
+    "la": "Phylloscopus collybita",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "phylloscopus-trochilus",
+    "order": 261,
+    "sv": "Lövsångare",
+    "en": "Willow Warbler",
+    "la": "Phylloscopus trochilus",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "regulus-regulus",
+    "order": 262,
+    "sv": "Kungsfågel",
+    "en": "Goldcrest",
+    "la": "Regulus regulus",
+    "group": "Warblers & Kinglets",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "regulus-ignicapilla",
+    "order": 263,
+    "sv": "Brandkronad kungsfågel",
+    "en": "Common Firecrest",
+    "la": "Regulus ignicapilla",
+    "group": "Warblers & Kinglets",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "muscicapa-striata",
+    "order": 264,
+    "sv": "Grå flugsnappare",
+    "en": "Spotted Flycatcher",
+    "la": "Muscicapa striata",
+    "group": "Flycatchers",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "ficedula-parva",
+    "order": 265,
+    "sv": "Mindre flugsnappare",
+    "en": "Red-breasted Flycatcher",
+    "la": "Ficedula parva",
+    "group": "Flycatchers",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "ficedula-albicollis",
+    "order": 266,
+    "sv": "Halsbandsflugsnappare",
+    "en": "Collared Flycatcher",
+    "la": "Ficedula albicollis",
+    "group": "Flycatchers",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "ficedula-hypoleuca",
+    "order": 267,
+    "sv": "Svartvit flugsnappare",
+    "en": "European Pied Flycatcher",
+    "la": "Ficedula hypoleuca",
+    "group": "Flycatchers",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "panurus-biarmicus",
+    "order": 268,
+    "sv": "Skäggmes",
+    "en": "Bearded Reedling",
+    "la": "Panurus biarmicus",
+    "group": "Tits",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "aegithalos-caudatus",
+    "order": 269,
+    "sv": "Stjärtmes",
+    "en": "Long-tailed Tit",
+    "la": "Aegithalos caudatus",
+    "group": "Tits",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "poecile-palustris",
+    "order": 270,
+    "sv": "Entita",
+    "en": "Marsh Tit",
+    "la": "Poecile palustris",
+    "group": "Tits",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "poecile-montanus",
+    "order": 271,
+    "sv": "Talltita",
+    "en": "Willow Tit",
+    "la": "Poecile montanus",
+    "group": "Tits",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "lophophanes-cristatus",
+    "order": 272,
+    "sv": "Tofsmes",
+    "en": "European Crested Tit",
+    "la": "Lophophanes cristatus",
+    "group": "Tits",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "periparus-ater",
+    "order": 273,
+    "sv": "Svartmes",
+    "en": "Coal Tit",
+    "la": "Periparus ater",
+    "group": "Tits",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "cyanistes-caeruleus",
+    "order": 274,
+    "sv": "Blåmes",
+    "en": "Eurasian Blue Tit",
+    "la": "Cyanistes caeruleus",
+    "group": "Tits",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "parus-major",
+    "order": 275,
+    "sv": "Talgoxe",
+    "en": "Great Tit",
+    "la": "Parus major",
+    "group": "Tits",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "sitta-europaea",
+    "order": 276,
+    "sv": "Nötväcka",
+    "en": "Eurasian Nuthatch",
+    "la": "Sitta europaea",
+    "group": "Nuthatch & Treecreepers",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "certhia-familiaris",
+    "order": 277,
+    "sv": "Trädkrypare",
+    "en": "Eurasian Treecreeper",
+    "la": "Certhia familiaris",
+    "group": "Nuthatch & Treecreepers",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "certhia-brachydactyla",
+    "order": 278,
+    "sv": "Trädgårdsträdkrypare",
+    "en": "Short-toed Treecreeper",
+    "la": "Certhia brachydactyla",
+    "group": "Nuthatch & Treecreepers",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "remiz-pendulinus",
+    "order": 279,
+    "sv": "Pungmes",
+    "en": "Eurasian Penduline Tit",
+    "la": "Remiz pendulinus",
+    "group": "Tits",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "oriolus-oriolus",
+    "order": 280,
+    "sv": "Sommargylling",
+    "en": "Eurasian Golden Oriole",
+    "la": "Oriolus oriolus",
+    "group": "Oriole & Shrikes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "lanius-collurio",
+    "order": 281,
+    "sv": "Törnskata",
+    "en": "Red-backed Shrike",
+    "la": "Lanius collurio",
+    "group": "Oriole & Shrikes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "lanius-excubitor",
+    "order": 282,
+    "sv": "Varfågel",
+    "en": "Great Grey Shrike",
+    "la": "Lanius excubitor",
+    "group": "Oriole & Shrikes",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "garrulus-glandarius",
+    "order": 283,
+    "sv": "Nötskrika",
+    "en": "Eurasian Jay",
+    "la": "Garrulus glandarius",
+    "group": "Crows",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "pica-pica",
+    "order": 284,
+    "sv": "Skata",
+    "en": "Eurasian Magpie",
+    "la": "Pica pica",
+    "group": "Crows",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "nucifraga-caryocatactes",
+    "order": 285,
+    "sv": "Nötkråka",
+    "en": "Spotted Nutcracker",
+    "la": "Nucifraga caryocatactes",
+    "group": "Crows",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "coloeus-monedula",
+    "order": 286,
+    "sv": "Kaja",
+    "en": "Western Jackdaw",
+    "la": "Coloeus monedula",
+    "group": "Crows",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "corvus-frugilegus",
+    "order": 287,
+    "sv": "Råka",
+    "en": "Rook",
+    "la": "Corvus frugilegus",
+    "group": "Crows",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "corvus-cornix",
+    "order": 288,
+    "sv": "Kråka",
+    "en": "Hooded Crow",
+    "la": "Corvus cornix",
+    "group": "Crows",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "corvus-corax",
+    "order": 289,
+    "sv": "Korp",
+    "en": "Northern Raven",
+    "la": "Corvus corax",
+    "group": "Crows",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "sturnus-vulgaris",
+    "order": 290,
+    "sv": "Stare",
+    "en": "Common Starling",
+    "la": "Sturnus vulgaris",
+    "group": "Starlings",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "pastor-roseus",
+    "order": 291,
+    "sv": "Rosenstare",
+    "en": "Rosy Starling",
+    "la": "Pastor roseus",
+    "group": "Starlings",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "passer-domesticus",
+    "order": 292,
+    "sv": "Gråsparv",
+    "en": "House Sparrow",
+    "la": "Passer domesticus",
+    "group": "Sparrows",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "passer-montanus",
+    "order": 293,
+    "sv": "Pilfink",
+    "en": "Eurasian Tree Sparrow",
+    "la": "Passer montanus",
+    "group": "Sparrows",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "fringilla-coelebs",
+    "order": 294,
+    "sv": "Bofink",
+    "en": "Common Chaffinch",
+    "la": "Fringilla coelebs",
+    "group": "Finches",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "fringilla-montifringilla",
+    "order": 295,
+    "sv": "Bergfink",
+    "en": "Brambling",
+    "la": "Fringilla montifringilla",
+    "group": "Finches",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "serinus-serinus",
+    "order": 296,
+    "sv": "Gulhämpling",
+    "en": "European Serin",
+    "la": "Serinus serinus",
+    "group": "Finches",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "chloris-chloris",
+    "order": 297,
+    "sv": "Grönfink",
+    "en": "European Greenfinch",
+    "la": "Chloris chloris",
+    "group": "Finches",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "carduelis-carduelis",
+    "order": 298,
+    "sv": "Steglits",
+    "en": "European Goldfinch",
+    "la": "Carduelis carduelis",
+    "group": "Finches",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "spinus-spinus",
+    "order": 299,
+    "sv": "Grönsiska",
+    "en": "Eurasian Siskin",
+    "la": "Spinus spinus",
+    "group": "Finches",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "linaria-cannabina",
+    "order": 300,
+    "sv": "Hämpling",
+    "en": "Common Linnet",
+    "la": "Linaria cannabina",
+    "group": "Finches",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "linaria-flavirostris",
+    "order": 301,
+    "sv": "Vinterhämpling",
+    "en": "Twite",
+    "la": "Linaria flavirostris",
+    "group": "Finches",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "acanthis-flammea",
+    "order": 302,
+    "sv": "Gråsiska",
+    "en": "Common Redpoll",
+    "la": "Acanthis flammea",
+    "group": "Finches",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "loxia-leucoptera",
+    "order": 303,
+    "sv": "Bändelkorsnäbb",
+    "en": "Two-barred Crossbill",
+    "la": "Loxia leucoptera",
+    "group": "Finches",
+    "status": "O",
+    "regular": false
+  },
+  {
+    "id": "loxia-curvirostra",
+    "order": 304,
+    "sv": "Mindre korsnäbb",
+    "en": "Red Crossbill",
+    "la": "Loxia curvirostra",
+    "group": "Finches",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "carpodacus-erythrinus",
+    "order": 305,
+    "sv": "Rosenfink",
+    "en": "Common Rosefinch",
+    "la": "Carpodacus erythrinus",
+    "group": "Finches",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "pyrrhula-pyrrhula",
+    "order": 306,
+    "sv": "Domherre",
+    "en": "Eurasian Bullfinch",
+    "la": "Pyrrhula pyrrhula",
+    "group": "Finches",
+    "status": "S",
+    "regular": true
+  },
+  {
+    "id": "coccothraustes-coccothraustes",
+    "order": 307,
+    "sv": "Stenknäck",
+    "en": "Hawfinch",
+    "la": "Coccothraustes coccothraustes",
+    "group": "Finches",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "emberiza-aureola",
+    "order": 308,
+    "sv": "Gyllensparv",
+    "en": "Yellow-breasted Bunting",
+    "la": "Emberiza aureola",
+    "group": "Buntings",
+    "status": "G",
+    "regular": false
+  },
+  {
+    "id": "calcarius-lapponicus",
+    "order": 309,
+    "sv": "Lappsparv",
+    "en": "Lapland Longspur",
+    "la": "Calcarius lapponicus",
+    "group": "Buntings",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "plectrophenax-nivalis",
+    "order": 310,
+    "sv": "Snösparv",
+    "en": "Snow Bunting",
+    "la": "Plectrophenax nivalis",
+    "group": "Buntings",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "emberiza-citrinella",
+    "order": 311,
+    "sv": "Gulsparv",
+    "en": "Yellowhammer",
+    "la": "Emberiza citrinella",
+    "group": "Buntings",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "emberiza-hortulana",
+    "order": 312,
+    "sv": "Ortolansparv",
+    "en": "Ortolan Bunting",
+    "la": "Emberiza hortulana",
+    "group": "Buntings",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "emberiza-schoeniclus",
+    "order": 313,
+    "sv": "Sävsparv",
+    "en": "Common Reed Bunting",
+    "la": "Emberiza schoeniclus",
+    "group": "Buntings",
+    "status": "H",
+    "regular": true
+  },
+  {
+    "id": "emberiza-calandra",
+    "order": 314,
+    "sv": "Kornsparv",
+    "en": "Corn Bunting",
+    "la": "Emberiza calandra",
+    "group": "Buntings",
+    "status": "H",
+    "regular": true
+  }
+]

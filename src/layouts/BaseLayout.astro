@@ -1,4 +1,5 @@
 ---
+import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 
@@ -59,7 +60,7 @@ const personSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />
     <meta name="author" content="Yunus Andreasson" />
-    <meta name="theme-color" content="#73716c" />
+    <meta name="theme-color" content="#4f4d49" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
@@ -83,11 +84,19 @@ const personSchema = {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="preload" href="/fonts/cormorant-garamond-light.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/cormorant-garamond-light-italic.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Preload only the face every page shows above the fold (header + nav).
+         The rest load on demand; their optimized fallbacks keep the swap still. -->
+    <Font cssVariable="--font-cormorant" preload={[{ weight: 300, style: 'normal' }]} />
+    <Font cssVariable="--font-eb-garamond" />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
     <slot name="head" />
     <ClientRouter />
+    <!-- Without JS the reveal IntersectionObserver never runs, so .gallery-item
+         would stay at its scroll-in opacity:0 forever — the entire wall would
+         be blank. This is the only content that must never depend on JS. -->
+    <noscript>
+      <style>.gallery-item { opacity: 1 !important; }</style>
+    </noscript>
   </head>
   <body>
     <header class="site-header">
@@ -95,7 +104,8 @@ const personSchema = {
       <nav class="site-nav">
         <a href="/" class:list={{ 'is-current': navPath === '/' }} aria-current={navPath === '/' ? 'page' : undefined}>Work</a>
         <a href="/about" class:list={{ 'is-current': navPath === '/about' }} aria-current={navPath === '/about' ? 'page' : undefined}>Words</a>
-        <a href="/projects" class:list={{ 'is-current': navPath === '/projects' }} aria-current={navPath === '/projects' ? 'page' : undefined}>Projects</a>
+        <a href="/birds" class:list={{ 'is-current': navPath === '/birds' }} aria-current={navPath === '/birds' ? 'page' : undefined}>Birds</a>
+        <a href="/projects" class:list={{ 'is-current': navPath === '/projects' }} aria-current={navPath === '/projects' ? 'page' : undefined}>Building</a>
       </nav>
     </header>
 
@@ -114,8 +124,14 @@ const personSchema = {
 
     <script>
       let lastScrollY = 0;
+      let controller: AbortController;
 
       document.addEventListener('astro:page-load', () => {
+        // `window` survives ClientRouter navigations, so drop the previous
+        // page's scroll listener before adding one for the new header.
+        controller?.abort();
+        controller = new AbortController();
+
         const header = document.querySelector('.site-header') as HTMLElement;
         if (!header) return;
 
@@ -130,7 +146,7 @@ const personSchema = {
             header.classList.remove('is-hidden');
           }
           lastScrollY = y;
-        }, { passive: true });
+        }, { passive: true, signal: controller.signal });
       });
     </script>
 

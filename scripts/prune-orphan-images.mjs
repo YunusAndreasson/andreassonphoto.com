@@ -1,7 +1,9 @@
 // Prune orphaned original images from the build output.
 //
-// GalleryView.astro resolves images via `import.meta.glob('.../*.{jpg,jpeg}')`.
-// That import makes Astro emit each ORIGINAL source file into dist/_astro
+// Now a safety net: as of Astro 7 a static build emits no unreferenced
+// originals (this reports 0). It was added when importing each gallery image
+// (then via import.meta.glob, now the collection's image() schema) made Astro
+// emit each ORIGINAL source file into dist/_astro
 // (because ImageMetadata.src must point to a real, hashed asset) — even though
 // the gallery only ever renders the generated `_<transform>.avif` variants.
 // The result is ~21 MB of unreferenced JPEGs per build that bloat every deploy

@@ -1,4 +1,4 @@
-import type { APIRoute, ImageMetadata } from 'astro';
+import type { APIRoute } from 'astro';
 import { getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
 
@@ -13,11 +13,6 @@ import { getCollection } from 'astro:content';
 // Image URLs mirror GalleryView.astro's fullscreen variant exactly (same src,
 // width and format), so Astro dedupes to the already-emitted AVIF file rather
 // than generating extra assets. AVIF is never touched by prune-orphan-images.
-
-// Optimized binaries, resolved by filename from the gallery asset folder.
-const imageModules = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/gallery_bw/*.{jpg,jpeg}',
-);
 
 function xmlEscape(value: string): string {
   return value
@@ -38,9 +33,7 @@ export const GET: APIRoute = async ({ site }) => {
 
   const entries = await Promise.all(
     images.map(async (img) => {
-      const loader = imageModules[`/src/assets/gallery_bw/${img.file}`];
-      if (!loader) throw new Error(`Gallery image not found: src/assets/gallery_bw/${img.file}`);
-      const meta = (await loader()).default;
+      const meta = img.file; // ImageMetadata via the collection's image() schema
       const full = await getImage({
         src: meta,
         width: Math.min(1600, meta.width),

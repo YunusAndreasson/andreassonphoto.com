@@ -26,16 +26,16 @@ const projects = [
 ];
 ---
 
-<BaseLayout title="Andrèasson Photo — Projects" description="Software Yunus Andreasson builds alongside the photography">
+<BaseLayout title="Andrèasson Photo — Building" description="Software Yunus Andreasson builds alongside the photography">
   <script type="application/ld+json" is:inline set:html={JSON.stringify(collectionSchema)} slot="head" />
-  <div class="page-content">
+  <main class="page-content">
     <p class="invocation">
       Alongside the photography, a handful of small, quiet apps —<br>
       mostly for reading, remembering, and prayer.
     </p>
 
-    <section class="also-building" aria-labelledby="projects-heading">
-      <h2 id="projects-heading" class="section-label">Projects</h2>
+    <section class="also-building" aria-labelledby="building-heading">
+      <h1 id="building-heading" class="section-label">Building</h1>
       <ul class="project-list">
         {projects.map((project) => (
           <li>
@@ -45,5 +45,5 @@ const projects = [
         ))}
       </ul>
     </section>
-  </div>
+  </main>
 </BaseLayout>

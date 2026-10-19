@@ -1,6 +1,5 @@
 ---
 import { Image, getImage } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
 import { composeRows, type GalleryImage, type Item } from '../utils/composeRows';
 
 interface Props {
@@ -9,33 +8,23 @@ interface Props {
 
 const { images } = Astro.props;
 
-// Optimized binaries, resolved by filename from the gallery asset folder.
-const imageModules = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/gallery_bw/*.{jpg,jpeg}',
-);
-
-async function metaFor(file: string): Promise<ImageMetadata> {
-  const loader = imageModules[`/src/assets/gallery_bw/${file}`];
-  if (!loader) throw new Error(`Gallery image not found: src/assets/gallery_bw/${file}`);
-  return (await loader()).default;
-}
-
-// Resolve real dimensions FIRST: the justified layout sizes every row from true
-// aspect ratios so each row fills the full width at a common height — see
+// `img.file` is already ImageMetadata (the collection's image() schema), so the
+// real dimensions are known up front: the justified layout sizes every row from
+// true aspect ratios so each row fills the full width at a common height — see
 // composeRows.
-const metas = await Promise.all(images.map((img) => metaFor(img.file)));
-const items: Item[] = images.map((img, k) => ({
+const items: Item[] = images.map((img) => ({
   img,
-  ar: metas[k].width / metas[k].height,
+  ar: img.file.width / img.file.height,
   isHero: false,
 }));
 const rows = composeRows(items);
 
 // Mirror composeRows' constants only to estimate the px width each image
-// renders at, so `sizes`/`widths` request a right-sized resolution.
+// renders at, so `sizes`/`widths` request a right-sized resolution. (No global
+// image `layout` in astro.config: these explicit widths/sizes keep the gallery
+// CSS in full control of image sizing.)
 const CONTENT_W = 1120;
 const GAP = 40;
-const metaByFile = new Map(images.map((img, k) => [img.file, metas[k]] as const));
 
 function renderedWidth(row: (typeof rows)[number], ar: number): number {
   if (row.mode === 'hero') return CONTENT_W;
@@ -58,7 +47,7 @@ const renderRows = await Promise.all(
   rows.map(async (row, ri) => {
     const cells = await Promise.all(
       row.cells.map(async (cell) => {
-        const meta = metaByFile.get(cell.img.file)!;
+        const meta = cell.img.file;
         const full = await getImage({
           src: meta,
           width: Math.min(1600, meta.width),
@@ -91,6 +80,7 @@ const renderRows = await Promise.all(
 ---
 
 <main class="gallery-wall">
+  <h1 class="sr-only">Yunus Andreasson — black-and-white photography</h1>
   {renderRows.map((row) => (
     <div
       class:list={[

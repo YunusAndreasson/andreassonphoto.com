@@ -1,13 +1,8 @@
 # Cloudflare Pages Headers
 
-# Astro hashed assets - cache forever
+# Astro hashed assets (incl. Fonts API files) - cache forever
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
-
-# Fonts - cache forever
-/fonts/*
-  Cache-Control: public, max-age=31536000, immutable
-  Access-Control-Allow-Origin: *
 
 # Open Graph image - cache 30 days
 /og/*

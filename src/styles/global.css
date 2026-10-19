@@ -1,67 +1,35 @@
-@font-face {
-  font-family: 'Cormorant Garamond';
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-  src: url('/fonts/cormorant-garamond-light.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Cormorant Garamond';
-  font-style: italic;
-  font-weight: 300;
-  font-display: swap;
-  src: url('/fonts/cormorant-garamond-light-italic.woff2') format('woff2');
-}
-
-/* Body text is set in EB Garamond, not Cormorant. Cormorant is a *display*
-   face — very high stroke contrast whose hairlines vanish at reading sizes, so
-   it stays wispy as prose at any weight. EB Garamond is the same Garamond
-   lineage but drawn for text (sturdier, lower-contrast strokes), so the Words
-   page actually reads. Cormorant stays for the display/header. */
-@font-face {
-  font-family: 'EB Garamond';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/eb-garamond-regular.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'EB Garamond';
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/eb-garamond-italic.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'EB Garamond';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('/fonts/eb-garamond-medium.woff2') format('woff2');
-}
-
 :root {
-  --font: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
-  --font-prose: 'EB Garamond', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  /* Faces and their metric-matched fallbacks come from the Fonts API
+     (astro.config.mjs → <Font /> in BaseLayout). Body text is EB Garamond, not
+     Cormorant: Cormorant is a *display* face whose hairlines vanish at reading
+     sizes, so it stays for the header/labels and EB Garamond carries prose. */
+  --font: var(--font-cormorant);
+  --font-prose: var(--font-eb-garamond);
 
-  /* Single neutral museum scheme — warm gallery grey, no dark/light toggle.
-     Kept near 18% mid-grey so B&W tonal values stay perceptually neutral. */
-  --wall-bg: #73716c;
-  --wall-glow: #807e78; /* overhead-light tone for the faint top gradient */
-  --ink: #d6d4ce;
-  --nav-fg: #f4f2ec;
-  /* near-white prose: nudged up so body text clears WCAG AA (4.5:1) on the
-     mid-grey wall — #f7f5f0 measured 4.47:1 (just under); this reads 4.75:1. */
-  --prose-ink: #fdfcf9;
+  /* Single neutral museum scheme — warm exhibition grey, no dark/light toggle.
+     Deeper than 18% mid-grey (L*33 vs 48): a darker surround makes the prints
+     read as lit, the way photo galleries paint their rooms, while staying a
+     grey wall rather than a black void. It also frees the text from the old
+     4.88:1 ceiling, so every tone below clears WCAG AA with room to spare. */
+  --wall-bg: #4f4d49;
+  --wall-glow: #57554f; /* overhead-light tone for the faint top gradient */
+  /* Secondary text (notes, captions, Latin names): 5.5:1 on the wall, 4.8:1
+     on the glow — quieter than prose, still AA everywhere it can sit. */
+  --ink: #d3d0c8;
+  --nav-fg: #f4f2ec; /* 7.5:1 */
+  /* Warm paper-white prose: 7.3:1 on the wall, 6.5:1 on the glow. Softer than
+     pure white so long reading doesn't glare against the deeper grey. */
+  --prose-ink: #f1eee7;
   --detail-bg: #0a0a0a;
   --focus-ring: color-mix(in oklab, var(--ink) 80%, transparent);
+  /* Header scrim drawn in the wall's own warm hue, so it reads as shade
+     falling across the wall rather than a black band. */
+  --scrim: 18 17 15;
 
-  /* Soft-shadow lift — each print raised gently off the wall, lit not glossy */
-  --print-shadow: 0 12px 32px -10px rgb(0 0 0 / 0.45), 0 2px 8px -4px rgb(0 0 0 / 0.30);
-  --print-shadow-hover: 0 22px 48px -12px rgb(0 0 0 / 0.55), 0 4px 12px -6px rgb(0 0 0 / 0.38);
+  /* Soft-shadow lift — each print raised gently off the wall, lit not glossy.
+     A touch stronger than on the old lighter wall so the lift still registers. */
+  --print-shadow: 0 14px 36px -10px rgb(0 0 0 / 0.55), 0 2px 8px -4px rgb(0 0 0 / 0.38);
+  --print-shadow-hover: 0 24px 52px -12px rgb(0 0 0 / 0.65), 0 4px 12px -6px rgb(0 0 0 / 0.45);
 
   /* Fluid spacing — replaces the old per-breakpoint magic numbers */
   --gap: clamp(20px, 3vw, 56px);
@@ -74,6 +42,21 @@
   --fs-0: 1rem; /*    16px   — signature */
   --fs-1: 1.2rem; /*  19.2px — prose (min) */
   --fs-2: 1.44rem; /* 23.0px — prose (max), detail close */
+}
+
+/* High contrast: the default palette already clears AA (secondary text
+   ≥4.8:1). For users whose OS asks for more, deepen the wall and lift every
+   tone — prose ~11:1, secondary ~8:1, AAA throughout. This must stay unlayered
+   like :root above: an unlayered rule beats any layered one, so inside
+   @layer components these overrides would never apply. */
+@media (prefers-contrast: more) {
+  :root {
+    --wall-bg: #3c3a37;
+    --wall-glow: #3f3d3a;
+    --prose-ink: #ffffff;
+    --ink: #e8e5de;
+    --nav-fg: #ffffff;
+  }
 }
 
 @layer reset, base, components;
@@ -115,6 +98,20 @@
   body:has(.detail-overlay[open]) {
     overflow: hidden;
   }
+
+  /* Visually hidden but exposed to assistive tech — each page's real h1,
+     kept out of the deliberately headline-free visual design. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
 }
 
 @layer components {
@@ -133,11 +130,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* ≥0.64 through the band the nav text sits in (~45%): over a pure-white
+       print that leaves a ~#666 backdrop, so the nav clears AA (5.2:1) on the
+       plate alone, before the text-shadow. Then an eased tail so the shade
+       fades out without a visible edge. */
     background: linear-gradient(
       180deg,
-      rgb(0 0 0 / 0.62) 0%,
-      rgb(0 0 0 / 0.5) 45%,
-      rgb(0 0 0 / 0) 100%
+      rgb(var(--scrim) / 0.74) 0%,
+      rgb(var(--scrim) / 0.64) 45%,
+      rgb(var(--scrim) / 0.36) 65%,
+      rgb(var(--scrim) / 0.14) 82%,
+      rgb(var(--scrim) / 0) 100%
     );
     transition: opacity 0.4s ease;
   }
@@ -425,7 +428,7 @@
       text-transform: uppercase;
       color: inherit;
       text-decoration: none;
-      opacity: 1; /* full near-white = 4.75:1 (AA); 0.92 fell to 4.3:1 */
+      opacity: 1;
       padding-block: 0.6rem; /* generous touch target (Fitts / WCAG 2.5.5) */
       transition: opacity 0.3s, color 0.3s;
 
@@ -508,8 +511,8 @@
       font-size: clamp(var(--fs-0), 0.9rem + 0.5vw, var(--fs-1));
       font-style: italic;
       line-height: 1.8;
-      /* Full strength: a quiet lead-in held to WCAG AA (4.75:1) via size + italic,
-         not low contrast (0.72 opacity measured 3.2:1 — failed AA). */
+      /* A quiet lead-in: its restraint comes from size + italic, at full
+         prose strength. */
       margin-bottom: 3rem;
     }
 
@@ -541,8 +544,7 @@
       font-size: var(--fs-0);
       font-style: italic;
       letter-spacing: 0.05em;
-      /* Held to AA (4.75:1); restraint comes from size + italic, not 0.82 opacity
-         (which measured 3.6:1). */
+      color: var(--ink);
     }
   }
 
@@ -607,7 +609,227 @@
       font-style: italic;
       line-height: 1.5;
       letter-spacing: 0.01em;
-      color: var(--prose-ink);
+      color: var(--ink);
+    }
+  }
+
+  /* ── Birds ──
+     The Sweden list, assembled from pieces the other pages already use. It
+     takes the plain .page-content measure, so every edge lines up with /about
+     and /projects, and each family is a .section-label with its species
+     beneath — the "label, then list" shape of /projects, gridded into columns
+     because there are 314 entries rather than seven. The page is long; that is
+     the content, not the layout, and the rarities filter is the short view.
+
+     No rules, boxes or borders: this site takes its structure from whitespace,
+     size and letterspacing, and the ledger does the same. Names hold
+     --prose-ink; the notes beneath them (English and Latin names, counts,
+     captions) step down to --ink, which still clears AA on the wall. A rarity
+     is marked with an open circle beside the name — a shape, not a colour, so
+     it survives greyscale — paired with an .sr-only note for screen readers. */
+
+  .bird-tally {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1.8rem, 6vw, 4rem);
+  }
+
+  .bird-tally-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  /* --fs-2 is the largest size anywhere else on the site; the tally does not get
+     to be the exception that announces itself. */
+  .bird-tally-figure {
+    font-family: var(--font);
+    font-weight: 300;
+    font-size: var(--fs-2);
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+
+  .bird-tally-caption {
+    font-family: var(--font);
+    font-size: var(--fs--2);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .bird-toggle {
+    margin-top: 2.4rem;
+  }
+
+  /* The <input> is .sr-only (clipped, still focusable) and the whole label is
+     the hit target, so the visible 10px dot never has to be the thing you aim at. */
+  .bird-toggle-label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    cursor: pointer;
+    padding-block: 0.5rem;
+    font-family: var(--font-prose);
+    font-size: var(--fs-0);
+    font-style: italic;
+
+    & .bird-toggle-dot {
+      flex: none;
+      width: 10px;
+      height: 10px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      transition: background-color 0.35s ease;
+    }
+
+    & input:checked ~ .bird-toggle-dot {
+      background-color: currentColor;
+    }
+
+    & input:focus-visible ~ .bird-toggle-dot {
+      outline: 2px solid currentColor;
+      outline-offset: 4px;
+    }
+  }
+
+  /* Two classes, so it outranks the `.page-content p` size/margin rule above. */
+  .bird-toggle .bird-legend {
+    display: none;
+    max-width: 52ch;
+    margin-top: 0.3rem;
+    margin-bottom: 0;
+    font-family: var(--font-prose);
+    font-size: var(--fs--1);
+    font-style: italic;
+    line-height: 1.55;
+  }
+
+  /* 4.5rem below the lead is the same air /projects leaves before "BUILDING". */
+  .bird-ledger {
+    display: flex;
+    flex-direction: column;
+    gap: 3.4rem;
+    margin-top: 4.5rem;
+  }
+
+  /* The family name is a plain .section-label — the same heading /projects uses
+     — so only the trailing count needs styling of its own. */
+  .bird-group-count {
+    margin-left: 0.9em;
+    font-family: var(--font-prose);
+    font-size: var(--fs--1);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    color: var(--ink);
+  }
+
+  /* The head shows the family total; under the rarities filter it swaps to the
+     rarity count, so the number never contradicts what is on screen. */
+  .bird-count-rare {
+    display: none;
+  }
+
+  /* Same shape as .project-list: a column of entries, each a name over a quiet
+     italic note. Only the grid is new, because there are 314 of them. */
+  .bird-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 1.5rem 1.8rem;
+  }
+
+  .bird {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  /* Typographically identical to a project name on /projects. */
+  .bird-sv {
+    font-family: var(--font);
+    font-size: var(--fs-1);
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+
+  /* An open circle, set like a footnote mark, on the rarities. */
+  .bird.is-rare .bird-sv::after {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-left: 0.42em;
+    vertical-align: 0.36em;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+  }
+
+  /* Same size and register as a .project-desc; the scientific name keeps the
+     field-guide italic, the English name stays roman to separate the two. */
+  .bird-meta {
+    font-family: var(--font-prose);
+    font-size: var(--fs-0);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    text-wrap: pretty;
+    color: var(--ink);
+
+    & i {
+      display: block;
+    }
+  }
+
+  body:has(#rarities-only:checked) {
+    & .bird:not(.is-rare) {
+      display: none;
+    }
+
+    /* A family with no rarities drops out of the ledger entirely. */
+    & .bird-group:not(:has(.bird.is-rare)) {
+      display: none;
+    }
+
+    & .bird-count-all {
+      display: none;
+    }
+
+    & .bird-count-rare {
+      display: inline;
+    }
+
+    & .bird-toggle .bird-legend {
+      display: block;
+    }
+  }
+
+  .page-content .bird-source {
+    margin-top: 4.5rem;
+    margin-bottom: 0;
+    font-family: var(--font-prose);
+    font-size: var(--fs--1);
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  @media (width <= 768px) {
+    /* "Rarities & vagrants" is too wide to sit three-across on a phone, so the
+       tally becomes a proper two-column grid rather than a ragged flex wrap. */
+    .bird-tally {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.4rem 1rem;
+    }
+
+    .bird-list {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1.3rem;
     }
   }
 
@@ -626,18 +848,8 @@
     }
   }
 
-  /* ── High contrast ──
-     The muted museum palette (faint invocation/signature, near-white prose on a
-     mid-grey wall) is intentional but sits near the WCAG floor. For users whose
-     OS asks for more contrast, drop the dimming and deepen the wall so all text
-     clears AA comfortably (~6:1) — without changing the default look. */
+  /* ── High contrast ── (token overrides live beside :root, outside the layers) */
   @media (prefers-contrast: more) {
-    :root {
-      --wall-bg: #595855;
-      --wall-glow: #5f5e5a;
-      --prose-ink: #ffffff;
-    }
-
     .page-content .invocation,
     .page-content .about-signature,
     .contact-links a,

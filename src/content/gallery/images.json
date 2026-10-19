@@ -1,7 +1,7 @@
 [
   {
     "id": "01_pilgrims_at_night",
-    "file": "01_pilgrims_at_night.jpg",
+    "file": "../../assets/gallery_bw/01_pilgrims_at_night.jpg",
     "title": "Pilgrims at Night",
     "tone": "dark",
     "aspect": "square",
@@ -11,7 +11,7 @@
   },
   {
     "id": "02_the_reader",
-    "file": "02_the_reader.jpg",
+    "file": "../../assets/gallery_bw/02_the_reader.jpg",
     "title": "The Reader",
     "tone": "dark",
     "aspect": "square",
@@ -21,7 +21,7 @@
   },
   {
     "id": "03_the_lone_boat",
-    "file": "03_the_lone_boat.jpg",
+    "file": "../../assets/gallery_bw/03_the_lone_boat.jpg",
     "title": "The Lone Boat",
     "tone": "light",
     "aspect": "portrait",
@@ -31,7 +31,7 @@
   },
   {
     "id": "04_drooping_bloom",
-    "file": "04_drooping_bloom.jpg",
+    "file": "../../assets/gallery_bw/04_drooping_bloom.jpg",
     "title": "Drooping Bloom",
     "tone": "mid",
     "aspect": "square",
@@ -41,7 +41,7 @@
   },
   {
     "id": "05_forest_path",
-    "file": "05_forest_path.jpg",
+    "file": "../../assets/gallery_bw/05_forest_path.jpg",
     "title": "Forest Path",
     "tone": "dark",
     "aspect": "square",
@@ -51,7 +51,7 @@
   },
   {
     "id": "06_two_mushrooms",
-    "file": "06_two_mushrooms.jpg",
+    "file": "../../assets/gallery_bw/06_two_mushrooms.jpg",
     "title": "Two Mushrooms",
     "tone": "dark",
     "aspect": "portrait",
@@ -61,7 +61,7 @@
   },
   {
     "id": "07_three_posts",
-    "file": "07_three_posts.jpg",
+    "file": "../../assets/gallery_bw/07_three_posts.jpg",
     "title": "Three Posts",
     "tone": "light",
     "aspect": "square",
@@ -71,7 +71,7 @@
   },
   {
     "id": "08_night_restaurant",
-    "file": "08_night_restaurant.jpg",
+    "file": "../../assets/gallery_bw/08_night_restaurant.jpg",
     "title": "Night Restaurant",
     "tone": "dark",
     "aspect": "square",
@@ -81,7 +81,7 @@
   },
   {
     "id": "09_birds_on_lamp",
-    "file": "09_birds_on_lamp.jpg",
+    "file": "../../assets/gallery_bw/09_birds_on_lamp.jpg",
     "title": "Birds on Lamp",
     "tone": "dark",
     "aspect": "square",
@@ -91,7 +91,7 @@
   },
   {
     "id": "10_barn_in_snow",
-    "file": "10_barn_in_snow.jpg",
+    "file": "../../assets/gallery_bw/10_barn_in_snow.jpg",
     "title": "Barn in Snow",
     "tone": "light",
     "aspect": "portrait",
@@ -101,7 +101,7 @@
   },
   {
     "id": "11_two_posts",
-    "file": "11_two_posts.jpg",
+    "file": "../../assets/gallery_bw/11_two_posts.jpg",
     "title": "Two Posts",
     "tone": "light",
     "aspect": "square",
@@ -111,7 +111,7 @@
   },
   {
     "id": "12_man_and_pigeons",
-    "file": "12_man_and_pigeons.jpg",
+    "file": "../../assets/gallery_bw/12_man_and_pigeons.jpg",
     "title": "Man and Pigeons",
     "tone": "dark",
     "aspect": "landscape",
@@ -121,7 +121,7 @@
   },
   {
     "id": "13_pastoral_hills",
-    "file": "13_pastoral_hills.jpg",
+    "file": "../../assets/gallery_bw/13_pastoral_hills.jpg",
     "title": "Pastoral Hills",
     "tone": "dark",
     "aspect": "square",
@@ -131,7 +131,7 @@
   },
   {
     "id": "14_ethereal_bloom",
-    "file": "14_ethereal_bloom.jpg",
+    "file": "../../assets/gallery_bw/14_ethereal_bloom.jpg",
     "title": "Ethereal Bloom",
     "tone": "mid",
     "aspect": "landscape",
@@ -141,7 +141,7 @@
   },
   {
     "id": "15_two_trees",
-    "file": "15_two_trees.jpg",
+    "file": "../../assets/gallery_bw/15_two_trees.jpg",
     "title": "Two Trees",
     "tone": "light",
     "aspect": "portrait",
@@ -151,7 +151,7 @@
   },
   {
     "id": "16_rocks_in_mist",
-    "file": "16_rocks_in_mist.jpg",
+    "file": "../../assets/gallery_bw/16_rocks_in_mist.jpg",
     "title": "Rocks in Mist",
     "tone": "dark",
     "aspect": "landscape",
@@ -161,7 +161,7 @@
   },
   {
     "id": "17_ghost_flower",
-    "file": "17_ghost_flower.jpg",
+    "file": "../../assets/gallery_bw/17_ghost_flower.jpg",
     "title": "Ghost Flower",
     "tone": "mid",
     "aspect": "square",
@@ -171,7 +171,7 @@
   },
   {
     "id": "18_white_anemones",
-    "file": "18_white_anemones.jpg",
+    "file": "../../assets/gallery_bw/18_white_anemones.jpg",
     "title": "White Anemones",
     "tone": "mid",
     "aspect": "landscape",
@@ -181,7 +181,7 @@
   },
   {
     "id": "19_storm_over_mountains",
-    "file": "19_storm_over_mountains.jpg",
+    "file": "../../assets/gallery_bw/19_storm_over_mountains.jpg",
     "title": "Storm over Mountains",
     "tone": "dark",
     "aspect": "landscape",
@@ -191,7 +191,7 @@
   },
   {
     "id": "20_morning_reflections",
-    "file": "20_morning_reflections.jpg",
+    "file": "../../assets/gallery_bw/20_morning_reflections.jpg",
     "title": "Morning Reflections",
     "tone": "mid",
     "aspect": "portrait",
@@ -201,7 +201,7 @@
   },
   {
     "id": "21_the_old_alley",
-    "file": "21_the_old_alley.jpg",
+    "file": "../../assets/gallery_bw/21_the_old_alley.jpg",
     "title": "The Old Alley",
     "tone": "dark",
     "aspect": "square",
@@ -211,7 +211,7 @@
   },
   {
     "id": "22_night_road",
-    "file": "22_night_road.jpg",
+    "file": "../../assets/gallery_bw/22_night_road.jpg",
     "title": "Night Road",
     "tone": "dark",
     "aspect": "square",
@@ -221,7 +221,7 @@
   },
   {
     "id": "23_the_sleeper",
-    "file": "23_the_sleeper.jpg",
+    "file": "../../assets/gallery_bw/23_the_sleeper.jpg",
     "title": "The Sleeper",
     "tone": "dark",
     "aspect": "landscape",
@@ -231,7 +231,7 @@
   },
   {
     "id": "24_winter_reflections",
-    "file": "24_winter_reflections.jpg",
+    "file": "../../assets/gallery_bw/24_winter_reflections.jpg",
     "title": "Winter Reflections",
     "tone": "light",
     "aspect": "landscape",
@@ -241,7 +241,7 @@
   },
   {
     "id": "25_the_winding_road",
-    "file": "25_the_winding_road.jpg",
+    "file": "../../assets/gallery_bw/25_the_winding_road.jpg",
     "title": "The Winding Road",
     "tone": "dark",
     "aspect": "portrait",
@@ -251,7 +251,7 @@
   },
   {
     "id": "26_the_vessel",
-    "file": "26_the_vessel.jpg",
+    "file": "../../assets/gallery_bw/26_the_vessel.jpg",
     "title": "The Vessel",
     "tone": "dark",
     "aspect": "portrait",
@@ -261,7 +261,7 @@
   },
   {
     "id": "27_twin_minarets",
-    "file": "27_twin_minarets.jpg",
+    "file": "../../assets/gallery_bw/27_twin_minarets.jpg",
     "title": "Twin Minarets",
     "tone": "dark",
     "aspect": "portrait",
@@ -271,7 +271,7 @@
   },
   {
     "id": "28_mountain_village",
-    "file": "28_mountain_village.jpg",
+    "file": "../../assets/gallery_bw/28_mountain_village.jpg",
     "title": "Mountain Village",
     "tone": "dark",
     "aspect": "square",
@@ -281,7 +281,7 @@
   },
   {
     "id": "29_no_fear",
-    "file": "29_no_fear.jpg",
+    "file": "../../assets/gallery_bw/29_no_fear.jpg",
     "title": "No Fear",
     "tone": "dark",
     "aspect": "square",
@@ -291,7 +291,7 @@
   },
   {
     "id": "30_the_lone_tree",
-    "file": "30_the_lone_tree.jpg",
+    "file": "../../assets/gallery_bw/30_the_lone_tree.jpg",
     "title": "The Lone Tree",
     "tone": "mid",
     "aspect": "landscape",
@@ -301,7 +301,7 @@
   },
   {
     "id": "31_blooming_tree",
-    "file": "31_blooming_tree.jpg",
+    "file": "../../assets/gallery_bw/31_blooming_tree.jpg",
     "title": "Blooming Tree",
     "tone": "light",
     "aspect": "square",
@@ -311,7 +311,7 @@
   },
   {
     "id": "32_breaking_light",
-    "file": "32_breaking_light.jpg",
+    "file": "../../assets/gallery_bw/32_breaking_light.jpg",
     "title": "Breaking Light",
     "tone": "dark",
     "aspect": "landscape",
@@ -321,7 +321,7 @@
   },
   {
     "id": "33_surf_and_stone",
-    "file": "33_surf_and_stone.jpg",
+    "file": "../../assets/gallery_bw/33_surf_and_stone.jpg",
     "title": "Surf and Stone",
     "tone": "mid",
     "aspect": "landscape",
@@ -331,7 +331,7 @@
   },
   {
     "id": "34_misty_bog",
-    "file": "34_misty_bog.jpg",
+    "file": "../../assets/gallery_bw/34_misty_bog.jpg",
     "title": "Misty Bog",
     "tone": "mid",
     "aspect": "landscape",
@@ -341,7 +341,7 @@
   },
   {
     "id": "35_mosque_silhouette",
-    "file": "35_mosque_silhouette.jpg",
+    "file": "../../assets/gallery_bw/35_mosque_silhouette.jpg",
     "title": "Mosque Silhouette",
     "tone": "dark",
     "aspect": "portrait",
@@ -351,7 +351,7 @@
   },
   {
     "id": "36_stormy_shore",
-    "file": "36_stormy_shore.jpg",
+    "file": "../../assets/gallery_bw/36_stormy_shore.jpg",
     "title": "Stormy Shore",
     "tone": "dark",
     "aspect": "square",
@@ -361,7 +361,7 @@
   },
   {
     "id": "37_town_at_night",
-    "file": "37_town_at_night.jpg",
+    "file": "../../assets/gallery_bw/37_town_at_night.jpg",
     "title": "Town at Night",
     "tone": "dark",
     "aspect": "square",
@@ -371,7 +371,7 @@
   },
   {
     "id": "38_the_lone_pole",
-    "file": "38_the_lone_pole.jpg",
+    "file": "../../assets/gallery_bw/38_the_lone_pole.jpg",
     "title": "The Lone Pole",
     "tone": "mid",
     "aspect": "portrait",
@@ -381,7 +381,7 @@
   },
   {
     "id": "39_sea_stones",
-    "file": "39_sea_stones.jpg",
+    "file": "../../assets/gallery_bw/39_sea_stones.jpg",
     "title": "Sea Stones",
     "tone": "dark",
     "aspect": "landscape",
@@ -391,7 +391,7 @@
   },
   {
     "id": "41_water_lilies",
-    "file": "41_water_lilies.jpg",
+    "file": "../../assets/gallery_bw/41_water_lilies.jpg",
     "title": "Water Lilies",
     "tone": "dark",
     "aspect": "landscape",
@@ -401,7 +401,7 @@
   },
   {
     "id": "42_single_anemone",
-    "file": "42_single_anemone.jpg",
+    "file": "../../assets/gallery_bw/42_single_anemone.jpg",
     "title": "Single Anemone",
     "tone": "dark",
     "aspect": "landscape",
@@ -411,7 +411,7 @@
   },
   {
     "id": "43_misty_island",
-    "file": "43_misty_island.jpg",
+    "file": "../../assets/gallery_bw/43_misty_island.jpg",
     "title": "Misty Island",
     "tone": "light",
     "aspect": "square",
@@ -421,7 +421,7 @@
   },
   {
     "id": "44_sleeping_cat",
-    "file": "44_sleeping_cat.jpg",
+    "file": "../../assets/gallery_bw/44_sleeping_cat.jpg",
     "title": "Sleeping Cat",
     "tone": "mid",
     "aspect": "square",
@@ -431,7 +431,7 @@
   },
   {
     "id": "45_light_in_alley",
-    "file": "45_light_in_alley.jpg",
+    "file": "../../assets/gallery_bw/45_light_in_alley.jpg",
     "title": "Light in Alley",
     "tone": "dark",
     "aspect": "landscape",
@@ -441,7 +441,7 @@
   },
   {
     "id": "46_winter_mirror",
-    "file": "46_winter_mirror.jpg",
+    "file": "../../assets/gallery_bw/46_winter_mirror.jpg",
     "title": "Winter Mirror",
     "tone": "light",
     "aspect": "landscape",
@@ -451,7 +451,7 @@
   },
   {
     "id": "47_silver_tide",
-    "file": "47_silver_tide.jpg",
+    "file": "../../assets/gallery_bw/47_silver_tide.jpg",
     "title": "Silver Tide",
     "tone": "mid",
     "aspect": "square",
@@ -461,7 +461,7 @@
   },
   {
     "id": "48_the_cape",
-    "file": "48_the_cape.jpg",
+    "file": "../../assets/gallery_bw/48_the_cape.jpg",
     "title": "The Cape",
     "tone": "mid",
     "aspect": "square",
@@ -471,7 +471,7 @@
   },
   {
     "id": "49_the_sentinels",
-    "file": "49_the_sentinels.jpg",
+    "file": "../../assets/gallery_bw/49_the_sentinels.jpg",
     "title": "The Sentinels",
     "tone": "dark",
     "aspect": "square",
@@ -481,7 +481,7 @@
   },
   {
     "id": "50_valley_light",
-    "file": "50_valley_light.jpg",
+    "file": "../../assets/gallery_bw/50_valley_light.jpg",
     "title": "Valley Light",
     "tone": "dark",
     "aspect": "square",
@@ -491,7 +491,7 @@
   },
   {
     "id": "51_last_light",
-    "file": "51_last_light.jpg",
+    "file": "../../assets/gallery_bw/51_last_light.jpg",
     "title": "Last Light",
     "tone": "dark",
     "aspect": "landscape",
@@ -501,7 +501,7 @@
   },
   {
     "id": "52_quiet_shore",
-    "file": "52_quiet_shore.jpg",
+    "file": "../../assets/gallery_bw/52_quiet_shore.jpg",
     "title": "Quiet Shore",
     "tone": "dark",
     "aspect": "landscape",
@@ -511,7 +511,7 @@
   },
   {
     "id": "53_black_sand",
-    "file": "53_black_sand.jpg",
+    "file": "../../assets/gallery_bw/53_black_sand.jpg",
     "title": "Black Sand",
     "tone": "mid",
     "aspect": "square",
