@@ -16,6 +16,7 @@ export default defineConfig({
   fonts: [
     {
       // Display face: header, nav, labels, names, signature (its italic carries ū).
+      // Medium is for the small uppercase labels: Light's hairlines break up at 11–13px.
       provider: fontProviders.local(),
       name: 'Cormorant Garamond',
       cssVariable: '--font-cormorant',
@@ -24,6 +25,7 @@ export default defineConfig({
         variants: [
           { weight: 300, style: 'normal', src: ['./src/assets/fonts/cormorant-garamond-light.woff2'] },
           { weight: 300, style: 'italic', src: ['./src/assets/fonts/cormorant-garamond-light-italic.woff2'] },
+          { weight: 500, style: 'normal', src: ['./src/assets/fonts/cormorant-garamond-medium.woff2'] },
         ],
       },
     },

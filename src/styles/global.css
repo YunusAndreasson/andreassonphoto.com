@@ -152,12 +152,12 @@
 
   .site-name {
     font-size: var(--fs--1);
-    font-weight: 300;
+    font-weight: 500;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--nav-fg);
     text-decoration: none;
-    text-shadow: 0 1px 3px rgb(0 0 0 / 0.55);
+    text-shadow: 0 1px 1.5px rgb(0 0 0 / 0.45);
     padding-block: 0.4rem; /* ≥24px touch target (WCAG 2.5.8) */
 
     &:focus-visible {
@@ -172,13 +172,13 @@
 
     & a {
       font-size: var(--fs--2);
-      font-weight: 300;
+      font-weight: 500;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--nav-fg);
       text-decoration: none;
-      text-shadow: 0 1px 3px rgb(0 0 0 / 0.55);
-      opacity: 0.85;
+      text-shadow: 0 1px 1.5px rgb(0 0 0 / 0.45);
+      opacity: 0.92;
       padding-block: 0.4rem; /* ≥24px touch target (WCAG 2.5.8) */
       transition: opacity 0.3s;
 
@@ -423,7 +423,7 @@
        low contrast. */
     & a {
       font-size: var(--fs--2);
-      font-weight: 300;
+      font-weight: 500;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: inherit;
@@ -462,7 +462,7 @@
   .footer-byline {
     font-family: var(--font);
     font-size: var(--fs--1);
-    font-weight: 300;
+    font-weight: 500;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--nav-fg);
@@ -559,7 +559,7 @@
   .section-label {
     font-family: var(--font);
     font-size: var(--fs--1);
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--prose-ink);
@@ -653,6 +653,7 @@
   .bird-tally-caption {
     font-family: var(--font);
     font-size: var(--fs--2);
+    font-weight: 500;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--ink);

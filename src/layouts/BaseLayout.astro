@@ -86,7 +86,7 @@ const personSchema = {
     <link rel="canonical" href={canonicalUrl} />
     <!-- Preload only the face every page shows above the fold (header + nav).
          The rest load on demand; their optimized fallbacks keep the swap still. -->
-    <Font cssVariable="--font-cormorant" preload={[{ weight: 300, style: 'normal' }]} />
+    <Font cssVariable="--font-cormorant" preload={[{ weight: 500, style: 'normal' }]} />
     <Font cssVariable="--font-eb-garamond" />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
     <slot name="head" />
@@ -104,8 +104,8 @@ const personSchema = {
       <nav class="site-nav">
         <a href="/" class:list={{ 'is-current': navPath === '/' }} aria-current={navPath === '/' ? 'page' : undefined}>Work</a>
         <a href="/about" class:list={{ 'is-current': navPath === '/about' }} aria-current={navPath === '/about' ? 'page' : undefined}>Words</a>
-        <a href="/birds" class:list={{ 'is-current': navPath === '/birds' }} aria-current={navPath === '/birds' ? 'page' : undefined}>Birds</a>
-        <a href="/projects" class:list={{ 'is-current': navPath === '/projects' }} aria-current={navPath === '/projects' ? 'page' : undefined}>Building</a>
+        <a href="/birds" class:list={{ 'is-current': navPath === '/birds' }} aria-current={navPath === '/birds' ? 'page' : undefined}>Wings</a>
+        <a href="/projects" class:list={{ 'is-current': navPath === '/projects' }} aria-current={navPath === '/projects' ? 'page' : undefined}>Webs</a>
       </nav>
     </header>
 
