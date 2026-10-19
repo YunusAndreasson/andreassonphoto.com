@@ -30,14 +30,14 @@ const collectionSchema = {
   '@type': 'CollectionPage',
   name: 'Birds seen in Sweden — Yunus Andreasson',
   url: 'https://andreassonphoto.com/birds',
-  description: `The ${total} bird species Yunus Andreasson has seen in Sweden, in taxonomic order.`,
+  description: `Every bird species Yunus Andreasson has seen in Sweden, ${total} so far.`,
   author: { '@id': 'https://andreassonphoto.com/#person' },
 };
 ---
 
 <BaseLayout
   title="Andrèasson Photo — Birds Seen in Sweden"
-  description={`${total} bird species seen in Sweden, kept in taxonomic order — ${rarities} of them rarities or vagrants.`}
+  description={`Every bird species Yunus Andreasson has seen in Sweden: ${total} so far, ${rarities} of them rarities.`}
 >
   <script type="application/ld+json" is:inline set:html={JSON.stringify(collectionSchema)} slot="head" />
   <main class="page-content">
@@ -96,7 +96,7 @@ const collectionSchema = {
     </div>
 
     <p class="bird-source">
-      Swedish names and taxonomic order follow the Swedish list. Rarities are marked with an open circle.
+      Names and order follow the Swedish list. An open circle marks a rarity.
     </p>
   </main>
 </BaseLayout>

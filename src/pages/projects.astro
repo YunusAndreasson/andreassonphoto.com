@@ -1,14 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// A quiet index of the software Yunus builds alongside the photography. This is
-// the single page every app links back to ("Made by Yunus Andreasson"), so the
-// apps themselves stay uncluttered — the full list lives here, not in each app.
+// The websites Yunus makes alongside the photography. This is the single page
+// every site links back to ("Made by Yunus Andreasson"), so the sites
+// themselves stay uncluttered — the full list lives here, not in each site.
 // CollectionPage whose author is the canonical Person defined in BaseLayout.
 const collectionSchema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  name: 'Projects — Yunus Andreasson',
+  name: 'Websites — Yunus Andreasson',
   url: 'https://andreassonphoto.com/projects',
   author: { '@id': 'https://andreassonphoto.com/#person' },
 };
@@ -16,22 +16,23 @@ const collectionSchema = {
 // One entry per project. `external` names appear as the visible link text; the
 // note is the same quiet italic register as the contact links.
 const projects = [
-  { name: 'islam.se', url: 'https://islam.se', desc: 'Prayer times and Islamic reading, in Swedish' },
-  { name: 'open-arabic', url: 'https://openarabic.io', desc: 'A place to learn to read Arabic' },
-  { name: 'al-ibadah', url: 'https://al-ibadah.com', desc: 'Islamic texts to read, in Swedish' },
-  { name: 'zuhd.news', url: 'https://zuhd.news', desc: 'World news, kept brief and calm' },
-  { name: 'qamar360', url: 'https://qamar360.com', desc: 'A companion for daily prayers' },
+  { name: 'islam.se', url: 'https://islam.se', desc: 'Prayer times and reading, in Swedish' },
+  { name: 'open-arabic', url: 'https://openarabic.io', desc: 'Learn to read Arabic' },
+  { name: 'al-ibadah', url: 'https://al-ibadah.com', desc: 'Islamic texts in Swedish' },
+  { name: 'zuhd.news', url: 'https://zuhd.news', desc: 'The news, short and calm' },
+  { name: 'qamar360', url: 'https://qamar360.com', desc: 'For the daily prayers' },
   { name: 'edenmind', url: 'https://edenmind.com', desc: 'Flashcards you review out loud' },
-  { name: 'mygjakova', url: 'https://mygjakova.com', desc: 'A small guide to Gjakova, Kosovo' },
+  { name: 'mygjakova', url: 'https://mygjakova.com', desc: 'A guide to Gjakova, in Kosovo' },
 ];
 ---
 
-<BaseLayout title="Andrèasson Photo — Webs" description="Software Yunus Andreasson builds alongside the photography">
+<BaseLayout title="Andrèasson Photo — Webs" description="Websites made by Yunus Andreasson: prayer times, Islamic texts, Arabic, the news, and a guide to Gjakova.">
   <script type="application/ld+json" is:inline set:html={JSON.stringify(collectionSchema)} slot="head" />
   <main class="page-content">
     <p class="invocation">
-      Alongside the photography, a handful of small, quiet apps —<br>
-      mostly for reading, remembering, and prayer.
+      When I'm not out with the camera, I make websites.<br>
+      A few for prayer and reading, one for the news,<br>
+      one for a town in Kosovo.
     </p>
 
     <section class="also-building" aria-labelledby="building-heading">
