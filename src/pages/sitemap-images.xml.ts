@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
-import { getImage } from 'astro:assets';
-import { getCollection } from 'astro:content';
+import { getFullscreenImage, getGalleryImages } from '../utils/gallery';
+import { SITE_ORIGIN } from '../utils/site';
 
 // A dedicated Google Image sitemap for the single-page gallery.
 //
@@ -10,9 +10,9 @@ import { getCollection } from 'astro:content';
 // astro.config's serialize hook). So this endpoint renders the image sitemap
 // directly — this is a photographer's site, and Google Images is the channel.
 //
-// Image URLs mirror GalleryView.astro's fullscreen variant exactly (same src,
-// width and format), so Astro dedupes to the already-emitted AVIF file rather
-// than generating extra assets. AVIF is never touched by prune-orphan-images.
+// Image URLs are GalleryView's fullscreen variant (the shared getFullscreenImage),
+// so Astro dedupes to the already-emitted AVIF file rather than generating extra
+// assets. AVIF is never touched by prune-orphan-images.
 
 function xmlEscape(value: string): string {
   return value
@@ -23,23 +23,13 @@ function xmlEscape(value: string): string {
     .replace(/'/g, '&apos;');
 }
 
-export const GET: APIRoute = async ({ site }) => {
-  const origin = site?.origin ?? 'https://andreassonphoto.com';
-
-  // Same source and ordering as the homepage (src/pages/index.astro).
-  const images = (await getCollection('gallery'))
-    .map((entry) => entry.data)
-    .sort((a, b) => a.order - b.order);
+export const GET: APIRoute = async () => {
+  const origin = SITE_ORIGIN;
+  const images = await getGalleryImages();
 
   const entries = await Promise.all(
     images.map(async (img) => {
-      const meta = img.file; // ImageMetadata via the collection's image() schema
-      const full = await getImage({
-        src: meta,
-        width: Math.min(1600, meta.width),
-        format: 'avif',
-      });
-      const loc = new URL(full.src, origin).href;
+      const loc = new URL((await getFullscreenImage(img.file)).src, origin).href;
       return [
         '    <image:image>',
         `      <image:loc>${xmlEscape(loc)}</image:loc>`,

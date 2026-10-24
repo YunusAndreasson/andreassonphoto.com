@@ -5,12 +5,10 @@ import type { CollectionEntry } from 'astro:content';
 export type GalleryImage = CollectionEntry<'gallery'>['data'];
 
 // An image paired with its real aspect ratio (width / height, from
-// astro:assets ImageMetadata). `isHero` is retained for type compatibility with
-// the view layer but the layout now reads the content `hero` flag directly.
+// astro:assets ImageMetadata).
 export interface Item {
   img: GalleryImage;
   ar: number;
-  isHero: boolean;
 }
 
 export interface Cell {
@@ -21,28 +19,24 @@ export interface Cell {
   grow: number;
 }
 
-// Every row is laid out full-bleed ('fill'); the union is kept so the view can
-// stay defensive, but the justified layout never emits 'center'/'hero'.
-export type RowMode = 'fill' | 'center' | 'hero';
-
+// Every row spans the full content width.
 export interface Row {
   cells: Cell[];
-  mode: RowMode;
-  maxWidthPx?: number;
 }
 
 // ── Layout tuning ──────────────────────────────────────────────────────────
 // Approximate: flex-grow does the exact pixel work in the browser at the live
-// viewport width. These only steer how the curated order is broken into rows.
-const CONTENT_W = 1120; // ~1200px max-width minus the wall padding
-const GAP = 40; // representative --gap (clamp(20px, 3vw, 56px))
+// viewport width. These steer how the curated order is broken into rows, and
+// GalleryView uses them to estimate each print's rendered width for `sizes`.
+export const CONTENT_W = 1120; // ~1200px max-width minus the wall padding
+export const GAP = 40; // representative --gap (clamp(20px, 3vw, 56px))
 const TARGET_H = 500; // preferred print height — every row is justified toward this
 const MAX_PER_ROW = 3; // keep prints large; never cram a row
 
 // Height a row of n images (aspect-ratio sum `sumAr`) renders at when it fills
 // the full content width — which EVERY row now does, so the left and right
 // edges of the wall are perfectly straight verticals from top to bottom.
-function rowHeight(sumAr: number, n: number): number {
+export function rowHeight(sumAr: number, n: number): number {
   return (CONTENT_W - (n - 1) * GAP) / sumAr;
 }
 
@@ -69,7 +63,7 @@ export function composeRows(items: Item[]): Row[] {
   for (const it of items) {
     if (it.img.hero) {
       flushSegment();
-      rows.push({ cells: [{ img: it.img, ar: it.ar, grow: it.ar }], mode: 'fill' });
+      rows.push({ cells: [{ img: it.img, ar: it.ar, grow: it.ar }] });
     } else {
       segment.push(it);
     }
@@ -126,7 +120,7 @@ function justify(items: Item[]): Row[] {
     const a = cuts[r];
     const b = cuts[r + 1];
     const cells: Cell[] = items.slice(a, b).map((it) => ({ img: it.img, ar: it.ar, grow: it.ar }));
-    rows.push({ cells, mode: 'fill' });
+    rows.push({ cells });
   }
   return rows;
 }

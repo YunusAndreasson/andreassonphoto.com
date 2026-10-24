@@ -1,6 +1,8 @@
 ---
-import { Image, getImage } from 'astro:assets';
-import { composeRows, type GalleryImage, type Item } from '../utils/composeRows';
+import { Image } from 'astro:assets';
+import { PERSON_NAME } from '../utils/site';
+import { getFullscreenImage } from '../utils/gallery';
+import { composeRows, rowHeight, type GalleryImage } from '../utils/composeRows';
 
 interface Props {
   images: GalleryImage[];
@@ -12,27 +14,7 @@ const { images } = Astro.props;
 // real dimensions are known up front: the justified layout sizes every row from
 // true aspect ratios so each row fills the full width at a common height — see
 // composeRows.
-const items: Item[] = images.map((img) => ({
-  img,
-  ar: img.file.width / img.file.height,
-  isHero: false,
-}));
-const rows = composeRows(items);
-
-// Mirror composeRows' constants only to estimate the px width each image
-// renders at, so `sizes`/`widths` request a right-sized resolution. (No global
-// image `layout` in astro.config: these explicit widths/sizes keep the gallery
-// CSS in full control of image sizing.)
-const CONTENT_W = 1120;
-const GAP = 40;
-
-function renderedWidth(row: (typeof rows)[number], ar: number): number {
-  if (row.mode === 'hero') return CONTENT_W;
-  const sum = row.cells.reduce((s, c) => s + c.ar, 0);
-  const rowW = row.mode === 'center' ? (row.maxWidthPx ?? CONTENT_W) : CONTENT_W;
-  const avail = rowW - (row.cells.length - 1) * GAP;
-  return Math.max(1, Math.round((ar / sum) * avail));
-}
+const rows = composeRows(images.map((img) => ({ img, ar: img.file.width / img.file.height })));
 
 // 1x / 1.5x / 2x widths, never upscaling past the source.
 function widthsFor(px: number, intrinsic: number): number[] {
@@ -42,63 +24,57 @@ function widthsFor(px: number, intrinsic: number): number[] {
 }
 
 // Pre-resolve a high-res variant (for the fullscreen detail view) + responsive
-// data per cell.
+// data per cell. Each print renders at the row's common height, so its width
+// is that height times its aspect ratio; `sizes`/`widths` request a right-sized
+// resolution from it. (No global image `layout` in astro.config: these explicit
+// widths/sizes keep the gallery CSS in full control of image sizing.)
 const renderRows = await Promise.all(
   rows.map(async (row, ri) => {
+    const sumAr = row.cells.reduce((s, c) => s + c.ar, 0);
+    // Reserve each row's REAL rendered height for off-screen items (they are
+    // content-visibility:auto). A flat estimate makes the scroll position jump
+    // as rows render in — matching the true height keeps CLS ~0 (Web Vitals).
+    const rowH = rowHeight(sumAr, row.cells.length);
     const cells = await Promise.all(
       row.cells.map(async (cell) => {
         const meta = cell.img.file;
-        const full = await getImage({
-          src: meta,
-          width: Math.min(1600, meta.width),
-          format: 'avif',
-        });
-        const px = renderedWidth(row, cell.ar);
+        const px = Math.max(1, Math.round(cell.ar * rowH));
+        const isEarly = ri < 3;
         return {
           img: cell.img,
           meta,
           grow: cell.grow,
-          fullSrc: full.src,
+          fullSrc: (await getFullscreenImage(meta)).src,
           widths: widthsFor(px, meta.width),
-          sizes:
-            row.mode === 'hero'
-              ? '(max-width: 768px) 100vw, 1120px'
-              : `(max-width: 768px) 100vw, ${px}px`,
-          isEarly: ri < 3,
+          // Lazy prints let the browser use their real laid-out width
+          // (`sizes="auto"`); the estimate after it is the fallback for
+          // browsers without it. Eager ones are fetched before layout, so they
+          // keep the estimate alone.
+          sizes: `${isEarly ? '' : 'auto, '}(max-width: 768px) 100vw, ${px}px`,
+          isEarly,
         };
       }),
     );
-    // Reserve each row's REAL rendered height for off-screen items (they are
-    // content-visibility:auto). A flat estimate makes the scroll position jump
-    // as rows render in — matching the true height keeps CLS ~0 (Web Vitals).
-    const sumAr = row.cells.reduce((s, c) => s + c.ar, 0);
-    const rowW = row.mode === 'center' ? (row.maxWidthPx ?? CONTENT_W) : CONTENT_W;
-    const intrinsicH = Math.round((rowW - (row.cells.length - 1) * GAP) / sumAr);
-    return { mode: row.mode, maxWidthPx: row.maxWidthPx, intrinsicH, cells };
+    return { intrinsicH: Math.round(rowH), cells };
   }),
 );
 ---
 
-<main class="gallery-wall">
-  <h1 class="sr-only">Yunus Andreasson — black-and-white photography</h1>
+<main id="main-content" class="gallery-wall" tabindex="-1">
+  <h1 class="sr-only">{PERSON_NAME} — black-and-white photography</h1>
   {renderRows.map((row) => (
-    <div
-      class:list={[
-        'gallery-row',
-        row.mode === 'center' && 'gallery-row--center',
-        row.mode === 'hero' && 'gallery-row--hero',
-      ]}
-      style={row.mode === 'center' && row.maxWidthPx ? `max-width:${row.maxWidthPx}px` : undefined}
-    >
+    <div class="gallery-row">
       {row.cells.map((cell) => (
-        <div
+        <button
+          type="button"
+          disabled
           class:list={['gallery-item', cell.isEarly && 'is-early']}
-          data-aspect={cell.img.aspect}
+          commandfor="detail-view"
+          command="show-modal"
+          aria-haspopup="dialog"
           data-bg={cell.img.edgeColor}
           data-full={cell.fullSrc}
           style={`flex-grow:${cell.grow.toFixed(4)};background-color:${cell.img.edgeColor};contain-intrinsic-size:auto ${row.intrinsicH}px`}
-          role="button"
-          tabindex="0"
         >
           <Image
             src={cell.meta}
@@ -110,20 +86,25 @@ const renderRows = await Promise.all(
             decoding={cell.isEarly ? 'sync' : 'async'}
             fetchpriority={cell.isEarly ? 'high' : undefined}
           />
-        </div>
+        </button>
       ))}
     </div>
   ))}
 </main>
 
-<dialog class="detail-overlay" aria-label="Image view">
-  <button class="detail-close" id="detail-close" aria-label="Close" type="button">&times;</button>
+<!-- Every control here is declarative: invoker commands (command/commandfor)
+     open and close the dialog natively, and the two custom commands below
+     (--prev/--next) arrive as `command` events on the dialog. -->
+<dialog id="detail-view" class="detail-overlay" aria-label="Image view" aria-describedby="detail-help">
+  <p id="detail-help" class="sr-only">Use the arrow keys or swipe to browse photographs. Press Escape to close.</p>
+  <button class="detail-close" type="button" commandfor="detail-view" command="close" aria-label="Close">&times;</button>
   <div class="detail-image-wrap">
-    <button class="detail-nav-prev" id="detail-prev" aria-label="Previous image" type="button"></button>
-    <img id="detail-img-a" class="detail-img is-active" src="" alt="" />
-    <img id="detail-img-b" class="detail-img" src="" alt="" />
-    <button class="detail-nav-next" id="detail-next" aria-label="Next image" type="button"></button>
+    <button class="detail-nav-prev" type="button" commandfor="detail-view" command="--prev" aria-label="Previous image"><span aria-hidden="true">‹</span></button>
+    <img class="detail-img" alt="" draggable="false" aria-hidden="true" />
+    <img class="detail-img" alt="" draggable="false" aria-hidden="true" />
+    <button class="detail-nav-next" type="button" commandfor="detail-view" command="--next" aria-label="Next image"><span aria-hidden="true">›</span></button>
   </div>
+  <p class="detail-status" role="status" aria-atomic="true"></p>
 </dialog>
 
 <script>
@@ -144,158 +125,185 @@ const renderRows = await Promise.all(
     return `#${h}${h}${h}`;
   }
 
+  // Fetch and decode off-screen, so stepping to it later is instant.
+  function preload(src: string) {
+    const img = new Image();
+    img.src = src;
+    img.decode().catch(() => {});
+  }
+
   document.addEventListener('astro:page-load', () => {
     controller?.abort();
     controller = new AbortController();
     const { signal } = controller;
 
-    const wall = document.querySelector<HTMLElement>('.gallery-wall');
-    const overlay = document.querySelector<HTMLDialogElement>('.detail-overlay');
-    if (!wall || !overlay) return;
+    const overlay = document.querySelector<HTMLDialogElement>('#detail-view');
+    if (!overlay) return;
+    const status = overlay.querySelector<HTMLElement>('.detail-status')!;
 
-    const imgA = document.getElementById('detail-img-a') as HTMLImageElement;
-    const imgB = document.getElementById('detail-img-b') as HTMLImageElement;
-    let activeImg = imgA;
-    let nextImg = imgB;
+    const galleryItems = document.querySelectorAll<HTMLElement>('.gallery-item');
 
-    const galleryItems = wall.querySelectorAll<HTMLElement>('.gallery-item');
+    // Prints fade in as they scroll into view (CSS keeps them visible with
+    // scripting off or motion reduced). Scroll-driven animations would do this
+    // without JS, but Firefox/Zen don't ship them yet.
+    const reveal = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add('is-visible');
+        reveal.unobserve(entry.target);
+      }
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    for (const el of galleryItems) reveal.observe(el);
+    signal.addEventListener('abort', () => reveal.disconnect());
+
+    // Two stacked <img>s: the next print decodes in the hidden one, then the
+    // two crossfade.
+    let [activeImg, nextImg] = overlay.querySelectorAll<HTMLImageElement>('.detail-img');
+
     const itemIndex = new Map<Element, number>();
-    const navList: { bg: string; src: string; alt: string }[] = [];
-
-    for (const [i, el] of galleryItems.entries()) {
+    const navList = [...galleryItems].map((el, i) => {
       itemIndex.set(el, i);
-      navList.push({
-        bg: detailBackdrop(el.dataset.bg!),
-        src: el.dataset.full!,
-        alt: el.querySelector('img')!.alt,
-      });
-    }
+      return { bg: detailBackdrop(el.dataset.bg!), src: el.dataset.full!, alt: el.querySelector('img')!.alt };
+    });
 
     let currentNav = 0;
 
-    function preloadAdjacent() {
-      const prev = (currentNav - 1 + navList.length) % navList.length;
-      const next = (currentNav + 1) % navList.length;
-      new Image().src = navList[prev].src;
-      new Image().src = navList[next].src;
-    }
+    // Bumped on every showImage, so a decode that finishes after the user has
+    // moved on can't swap a stale image in.
+    let loadToken = 0;
 
-    function showImage(data: (typeof navList)[number], isFirst = false) {
+    async function showImage(isFirst = false) {
+      const data = navList[currentNav];
+      const token = ++loadToken;
       overlay!.style.backgroundColor = data.bg;
+      status.textContent = `Loading photograph ${currentNav + 1} of ${navList.length}…`;
 
+      // On open the print goes straight into the visible slot; after that into
+      // the hidden one, which then fades in over the old.
+      const img = isFirst ? activeImg : nextImg;
       if (isFirst) {
-        // First image: simple load into active
-        activeImg.src = data.src;
-        activeImg.alt = data.alt;
-        activeImg.classList.remove('is-loaded');
-        activeImg.classList.add('is-active');
-        nextImg.classList.remove('is-active', 'is-loaded');
-        activeImg.addEventListener('load', () => {
-          activeImg.classList.add('is-loaded');
-          preloadAdjacent();
-        }, { once: true });
-        if (activeImg.complete) {
-          activeImg.classList.add('is-loaded');
-          preloadAdjacent();
+        nextImg.classList.remove('is-active');
+        nextImg.setAttribute('aria-hidden', 'true');
+      }
+      img.classList.remove('is-active');
+      img.setAttribute('aria-hidden', 'true');
+      img.src = data.src;
+      img.alt = data.alt;
+
+      try {
+        await img.decode(); // pixels ready to paint, so the fade never stutters
+      } catch {
+        if (token === loadToken) {
+          status.textContent = 'This photograph could not load. Try the next or previous image.';
         }
         return;
       }
+      if (token !== loadToken) return;
 
-      // Crossfade: load into the hidden image, then swap
-      nextImg.classList.remove('is-loaded', 'is-active');
-      nextImg.src = data.src;
-      nextImg.alt = data.alt;
-
-      const onLoad = () => {
-        // Fade in the new image on top
-        nextImg.classList.add('is-active', 'is-loaded');
-        // Fade out the old image behind
+      img.classList.add('is-active');
+      img.removeAttribute('aria-hidden');
+      if (!isFirst) {
         activeImg.classList.remove('is-active');
+        activeImg.setAttribute('aria-hidden', 'true');
+        [activeImg, nextImg] = [nextImg, activeImg];
+      }
+      status.textContent = `${currentNav + 1} of ${navList.length} · ${data.alt}`;
 
-        // Swap references
-        const tmp = activeImg;
-        activeImg = nextImg;
-        nextImg = tmp;
-
-        preloadAdjacent();
-      };
-
-      nextImg.addEventListener('load', onLoad, { once: true });
-      if (nextImg.complete) onLoad();
+      preload(navList[(currentNav + 1) % navList.length].src);
+      preload(navList[(currentNav - 1 + navList.length) % navList.length].src);
     }
 
     function navigate(dir: number) {
       currentNav = (currentNav + dir + navList.length) % navList.length;
-      showImage(navList[currentNav]);
+      showImage();
     }
 
-    function openDetail(idx: number) {
-      currentNav = idx;
-      showImage(navList[currentNav], true);
-      overlay!.showModal();
-    }
-
-    wall.addEventListener('click', (e) => {
-      const item = (e.target as HTMLElement).closest('.gallery-item');
-      if (!item) return;
-      const idx = itemIndex.get(item);
-      if (idx !== undefined) openDetail(idx);
-    }, { signal });
-
-    wall.addEventListener('keydown', (e) => {
-      if (e.key !== 'Enter' && e.key !== ' ') return;
-      const item = (e.target as HTMLElement).closest('.gallery-item');
-      if (!item) return;
-      const idx = itemIndex.get(item);
-      if (idx !== undefined) {
-        e.preventDefault();
-        openDetail(idx);
+    // `command` fires on the dialog before the browser acts on it, so the
+    // print is already loading when show-modal opens the dialog.
+    function handleCommand(command: string, source: Element | null) {
+      if (command === 'show-modal' && source && itemIndex.has(source)) {
+        currentNav = itemIndex.get(source)!;
+        showImage(true);
+      } else if (command === '--next') {
+        navigate(1);
+      } else if (command === '--prev') {
+        navigate(-1);
       }
+    }
+
+    overlay.addEventListener('command', (e) => {
+      const { command, source } = e as CommandEvent;
+      handleCommand(command, source);
     }, { signal });
 
-    document.getElementById('detail-close')!.addEventListener('click', () => {
-      overlay.close();
+    // Keep the native commands above; older browsers get the same controls.
+    if (!('commandForElement' in HTMLButtonElement.prototype)) {
+      document.addEventListener('click', (e) => {
+        const button = (e.target as Element).closest<HTMLButtonElement>('[commandfor="detail-view"]');
+        if (!button || e.defaultPrevented) return;
+        const command = button.getAttribute('command')!;
+        handleCommand(command, button);
+        if (command === 'show-modal') overlay.showModal();
+        if (command === 'close') overlay.close();
+      }, { signal });
+    }
+
+    overlay.addEventListener('close', () => {
+      ++loadToken;
+      status.textContent = '';
     }, { signal });
 
-    document.getElementById('detail-prev')!.addEventListener('click', (e) => {
-      e.stopPropagation();
-      navigate(-1);
-    }, { signal });
-
-    document.getElementById('detail-next')!.addEventListener('click', (e) => {
-      e.stopPropagation();
-      navigate(1);
-    }, { signal });
-
+    // Clicking the empty ground around the print closes, like a lightbox.
     overlay.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (target === overlay || target.classList.contains('detail-image-wrap')) {
+      if (e.target === overlay || (e.target as Element).classList.contains('detail-image-wrap')) {
         overlay.close();
       }
     }, { signal });
 
-    document.addEventListener('keydown', (e) => {
-      if (!overlay.open) return;
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate(-1);
+    // Focus is always inside the modal dialog, so it hears every key.
+    overlay.addEventListener('keydown', (e) => {
+      if (['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'].includes(e.key)) {
+        e.preventDefault();
+        navigate(e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1);
+      }
     }, { signal });
 
-    let startX = 0;
-    let startY = 0;
+    let pointerStart: { id: number; x: number; y: number } | null = null;
+    let suppressClick = false;
 
     overlay.addEventListener('pointerdown', (e) => {
-      startX = e.clientX;
-      startY = e.clientY;
+      suppressClick = false;
+      pointerStart = e.isPrimary && e.button === 0
+        ? { id: e.pointerId, x: e.clientX, y: e.clientY }
+        : null;
     }, { passive: true, signal });
 
     overlay.addEventListener('pointerup', (e) => {
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
+      if (!pointerStart || e.pointerId !== pointerStart.id) return;
+      const dx = e.clientX - pointerStart.x;
+      const dy = e.clientY - pointerStart.y;
+      pointerStart = null;
       if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+        suppressClick = true;
         navigate(dx < 0 ? 1 : -1);
       } else if (Math.abs(dy) > 80) {
+        suppressClick = true;
         overlay.close();
       }
     }, { passive: true, signal });
+
+    overlay.addEventListener('pointercancel', () => { pointerStart = null; }, { signal });
+    // A completed swipe also produces a click. Consume it before a navigation
+    // button's native command or the backdrop close handler can act twice.
+    overlay.addEventListener('click', (e) => {
+      if (!suppressClick || e.detail === 0) return;
+      suppressClick = false;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }, { capture: true, signal });
+
+    // Enable only when the viewer is ready. With scripting disabled the wall
+    // remains readable without opening an empty native dialog.
+    for (const item of galleryItems) (item as HTMLButtonElement).disabled = false;
   });
 </script>

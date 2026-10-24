@@ -6,6 +6,10 @@
   --font: var(--font-cormorant);
   --font-prose: var(--font-eb-garamond);
 
+  /* Not a theme toggle: tells the browser the page is dark, so native
+     scrollbars and the focus/selection UI match the wall instead of glaring. */
+  color-scheme: dark;
+
   /* Single neutral museum scheme — warm exhibition grey, no dark/light toggle.
      Deeper than 18% mid-grey (L*33 vs 48): a darker surround makes the prints
      read as lit, the way photo galleries paint their rooms, while staying a
@@ -20,8 +24,9 @@
   /* Warm paper-white prose: 7.3:1 on the wall, 6.5:1 on the glow. Softer than
      pure white so long reading doesn't glare against the deeper grey. */
   --prose-ink: #f1eee7;
+  /* Every link brightens to this on hover — one hover language site-wide. */
+  --ink-bright: #ffffff;
   --detail-bg: #0a0a0a;
-  --focus-ring: color-mix(in oklab, var(--ink) 80%, transparent);
   /* Header scrim drawn in the wall's own warm hue, so it reads as shade
      falling across the wall rather than a black band. */
   --scrim: 18 17 15;
@@ -33,15 +38,31 @@
 
   /* Fluid spacing — replaces the old per-breakpoint magic numbers */
   --gap: clamp(20px, 3vw, 56px);
+  /* Room the fixed header takes; every page's content starts below it. */
+  --header-h: 72px;
+  /* The air between a page's lead and its body, and before its closing line. */
+  --section-gap: 4.5rem;
 
-  /* Modular type scale — minor third (1.2) on a 16px base. The hand-tuned
-     sizes already landed almost exactly on this ratio (11≈11.1, 13≈13.3,
-     23≈23.04), so every size now derives from one formula. */
-  --fs--2: 0.694rem; /* 11.1px — labels: nav, contact */
-  --fs--1: 0.833rem; /* 13.3px — site name */
-  --fs-0: 1rem; /*    16px   — signature */
-  --fs-1: 1.2rem; /*  19.2px — prose (min) */
-  --fs-2: 1.44rem; /* 23.0px — prose (max), detail close */
+  /* Optical sizes: small serif labels need enough body to retain their
+     hairlines, while reading text and display names have their own measure. */
+  --fs--2: 0.75rem; /* 12px — uppercase nav, links, captions */
+  --fs--1: 0.875rem; /* 14px — name, headings, small notes */
+  --fs-0: 1rem; /*    16px   — notes, signature */
+  --fs-1: 1.2rem; /*  19.2px — prose (min), display names */
+  --fs-2: 1.44rem; /* 23.0px — prose (max), tally figures, detail close */
+}
+
+@media (width <= 768px) {
+  :root {
+    --header-h: 56px;
+  }
+}
+
+/* On phones the nav gets its own line, preserving readable serif labels. */
+@media (width <= 600px) {
+  :root {
+    --header-h: 100px;
+  }
 }
 
 /* High contrast: the default palette already clears AA (secondary text
@@ -73,30 +94,58 @@
 
 @layer base {
   html {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    /* Let the platform rasterize these fine serifs at the display's resolution. */
+    /* Reserve the scrollbar's space, so locking scroll under the dialog
+       doesn't shift the wall sideways. */
+    scrollbar-gutter: stable;
   }
 
   body {
+    min-block-size: 100svh;
+    display: flex;
+    flex-direction: column;
     font-family: var(--font);
     font-weight: 300;
     font-synthesis: none;
     font-kerning: normal;
     font-variant-ligatures: common-ligatures contextual;
-    text-rendering: optimizeLegibility;
     background-color: var(--wall-bg);
     background-image: linear-gradient(180deg, var(--wall-glow) 0%, var(--wall-bg) 45dvh);
     background-attachment: fixed;
     background-repeat: no-repeat;
     color: var(--ink);
-    overflow-x: hidden;
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
+    /* clip, not hidden: trims sideways overflow without making the body a
+       scroll container. */
+    overflow-x: clip;
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
   }
 
   /* Lock background scroll while the detail dialog is open (replaces JS) */
   body:has(.detail-overlay[open]) {
     overflow: hidden;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s, opacity 0.3s;
+  }
+
+  main {
+    flex: 1;
+    width: 100%;
+    scroll-margin-block-start: calc(var(--header-h) + env(safe-area-inset-top));
+  }
+
+  main:focus {
+    outline: none;
+  }
+
+  /* One focus ring for everything: a 2px line in the element's own colour,
+     clear of its edge. Components only adjust the offset where space is tight. */
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
   }
 
   /* Visually hidden but exposed to assistive tech — each page's real h1,
@@ -105,16 +154,124 @@
     position: absolute;
     width: 1px;
     height: 1px;
-    padding: 0;
-    margin: -1px;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
     white-space: nowrap;
     border: 0;
+    /* Hidden labels must not fetch webfonts solely for unpainted glyphs. */
+    font-family: system-ui;
   }
 }
 
 @layer components {
+  .skip-link {
+    position: fixed;
+    inset-block-start: calc(0.5rem + env(safe-area-inset-top));
+    inset-inline-start: max(1rem, env(safe-area-inset-left));
+    z-index: 200;
+    padding: 0.75rem 1rem;
+    background: var(--detail-bg);
+    color: var(--nav-fg);
+    /* Reuse the navigation face rather than fetching prose for a hidden link. */
+    font-family: var(--font);
+    font-weight: 500;
+    transform: translateY(calc(-100% - 2rem - env(safe-area-inset-top)));
+
+    &:focus {
+      transform: none;
+    }
+  }
+
+  /* ── Type roles ──
+     Every text on the site is one of a few roles, each defined once here.
+     The component rules further down only add colour, size steps and layout. */
+
+  /* Name — the maker's name, header and footer: the widest-tracked small caps. */
+  .site-name,
+  .footer-byline {
+    font-size: var(--fs--1);
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--nav-fg);
+    padding-block: 0.4rem; /* ≥24px touch target (WCAG 2.5.8) */
+  }
+
+  /* Label — small caps for links (nav, footer) and headings (families, tally). */
+  .site-nav a,
+  .footer-social a,
+  .section-label,
+  .bird-tally-caption {
+    font-family: var(--font);
+    font-size: var(--fs--2);
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* Display — a name set large and light: projects, birds, the way back home. */
+  .project-list a,
+  .bird-sv,
+  .not-found-back a,
+  .bird-tally-figure {
+    font-family: var(--font);
+    font-size: var(--fs-2);
+    font-weight: 300;
+    letter-spacing: 0.01em;
+  }
+
+  /* Repeated reading-size names need a firmer stroke than display titles. */
+  .bird-sv {
+    font-size: var(--fs-1);
+    font-weight: 500;
+  }
+
+  /* Note — the quiet italic line under or beside a name. */
+  .footer-note,
+  .project-desc,
+  .bird-meta,
+  .bird-legend,
+  .bird-group-count,
+  .bird-source {
+    font-family: var(--font-prose);
+    font-size: var(--fs-0);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--ink);
+  }
+
+  /* Small notes step down one size: footer, legends, counts, the source line. */
+  .footer-note,
+  .bird-legend,
+  .bird-group-count,
+  .bird-source {
+    font-size: var(--fs--1);
+  }
+
+  /* ── Link states ── one hover, one underline, used everywhere. */
+
+  .site-name:hover,
+  .footer-byline:hover,
+  .footer-social a:hover,
+  .project-list a:hover,
+  .not-found-back a:hover {
+    color: var(--ink-bright);
+  }
+
+  /* The underline means "you are here" in the nav, marks a lone prose link,
+     and appears on hover where a list of names is already clearly links. */
+  .site-nav a[aria-current='page'],
+  .project-list a:hover,
+  .not-found-back a {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: color-mix(in oklab, currentColor 55%, transparent);
+    text-underline-offset: 5px;
+  }
+
   /* ── Header ── */
 
   /* Fixed header floats over the prints — including high-key (near-white)
@@ -122,11 +279,12 @@
      over any photo (a flat 40% fill measured 2.5:1 over a light image). */
   .site-header {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    inset: 0 0 auto;
     z-index: 100;
-    padding: 1.4rem 2rem 2.2rem;
+    /* max()/env(): with viewport-fit=cover a fixed bar ignores the body's
+       safe-area padding, so it keeps the name clear of a landscape notch itself. */
+    padding: calc(1.4rem + env(safe-area-inset-top)) max(2rem, env(safe-area-inset-right)) 2.2rem
+      max(2rem, env(safe-area-inset-left));
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -143,27 +301,17 @@
       rgb(var(--scrim) / 0) 100%
     );
     transition: opacity 0.4s ease;
+
+    & a {
+      text-shadow: 0 1px 1.5px rgb(0 0 0 / 0.45);
+    }
   }
 
-  .site-header.is-hidden {
+  /* Tabbing into a hidden header brings it back, so focus never lands on an
+     invisible link. */
+  .site-header.is-hidden:not(:focus-within) {
     opacity: 0;
     pointer-events: none;
-  }
-
-  .site-name {
-    font-size: var(--fs--1);
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--nav-fg);
-    text-decoration: none;
-    text-shadow: 0 1px 1.5px rgb(0 0 0 / 0.45);
-    padding-block: 0.4rem; /* ≥24px touch target (WCAG 2.5.8) */
-
-    &:focus-visible {
-      outline: 2px solid currentColor;
-      outline-offset: 4px;
-    }
   }
 
   .site-nav {
@@ -171,34 +319,15 @@
     gap: 2rem;
 
     & a {
-      font-size: var(--fs--2);
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
       color: var(--nav-fg);
-      text-decoration: none;
-      text-shadow: 0 1px 1.5px rgb(0 0 0 / 0.45);
       opacity: 0.92;
       padding-block: 0.4rem; /* ≥24px touch target (WCAG 2.5.8) */
-      transition: opacity 0.3s;
 
-      &:hover {
-        opacity: 1;
-      }
-
-      /* "You are here": the current page reads at full strength with a quiet
-         underline so the active section is unambiguous (Nielsen #1). */
-      &.is-current {
-        opacity: 1;
-        text-decoration: underline;
-        text-underline-offset: 6px;
-        text-decoration-thickness: 1px;
-        text-decoration-color: color-mix(in oklab, currentColor 55%, transparent);
-      }
-
-      &:focus-visible {
-        outline: 2px solid currentColor;
-        outline-offset: 4px;
+      /* "You are here" (with the underline above) reads at full strength so
+         the active section is unambiguous (Nielsen #1). */
+      &:hover,
+      &:focus-visible,
+      &[aria-current='page'] {
         opacity: 1;
       }
     }
@@ -207,39 +336,39 @@
   /* ── Gallery Wall ── */
 
   .gallery-wall {
-    padding: calc(72px + var(--gap)) var(--gap) calc(var(--gap) * 1.5);
+    padding: calc(var(--header-h) + env(safe-area-inset-top) + var(--gap)) var(--gap) calc(var(--gap) * 1.5);
     max-width: 1200px;
-    margin: 0 auto;
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
     gap: var(--gap);
   }
 
   /* Each row sizes its images from real aspect ratios (flex-grow = ratio, see
-     GalleryView) so they resolve to a common height. Wide rows fill the wall;
-     tall/sparse rows are capped + centered (.gallery-row--center) for museum
-     breathing room; a hero is a single full-bleed print (.gallery-row--hero). */
+     GalleryView) so they resolve to a common height and fill the wall. */
   .gallery-row {
     display: flex;
     gap: var(--gap);
     align-items: flex-start;
   }
 
-  .gallery-row--center {
-    margin-inline: auto;
-    justify-content: center;
-  }
-
+  /* A real <button>: keyboard, focus and activation come from the platform. */
   .gallery-item {
+    appearance: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: inherit;
     flex: 1 1 0;
     min-width: 0;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent; /* no grey flash over the print on tap */
     overflow: hidden;
     display: flex;
     align-items: start;
     justify-content: center;
+    /* contain-intrinsic-size is set per row inline, from its real height. */
     content-visibility: auto;
-    contain-intrinsic-size: auto 400px;
     opacity: 0;
     /* Shadow lives on the item, not the <img>: the item's own box-shadow is
        drawn outside its box and is clipped by neither overflow:hidden nor the
@@ -259,35 +388,34 @@
       opacity: 1;
     }
 
-    /* Above-the-fold rows show immediately (no-JS / pre-observer fallback).
-       Rows are wrapped now, so the old :nth-child(-n+6) would misfire — the
-       first ~2 rows are tagged .is-early in GalleryView instead. */
+    /* Above-the-fold rows show immediately (no-JS / pre-observer fallback):
+       the first rows are tagged .is-early in GalleryView. */
     &.is-early {
       opacity: 1;
     }
 
-    &:focus-visible {
-      outline: 2px solid var(--focus-ring);
-      outline-offset: 4px;
+    &:disabled {
+      cursor: default;
     }
   }
 
   @media (hover: hover) {
-    .gallery-item:hover {
+    .gallery-item:enabled:hover {
       transform: translateY(-3px);
       box-shadow: var(--print-shadow-hover);
     }
   }
 
-  /* A hero is the only full-bleed print; cap its height so a tall one never
-     overflows a short viewport (object-fit:contain mats it with the edge color). */
-  .gallery-row--hero .gallery-item img {
-    max-height: 78dvh;
-  }
-
   /* ── Detail View (native <dialog>) ── */
 
+  /* Fades in from @starting-style and back out on close: allow-discrete holds
+     `display` (and, in Chromium, the top layer via `overlay`) until the fade
+     ends. Pinned fixed above the header explicitly, because browsers without
+     the `overlay` transition drop it from the top layer at once. */
   .detail-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
     border: none;
     padding: 0;
     max-width: 100dvw;
@@ -298,13 +426,20 @@
     align-items: center;
     justify-content: center;
     background: var(--detail-bg);
+    color: var(--nav-fg);
     cursor: default;
+    touch-action: pinch-zoom;
     overscroll-behavior: contain;
+    opacity: 0;
+    transition:
+      opacity 0.6s ease,
+      background-color 0.8s ease,
+      display 0.6s allow-discrete,
+      overlay 0.6s allow-discrete;
 
     &[open] {
       display: flex;
       opacity: 1;
-      transition: opacity 0.6s ease, background-color 0.8s ease;
 
       @starting-style {
         opacity: 0;
@@ -338,8 +473,9 @@
     opacity: 0;
     transition: opacity 0.8s ease;
     pointer-events: none;
+    user-select: none;
 
-    &.is-active.is-loaded {
+    &.is-active {
       opacity: 1;
       pointer-events: auto;
     }
@@ -354,216 +490,184 @@
     padding: 0;
     margin: 0;
     font: inherit;
+    font-family: var(--font-prose);
+    font-weight: 400;
     color: inherit;
     position: absolute;
-    top: 0;
-    bottom: 0;
+    inset-block: 0;
     width: 35%;
-    cursor: pointer;
     z-index: 5;
+    display: flex;
+    align-items: center;
+
+    & span {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      margin-inline: max(0.5rem, env(safe-area-inset-left)) max(0.5rem, env(safe-area-inset-right));
+      border-radius: 50%;
+      background: rgb(10 10 10 / 0.8);
+      color: var(--nav-fg);
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    /* The zones run to the screen edge, so the ring sits just inside them. */
+    &:focus-visible {
+      outline-offset: -3px;
+    }
   }
 
   .detail-nav-prev {
-    left: 0;
+    inset-inline-start: 0;
     cursor: w-resize;
   }
 
   .detail-nav-next {
-    right: 0;
+    inset-inline-end: 0;
     cursor: e-resize;
+    justify-content: flex-end;
   }
 
   .detail-close {
     appearance: none;
-    background: none;
+    background: rgb(10 10 10 / 0.8);
+    border-radius: 50%;
     border: none;
     position: absolute;
-    top: 0.8rem;
-    right: 1rem;
-    color: var(--nav-fg);
+    inset-block-start: calc(0.8rem + env(safe-area-inset-top));
+    inset-inline-end: calc(1rem + env(safe-area-inset-right));
+    color: inherit;
     font-size: var(--fs-2);
-    font-weight: 300;
-    opacity: 0.6;
+    font-family: var(--font-prose);
+    font-weight: 400;
+    opacity: 1;
     cursor: pointer;
     z-index: 10;
     padding: 0.6rem;
     min-width: 44px; /* ≥44px touch target (Fitts / WCAG 2.5.5) */
     min-height: 44px;
     line-height: 1;
-    display: none;
-  }
+    transition: opacity 0.3s;
 
-  .detail-close:focus-visible {
-    outline: 2px solid var(--nav-fg);
-    outline-offset: 2px;
-    opacity: 1;
-  }
-
-  .detail-nav-prev:focus-visible,
-  .detail-nav-next:focus-visible {
-    outline: 2px solid var(--focus-ring);
-    outline-offset: -3px;
-  }
-
-  @media (width <= 768px) {
-    .detail-close {
-      display: block;
+    &:hover,
+    &:focus-visible {
+      opacity: 1;
     }
   }
 
-  /* ── Contact ── */
+  .detail-status {
+    position: absolute;
+    inset-block-end: calc(1rem + env(safe-area-inset-bottom));
+    max-width: min(85%, 52ch);
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.25rem;
+    background: rgb(10 10 10 / 0.8);
+    color: var(--nav-fg);
+    font-family: var(--font-prose);
+    font-size: var(--fs-0);
+    font-variant-numeric: lining-nums tabular-nums;
+    line-height: 1.4;
+    text-align: center;
+    pointer-events: none;
 
-  .contact-links {
-    display: flex;
-    gap: 2rem;
-    margin-top: 1.5rem;
-
-    /* Functional social links: kept legible (≥AA on the wall) rather than the
-       old 0.5 opacity (~2.3:1). Restraint comes from size + tracking, not from
-       low contrast. */
-    & a {
-      font-size: var(--fs--2);
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: inherit;
-      text-decoration: none;
-      opacity: 1;
-      padding-block: 0.6rem; /* generous touch target (Fitts / WCAG 2.5.5) */
-      transition: opacity 0.3s, color 0.3s;
-
-      &:hover {
-        color: #ffffff;
-      }
-
-      &:focus-visible {
-        outline: 2px solid currentColor;
-        outline-offset: 4px;
-        opacity: 1;
-      }
+    &:empty {
+      display: none;
     }
   }
 
   /* ── Site footer ──
-     A quiet signature closing every page: the maker's name (to the hub /about),
-     a one-line note, and the four social links. Restraint from size + tracking +
-     whitespace, echoing the header/contact treatment — no rules, badges, icons. */
+     A plain signature closing every page: the maker's name (to the hub /about),
+     a one-line note, and a GitHub link. Restraint from size + tracking +
+     whitespace, echoing the header — no badges or icons. */
 
   .site-footer {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: calc(var(--gap) * 1.6) var(--gap) calc(var(--gap) * 1.8);
-    border-top: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
-    margin-top: var(--gap);
-  }
-
-  .footer-byline {
-    font-family: var(--font);
-    font-size: var(--fs--1);
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--nav-fg);
-    text-decoration: none;
-    padding-block: 0.4rem; /* ≥24px touch target (WCAG 2.5.8) */
-    transition: opacity 0.3s;
-
-    &:hover {
-      opacity: 0.82;
-    }
-
-    &:focus-visible {
-      outline: 2px solid currentColor;
-      outline-offset: 4px;
-    }
+    padding: calc(var(--gap) * 1.6) var(--gap) calc(var(--gap) * 1.8 + env(safe-area-inset-bottom));
+    border-block-start: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+    margin-block-start: var(--gap);
   }
 
   .footer-note {
-    font-family: var(--font-prose);
-    font-size: var(--fs--2);
-    font-style: italic;
-    letter-spacing: 0.02em;
-    color: var(--ink);
     max-width: 42ch;
-    margin-top: 0.5rem;
+    margin-block-start: 0.5rem;
   }
 
-  /* Reuse .contact-links; just centre it and let it wrap on narrow screens. */
   .footer-social {
-    justify-content: center;
+    display: flex;
     flex-wrap: wrap;
-    margin-top: 1.2rem;
+    justify-content: center;
+    gap: 2rem;
+    margin-block-start: 1.2rem;
+
+    & a {
+      padding-block: 0.6rem; /* generous touch target (Fitts / WCAG 2.5.5) */
+    }
   }
 
-  /* ── About page ── */
+  /* ── Text pages (/about, /projects, /birds, 404) ── */
 
   .page-content {
     max-width: 640px;
-    margin: 0 auto;
-    padding: calc(80px + 2rem) 2rem 4rem;
+    margin-inline: auto;
+    padding: calc(var(--header-h) + env(safe-area-inset-top) + var(--gap)) 2rem 4rem;
     color: var(--prose-ink);
     font-family: var(--font-prose);
     font-weight: 400;
 
+    /* The lead every text page opens with: its restraint comes from size +
+       italic, at full prose strength. */
     & .invocation {
-      font-size: clamp(var(--fs-0), 0.9rem + 0.5vw, var(--fs-1));
+      font-size: clamp(1.125rem, 1rem + 0.35vw, var(--fs-1));
       font-style: italic;
       line-height: 1.8;
-      /* A quiet lead-in: its restraint comes from size + italic, at full
-         prose strength. */
-      margin-bottom: 3rem;
+      text-wrap: balance;
+      margin-block-end: 3rem;
     }
 
     & .verse {
-      margin-bottom: 1.5rem;
+      margin-block-end: 1.5rem;
 
       & p {
-        font-weight: 400;
-        font-size: clamp(var(--fs-1), 1rem + 0.7vw, var(--fs-2));
-        line-height: 1.7;
-        text-wrap: pretty;
-        margin-bottom: 1.2em;
+        margin-block-end: 1.2em;
       }
     }
 
-    & p {
-      font-weight: 400;
-      font-size: clamp(var(--fs-1), 1rem + 0.7vw, var(--fs-2));
-      line-height: 1.7;
-      text-wrap: pretty;
-      margin-bottom: 1.5rem;
-    }
-
     & .about-signature {
-      margin-top: 5rem;
-      /* Cormorant retained here: EB Garamond's latin subset lacks the ū in the
-         name; Cormorant italic carries both ū and è. */
-      font-family: var(--font);
+      margin-block-start: var(--section-gap);
+      /* The prose italic covers u + combining macron in Yūnus as well as è. */
       font-size: var(--fs-0);
       font-style: italic;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.01em;
       color: var(--ink);
     }
   }
 
-  /* ── Also building ──
-     A hub list of the other things Yunus makes. Same quiet register as the
-     contact links: a small uppercase label, serif names, muted italic notes. */
-
-  .also-building {
-    margin-top: 4.5rem;
+  /* Prose paragraphs. :where() keeps this at element specificity, so a type
+     role on a <p> (a legend, the source line) sets its own size and spacing. */
+  :where(.page-content) p {
+    font-size: clamp(var(--fs-1), 1rem + 0.7vw, var(--fs-2));
+    line-height: 1.7;
+    text-wrap: pretty;
+    margin-block-end: 1.5rem;
   }
 
+  /* Headings inside a text page: a small-caps label over what it names. */
   .section-label {
-    font-family: var(--font);
     font-size: var(--fs--1);
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    letter-spacing: 0.16em;
     color: var(--prose-ink);
-    margin-bottom: 1.6rem;
+    margin-block-end: 1.6rem;
+  }
+
+  /* ── /projects ── a label, then the sites: a name over its note. */
+
+  .also-building {
+    margin-block-start: var(--section-gap);
   }
 
   .project-list {
@@ -580,53 +684,30 @@
 
     & a {
       width: fit-content;
-      font-family: var(--font);
-      font-size: var(--fs-1);
-      font-weight: 300;
-      letter-spacing: 0.03em;
       color: var(--prose-ink);
-      text-decoration: none;
       padding-block: 0.15rem;
-      transition: color 0.3s;
-
-      &:hover {
-        color: #ffffff;
-        text-decoration: underline;
-        text-underline-offset: 5px;
-        text-decoration-thickness: 1px;
-        text-decoration-color: color-mix(in oklab, currentColor 55%, transparent);
-      }
-
-      &:focus-visible {
-        outline: 2px solid currentColor;
-        outline-offset: 4px;
-      }
-    }
-
-    & .project-desc {
-      font-family: var(--font-prose);
-      font-size: var(--fs-0);
-      font-style: italic;
-      line-height: 1.5;
-      letter-spacing: 0.01em;
-      color: var(--ink);
     }
   }
 
-  /* ── Birds ──
-     The Sweden list, assembled from pieces the other pages already use. It
-     takes the plain .page-content measure, so every edge lines up with /about
-     and /projects, and each family is a .section-label with its species
-     beneath — the "label, then list" shape of /projects, gridded into columns
-     because there are 314 entries rather than seven. The page is long; that is
-     the content, not the layout, and the rarities filter is the short view.
+  /* ── 404 ── the way back, set like a project name. */
+
+  .page-content .not-found-back a {
+    color: var(--prose-ink);
+  }
+
+  /* ── /birds ──
+     The Sweden list, assembled from the roles above. It takes the plain
+     .page-content measure, so every edge lines up with /about and /projects,
+     and each family is a .section-label with its species beneath — the
+     "label, then list" shape of /projects, gridded into columns because there
+     are 314 entries rather than seven. The page is long; that is the content,
+     not the layout, and the rarities filter is the short view.
 
      No rules, boxes or borders: this site takes its structure from whitespace,
      size and letterspacing, and the ledger does the same. Names hold
-     --prose-ink; the notes beneath them (English and Latin names, counts,
-     captions) step down to --ink, which still clears AA on the wall. A rarity
-     is marked with an open circle beside the name — a shape, not a colour, so
-     it survives greyscale — paired with an .sr-only note for screen readers. */
+     --prose-ink; the notes beneath them step down to --ink. A rarity is marked
+     with an open circle beside the name — a shape, not a colour, so it
+     survives greyscale — paired with an .sr-only note for screen readers. */
 
   .bird-tally {
     display: flex;
@@ -643,24 +724,17 @@
   /* --fs-2 is the largest size anywhere else on the site; the tally does not get
      to be the exception that announces itself. */
   .bird-tally-figure {
-    font-family: var(--font);
-    font-weight: 300;
     font-size: var(--fs-2);
+    font-variant-numeric: lining-nums tabular-nums;
     line-height: 1;
-    letter-spacing: 0.02em;
   }
 
   .bird-tally-caption {
-    font-family: var(--font);
-    font-size: var(--fs--2);
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
     color: var(--ink);
   }
 
   .bird-toggle {
-    margin-top: 2.4rem;
+    margin-block-start: 2.4rem;
   }
 
   /* The <input> is .sr-only (clipped, still focusable) and the whole label is
@@ -689,43 +763,29 @@
       background-color: currentColor;
     }
 
+    /* The input itself is clipped, so its focus ring is drawn on the dot. */
     & input:focus-visible ~ .bird-toggle-dot {
       outline: 2px solid currentColor;
       outline-offset: 4px;
     }
   }
 
-  /* Two classes, so it outranks the `.page-content p` size/margin rule above. */
-  .bird-toggle .bird-legend {
+  .bird-legend {
     display: none;
     max-width: 52ch;
-    margin-top: 0.3rem;
-    margin-bottom: 0;
-    font-family: var(--font-prose);
-    font-size: var(--fs--1);
-    font-style: italic;
-    line-height: 1.55;
+    margin-block-start: 0.3rem;
+    margin-block-end: 0;
   }
 
-  /* 4.5rem below the lead is the same air /projects leaves before "BUILDING". */
   .bird-ledger {
     display: flex;
     flex-direction: column;
     gap: 3.4rem;
-    margin-top: 4.5rem;
+    margin-block-start: var(--section-gap);
   }
 
-  /* The family name is a plain .section-label — the same heading /projects uses
-     — so only the trailing count needs styling of its own. */
   .bird-group-count {
-    margin-left: 0.9em;
-    font-family: var(--font-prose);
-    font-size: var(--fs--1);
-    font-style: italic;
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    text-transform: none;
-    color: var(--ink);
+    margin-inline-start: 0.9em;
   }
 
   /* The head shows the family total; under the rarities filter it swaps to the
@@ -734,8 +794,8 @@
     display: none;
   }
 
-  /* Same shape as .project-list: a column of entries, each a name over a quiet
-     italic note. Only the grid is new, because there are 314 of them. */
+  /* Same shape as .project-list: a column of entries, each a name over a note.
+     Only the grid is new, because there are 314 of them. */
   .bird-list {
     list-style: none;
     display: grid;
@@ -749,12 +809,7 @@
     gap: 0.3rem;
   }
 
-  /* Typographically identical to a project name on /projects. */
   .bird-sv {
-    font-family: var(--font);
-    font-size: var(--fs-1);
-    font-weight: 300;
-    letter-spacing: 0.03em;
     line-height: 1.25;
     text-wrap: balance;
   }
@@ -765,21 +820,17 @@
     display: inline-block;
     width: 5px;
     height: 5px;
-    margin-left: 0.42em;
+    margin-inline-start: 0.42em;
     vertical-align: 0.36em;
     border: 1px solid currentColor;
     border-radius: 50%;
   }
 
-  /* Same size and register as a .project-desc; the scientific name keeps the
-     field-guide italic, the English name stays roman to separate the two. */
+  /* A note in roman: the scientific name below keeps the field-guide italic,
+     so the English name stays upright to separate the two. */
   .bird-meta {
-    font-family: var(--font-prose);
-    font-size: var(--fs-0);
-    line-height: 1.5;
-    letter-spacing: 0.01em;
+    font-style: normal;
     text-wrap: pretty;
-    color: var(--ink);
 
     & i {
       display: block;
@@ -804,34 +855,15 @@
       display: inline;
     }
 
-    & .bird-toggle .bird-legend {
+    & .bird-legend {
       display: block;
     }
   }
 
-  .page-content .bird-source {
-    margin-top: 4.5rem;
-    margin-bottom: 0;
-    font-family: var(--font-prose);
-    font-size: var(--fs--1);
-    font-style: italic;
+  .bird-source {
+    margin-block-start: var(--section-gap);
+    margin-block-end: 0;
     line-height: 1.6;
-    color: var(--ink);
-  }
-
-  @media (width <= 768px) {
-    /* "Rarities & vagrants" is too wide to sit three-across on a phone, so the
-       tally becomes a proper two-column grid rather than a ragged flex wrap. */
-    .bird-tally {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.4rem 1rem;
-    }
-
-    .bird-list {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 1.3rem;
-    }
   }
 
   /* ── Reduced motion ── */
@@ -843,7 +875,11 @@
       transition-duration: 0.01ms !important;
       animation-duration: 0.01ms !important;
     }
+  }
 
+  /* The scroll-in reveal needs JS (GalleryView's IntersectionObserver). With
+     scripting off, or motion reduced, every print is simply there. */
+  @media (prefers-reduced-motion: reduce), (scripting: none) {
     .gallery-item {
       opacity: 1;
     }
@@ -851,9 +887,6 @@
 
   /* ── High contrast ── (token overrides live beside :root, outside the layers) */
   @media (prefers-contrast: more) {
-    .page-content .invocation,
-    .page-content .about-signature,
-    .contact-links a,
     .site-nav a {
       opacity: 1;
     }
@@ -863,31 +896,32 @@
 
   @media (width <= 768px) {
     .site-header {
-      padding: 1rem 1.2rem;
+      padding: calc(1rem + env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 1rem
+        max(1rem, env(safe-area-inset-left));
+      flex-wrap: wrap;
+      row-gap: 0.2rem;
     }
 
+    /* Retain the same readable labels on tablets and phones. */
     .site-name {
-      font-size: 11px;
+      font-size: var(--fs--1);
+      letter-spacing: 0.15em;
+      white-space: nowrap;
     }
 
     .site-nav {
-      gap: 1.2rem;
+      gap: clamp(0.5rem, 2.4vw, 1.2rem);
 
       & a {
-        font-size: 10px;
+        font-size: var(--fs--2);
+        letter-spacing: 0.12em;
       }
-    }
-
-    .gallery-wall {
-      padding: calc(48px + var(--gap)) var(--gap) var(--gap);
     }
 
     /* On phones, stack every print full-width — rows become a single column,
        so heights no longer need to match across a row. */
-    .gallery-row,
-    .gallery-row--center {
+    .gallery-row {
       flex-direction: column;
-      max-width: none;
     }
 
     /* width:100% fills the (now non-stretching) cross axis; flex-basis:auto is
@@ -915,7 +949,45 @@
     }
 
     .page-content {
-      padding: calc(60px + 1.5rem) 1.2rem 3rem;
+      padding-inline: 1.2rem;
+      padding-block-end: 3rem;
+    }
+
+    /* "Rarities & vagrants" is too wide to sit three-across on a phone, so the
+       tally becomes a proper two-column grid rather than a ragged flex wrap. */
+    .bird-tally {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.4rem 1rem;
+
+      & .bird-tally-cell:last-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .bird-list {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1.3rem;
+    }
+  }
+
+  @media (width <= 600px) {
+    .site-header {
+      flex-direction: column;
+      align-items: stretch;
+      row-gap: 0.5rem;
+    }
+
+    .site-name {
+      align-self: flex-start;
+    }
+
+    .site-nav {
+      justify-content: space-between;
+
+      & a {
+        padding-block: 0.5rem;
+      }
     }
   }
 }

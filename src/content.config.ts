@@ -13,8 +13,7 @@ const gallery = defineCollection({
     tone: z.enum(['dark', 'light', 'mid']),
     aspect: z.enum(['square', 'portrait', 'landscape']),
     featured: z.boolean().default(false),
-    // Opt-in full-bleed placement. When no image sets this, composeRows falls
-    // back to a heuristic (see markHeroes) so the wall still gets hero moments.
+    // Opt-in: give this print a full-width row of its own (see composeRows).
     hero: z.boolean().default(false),
     order: z.number(),
     edgeColor: z.string(),

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { PERSON_FULL_NAME, PERSON_ID, pageTitle } from '../utils/site';
 
 // This is the hub page for the maker's identity, so it carries a ProfilePage
 // node whose mainEntity points at the canonical Person (defined in BaseLayout).
@@ -8,13 +9,13 @@ const profilePageSchema = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
   dateModified: new Date().toISOString(),
-  mainEntity: { '@id': 'https://andreassonphoto.com/#person' },
+  mainEntity: { '@id': PERSON_ID },
 };
 ---
 
-<BaseLayout title="Andrèasson Photo — Words" description="Finding beauty in what at first glance slipped quietly by">
+<BaseLayout preloadProse title={pageTitle('Words')} description="Finding beauty in what at first glance slipped quietly by">
   <script type="application/ld+json" is:inline set:html={JSON.stringify(profilePageSchema)} slot="head" />
-  <main class="page-content">
+  <main id="main-content" class="page-content" tabindex="-1">
     <h1 class="sr-only">Words</h1>
     <p class="invocation">
       In the name of God,<br>
@@ -46,7 +47,7 @@ const profilePageSchema = {
       </p>
     </div>
     <p class="about-signature">
-      Jonas Yu&#x0304;nus Andr&egrave;asson
+      {PERSON_FULL_NAME.normalize('NFD')}
     </p>
   </main>
 </BaseLayout>

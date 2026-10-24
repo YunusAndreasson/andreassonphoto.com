@@ -1,16 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import GalleryView from '../components/GalleryView.astro';
-import { getCollection } from 'astro:content';
-
-const allImages = (await getCollection('gallery'))
-  .map((entry) => entry.data)
-  .sort((a, b) => a.order - b.order);
+import { getGalleryImages } from '../utils/gallery';
+import { PERSON_NAME } from '../utils/site';
 ---
 
 <BaseLayout
-  title="Yunus Andreasson — Black-and-White Landscape Photography"
-  description="Black-and-white photographs by Yunus Andreasson, mostly of landscapes and the small things people walk past."
+  title={`${PERSON_NAME} — Black-and-White Landscape Photography`}
+  description={`Black-and-white photographs by ${PERSON_NAME}, mostly of landscapes and the small things people walk past.`}
 >
-  <GalleryView images={allImages} />
+  <GalleryView images={await getGalleryImages()} />
 </BaseLayout>

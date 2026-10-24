@@ -8,9 +8,9 @@
 /og/*
   Cache-Control: public, max-age=2592000
 
-# HTML pages - always revalidate
+# Pages already revalidates HTML by default. Do not put Cache-Control on
+# this catch-all: matching values are joined, conflicting with immutable fonts.
 /*
-  Cache-Control: public, max-age=0, must-revalidate
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { PERSON_NAME, collectionPageSchema, pageTitle } from '../utils/site';
 import { getCollection } from 'astro:content';
 
 // The Sweden list, set as museum labels rather than a spreadsheet: every species
@@ -25,22 +26,19 @@ for (const bird of species) {
   if (!bird.regular) group.rare += 1;
 }
 
-const collectionSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'Birds seen in Sweden — Yunus Andreasson',
-  url: 'https://andreassonphoto.com/birds',
-  description: `Every bird species Yunus Andreasson has seen in Sweden, ${total} so far.`,
-  author: { '@id': 'https://andreassonphoto.com/#person' },
-};
+const collectionSchema = collectionPageSchema(
+  '/birds',
+  `Birds seen in Sweden — ${PERSON_NAME}`,
+  `Every bird species ${PERSON_NAME} has seen in Sweden, ${total} so far.`,
+);
 ---
 
-<BaseLayout
-  title="Andrèasson Photo — Birds Seen in Sweden"
-  description={`Every bird species Yunus Andreasson has seen in Sweden: ${total} so far, ${rarities} of them rarities.`}
+<BaseLayout preloadProse
+  title={pageTitle('Birds Seen in Sweden')}
+  description={`Every bird species ${PERSON_NAME} has seen in Sweden: ${total} so far, ${rarities} of them rarities.`}
 >
   <script type="application/ld+json" is:inline set:html={JSON.stringify(collectionSchema)} slot="head" />
-  <main class="page-content">
+  <main id="main-content" class="page-content" tabindex="-1">
     <h1 class="sr-only">Birds seen in Sweden</h1>
     <p class="invocation">
       Every bird I have seen in Sweden.<br>

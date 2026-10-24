@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { pageTitle } from '../utils/site';
+
+// Cloudflare Pages serves dist/404.html with a real 404 status. Without it, an
+// unknown URL fell back to the homepage with a 200, a soft 404 to crawlers.
+---
+
+<BaseLayout preloadProse title={pageTitle('Not found')} description="There is no page at this address.">
+  <meta name="robots" content="noindex" slot="head" />
+  <main id="main-content" class="page-content" tabindex="-1">
+    <h1 class="sr-only">Page not found</h1>
+    <p class="invocation">
+      There is no page at this address.<br>
+      Maybe I moved it, or the link was mistyped.
+    </p>
+    <p class="not-found-back"><a href="/">Back to the photographs</a></p>
+  </main>
+</BaseLayout>

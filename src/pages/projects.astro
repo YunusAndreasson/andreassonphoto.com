@@ -1,38 +1,64 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { PERSON_NAME, collectionPageSchema, pageTitle } from '../utils/site';
 
 // The websites Yunus makes alongside the photography. This is the single page
 // every site links back to ("Made by Yunus Andreasson"), so the sites
 // themselves stay uncluttered — the full list lives here, not in each site.
-// CollectionPage whose author is the canonical Person defined in BaseLayout.
-const collectionSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'Websites — Yunus Andreasson',
-  url: 'https://andreassonphoto.com/projects',
-  author: { '@id': 'https://andreassonphoto.com/#person' },
-};
+const collectionSchema = collectionPageSchema('/projects', `Websites — ${PERSON_NAME}`);
 
-// One entry per project. `external` names appear as the visible link text; the
-// note is the same quiet italic register as the contact links.
+// Short descriptions of what visitors will find at each site.
 const projects = [
-  { name: 'islam.se', url: 'https://islam.se', desc: 'Prayer times and reading, in Swedish' },
-  { name: 'open-arabic', url: 'https://openarabic.io', desc: 'Learn to read Arabic' },
-  { name: 'al-ibadah', url: 'https://al-ibadah.com', desc: 'Islamic texts in Swedish' },
-  { name: 'zuhd.news', url: 'https://zuhd.news', desc: 'The news, short and calm' },
-  { name: 'qamar360', url: 'https://qamar360.com', desc: 'For the daily prayers' },
-  { name: 'edenmind', url: 'https://edenmind.com', desc: 'Flashcards you review out loud' },
-  { name: 'mygjakova', url: 'https://mygjakova.com', desc: 'A guide to Gjakova, in Kosovo' },
+  {
+    name: 'islam.se',
+    url: 'https://islam.se',
+    desc: 'Essays and answers about Islam, written in Swedish, alongside local prayer times and a map of mosques.',
+  },
+  {
+    name: 'open-arabic',
+    url: 'https://openarabic.io',
+    desc: 'Read classical Arabic texts beside an English translation. Tap a word to hear it and save it for practice.',
+  },
+  {
+    name: 'al-ibadah',
+    url: 'https://al-ibadah.com',
+    desc: 'Scholarly answers translated into Swedish, on prayer, fasting and the questions that come up in everyday religious life.',
+  },
+  {
+    name: 'zuhd.news',
+    url: 'https://zuhd.news',
+    desc: 'World news in short reports, with a map of the places behind the headlines.',
+  },
+  {
+    name: 'qamar360',
+    url: 'https://qamar360.com',
+    desc: 'A habit and routine tracker for daily practices from the Sunnah.',
+  },
+  {
+    name: 'edenmind',
+    url: 'https://edenmind.com',
+    desc: 'Read about science, history and how things work, then test what you remember by answering questions out loud.',
+  },
+  {
+    name: 'mygjakova',
+    url: 'https://mygjakova.com',
+    desc: 'A guide to the old bazaar, mosques and streets of Gjakova in Kosovo, with the town’s history and notes for a visit.',
+  },
+  {
+    name: 'Markaryds Fågelklubb',
+    url: 'https://markarydsfagelklubb.nu',
+    desc: 'Bird sightings, field notes and outings from a small municipality in southern Sweden, kept by the local bird club.',
+  },
 ];
 ---
 
-<BaseLayout title="Andrèasson Photo — Webs" description="Websites made by Yunus Andreasson: prayer times, Islamic texts, Arabic, the news, and a guide to Gjakova.">
+<BaseLayout preloadProse title={pageTitle('Webs')} description={`Websites made by ${PERSON_NAME}: prayer times, Islamic texts, Arabic, the news, a guide to Gjakova, and birdwatching in Markaryd.`}>
   <script type="application/ld+json" is:inline set:html={JSON.stringify(collectionSchema)} slot="head" />
-  <main class="page-content">
+  <main id="main-content" class="page-content" tabindex="-1">
     <p class="invocation">
       When I'm not out with the camera, I make websites.<br>
       A few for prayer and reading, one for the news,<br>
-      one for a town in Kosovo.
+      one for a town in Kosovo, and one for the birds of Markaryd.
     </p>
 
     <section class="also-building" aria-labelledby="building-heading">
