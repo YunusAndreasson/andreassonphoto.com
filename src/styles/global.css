@@ -579,7 +579,7 @@
 
   /* ── Site footer ──
      A plain signature closing every page: the maker's name (to the hub /about),
-     a one-line note, and a GitHub link. Restraint from size + tracking +
+     a one-line note, and an email link. Restraint from size + tracking +
      whitespace, echoing the header — no badges or icons. */
 
   .site-footer {

@@ -10,8 +10,7 @@ export const PERSON_ID = `${SITE_ORIGIN}/#person`;
 
 export const GITHUB_URL = 'https://github.com/YunusAndreasson';
 
-// Profiles that are the same person, for the Person node's `sameAs`. Only
-// GitHub is linked visibly (in the footer); the rest just help crawlers.
+// Profiles that are the same person, for the Person node's `sameAs`.
 export const SAME_AS = [
   GITHUB_URL,
   'https://x.com/YunusAndreasson',
