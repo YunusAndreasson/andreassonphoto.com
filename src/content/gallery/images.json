@@ -57,7 +57,7 @@
     "aspect": "portrait",
     "featured": true,
     "order": 3,
-    "edgeColor": "#060606"
+    "edgeColor": "#040404"
   },
   {
     "id": "07_three_posts",
@@ -90,9 +90,9 @@
     "edgeColor": "#0a0a0a"
   },
   {
-    "id": "10_barn_in_snow",
-    "file": "../../assets/gallery_bw/10_barn_in_snow.jpg",
-    "title": "Barn in Snow",
+    "id": "10_two_posts",
+    "file": "../../assets/gallery_bw/10_two_posts.jpg",
+    "title": "Two Posts",
     "tone": "light",
     "aspect": "portrait",
     "featured": true,
@@ -100,24 +100,24 @@
     "edgeColor": "#f7f7f7"
   },
   {
-    "id": "11_two_posts",
-    "file": "../../assets/gallery_bw/11_two_posts.jpg",
-    "title": "Two Posts",
-    "tone": "light",
+    "id": "11_geese_in_mist",
+    "file": "../../assets/gallery_bw/11_geese_in_mist.jpg",
+    "title": "Geese in Mist",
+    "tone": "dark",
     "aspect": "square",
     "featured": true,
     "order": 16,
-    "edgeColor": "#0c0c0c"
+    "edgeColor": "#090909"
   },
   {
     "id": "12_man_and_pigeons",
     "file": "../../assets/gallery_bw/12_man_and_pigeons.jpg",
     "title": "Man and Pigeons",
-    "tone": "dark",
+    "tone": "mid",
     "aspect": "landscape",
     "featured": true,
     "order": 5,
-    "edgeColor": "#252525"
+    "edgeColor": "#1e1e1e"
   },
   {
     "id": "13_pastoral_hills",
@@ -183,11 +183,11 @@
     "id": "19_storm_over_mountains",
     "file": "../../assets/gallery_bw/19_storm_over_mountains.jpg",
     "title": "Storm over Mountains",
-    "tone": "dark",
+    "tone": "mid",
     "aspect": "landscape",
     "featured": true,
     "order": 2,
-    "edgeColor": "#0b0b0b"
+    "edgeColor": "#0d0d0d"
   },
   {
     "id": "20_morning_reflections",
@@ -207,7 +207,7 @@
     "aspect": "square",
     "featured": false,
     "order": 27,
-    "edgeColor": "#1b1b1b"
+    "edgeColor": "#1a1a1a"
   },
   {
     "id": "22_night_road",
@@ -280,16 +280,6 @@
     "edgeColor": "#3c3c3c"
   },
   {
-    "id": "29_no_fear",
-    "file": "../../assets/gallery_bw/29_no_fear.jpg",
-    "title": "No Fear",
-    "tone": "dark",
-    "aspect": "square",
-    "featured": false,
-    "order": 33,
-    "edgeColor": "#050505"
-  },
-  {
     "id": "30_the_lone_tree",
     "file": "../../assets/gallery_bw/30_the_lone_tree.jpg",
     "title": "The Lone Tree",
@@ -357,7 +347,7 @@
     "aspect": "square",
     "featured": false,
     "order": 37,
-    "edgeColor": "#060606"
+    "edgeColor": "#0b0b0b"
   },
   {
     "id": "37_town_at_night",
@@ -367,7 +357,7 @@
     "aspect": "square",
     "featured": false,
     "order": 38,
-    "edgeColor": "#0b0b0b"
+    "edgeColor": "#0a0a0a"
   },
   {
     "id": "38_the_lone_pole",
@@ -400,16 +390,6 @@
     "edgeColor": "#000000"
   },
   {
-    "id": "42_single_anemone",
-    "file": "../../assets/gallery_bw/42_single_anemone.jpg",
-    "title": "Single Anemone",
-    "tone": "dark",
-    "aspect": "landscape",
-    "featured": true,
-    "order": 18,
-    "edgeColor": "#0c0c0c"
-  },
-  {
     "id": "43_misty_island",
     "file": "../../assets/gallery_bw/43_misty_island.jpg",
     "title": "Misty Island",
@@ -438,16 +418,6 @@
     "featured": true,
     "order": 32,
     "edgeColor": "#1d1d1d"
-  },
-  {
-    "id": "46_winter_mirror",
-    "file": "../../assets/gallery_bw/46_winter_mirror.jpg",
-    "title": "Winter Mirror",
-    "tone": "light",
-    "aspect": "landscape",
-    "featured": true,
-    "order": 15,
-    "edgeColor": "#f1f1f1"
   },
   {
     "id": "47_silver_tide",
@@ -513,10 +483,210 @@
     "id": "53_black_sand",
     "file": "../../assets/gallery_bw/53_black_sand.jpg",
     "title": "Black Sand",
-    "tone": "mid",
+    "tone": "dark",
     "aspect": "square",
     "featured": true,
     "order": 18,
-    "edgeColor": "#363636"
+    "edgeColor": "#252525"
+  },
+  {
+    "id": "54_barn_in_snow",
+    "file": "../../assets/gallery_bw/54_barn_in_snow.jpg",
+    "title": "Barn in Snow",
+    "tone": "light",
+    "aspect": "square",
+    "featured": true,
+    "order": 25.25,
+    "edgeColor": "#ffffff"
+  },
+  {
+    "id": "55_twisted_beeches",
+    "file": "../../assets/gallery_bw/55_twisted_beeches.jpg",
+    "title": "Twisted Beeches",
+    "tone": "dark",
+    "aspect": "square",
+    "featured": true,
+    "order": 29.25,
+    "edgeColor": "#2d2d2d"
+  },
+  {
+    "id": "56_hepatica",
+    "file": "../../assets/gallery_bw/56_hepatica.jpg",
+    "title": "Hepatica",
+    "tone": "dark",
+    "aspect": "landscape",
+    "featured": true,
+    "order": 21.25,
+    "edgeColor": "#070707"
+  },
+  {
+    "id": "59_snowy_forest",
+    "file": "../../assets/gallery_bw/59_snowy_forest.jpg",
+    "title": "Snowy Forest",
+    "tone": "dark",
+    "aspect": "square",
+    "featured": true,
+    "order": 40.25,
+    "edgeColor": "#565656"
+  },
+  {
+    "id": "57_bridge_at_dusk",
+    "file": "../../assets/gallery_bw/57_bridge_at_dusk.jpg",
+    "title": "Bridge at Dusk",
+    "tone": "mid",
+    "aspect": "landscape",
+    "featured": true,
+    "order": 27.5,
+    "edgeColor": "#4b4b4b"
+  },
+  {
+    "id": "58_mist_at_dawn",
+    "file": "../../assets/gallery_bw/58_mist_at_dawn.jpg",
+    "title": "Mist at Dawn",
+    "tone": "dark",
+    "aspect": "square",
+    "featured": true,
+    "order": 34.5,
+    "edgeColor": "#080808"
+  },
+  {
+    "id": "60_light_over_the_peaks",
+    "file": "../../assets/gallery_bw/60_light_over_the_peaks.jpg",
+    "title": "Light over the Peaks",
+    "tone": "dark",
+    "aspect": "landscape",
+    "featured": true,
+    "order": 7.25,
+    "edgeColor": "#191919"
+  },
+  {
+    "id": "61_rain_over_ridges",
+    "file": "../../assets/gallery_bw/61_rain_over_ridges.jpg",
+    "title": "Rain over Ridges",
+    "tone": "dark",
+    "aspect": "landscape",
+    "featured": true,
+    "order": 36.25,
+    "edgeColor": "#141414"
+  },
+  {
+    "id": "62_peaks_under_cloud",
+    "file": "../../assets/gallery_bw/62_peaks_under_cloud.jpg",
+    "title": "Peaks under Cloud",
+    "tone": "mid",
+    "aspect": "landscape",
+    "featured": true,
+    "order": 20.75,
+    "edgeColor": "#333333"
+  },
+  {
+    "id": "63_sand_and_shadow",
+    "file": "../../assets/gallery_bw/63_sand_and_shadow.jpg",
+    "title": "Sand and Shadow",
+    "tone": "mid",
+    "aspect": "square",
+    "featured": true,
+    "order": 20.25,
+    "edgeColor": "#535353"
+  },
+  {
+    "id": "64_two_walkers",
+    "file": "../../assets/gallery_bw/64_two_walkers.jpg",
+    "title": "Two Walkers",
+    "tone": "dark",
+    "aspect": "square",
+    "featured": true,
+    "order": 13.75,
+    "edgeColor": "#303030"
+  },
+  {
+    "id": "65_whooper_swan",
+    "file": "../../assets/gallery_bw/65_whooper_swan.jpg",
+    "title": "Whooper Swan",
+    "tone": "dark",
+    "aspect": "square",
+    "featured": true,
+    "order": 35.75,
+    "edgeColor": "#030303"
+  },
+  {
+    "id": "66_night_alley",
+    "file": "../../assets/gallery_bw/66_night_alley.jpg",
+    "title": "Night Alley",
+    "tone": "dark",
+    "aspect": "portrait",
+    "featured": true,
+    "order": 34.75,
+    "edgeColor": "#0b0b0b"
+  },
+  {
+    "id": "67_through_the_gate",
+    "file": "../../assets/gallery_bw/67_through_the_gate.jpg",
+    "title": "Through the Gate",
+    "tone": "dark",
+    "aspect": "square",
+    "featured": true,
+    "order": 40.75,
+    "edgeColor": "#191919"
+  },
+  {
+    "id": "68_lone_sail",
+    "file": "../../assets/gallery_bw/68_lone_sail.jpg",
+    "title": "Lone Sail",
+    "tone": "mid",
+    "aspect": "landscape",
+    "featured": true,
+    "order": 10.75,
+    "edgeColor": "#373737"
+  },
+  {
+    "id": "69_passing_rain",
+    "file": "../../assets/gallery_bw/69_passing_rain.jpg",
+    "title": "Passing Rain",
+    "tone": "dark",
+    "aspect": "square",
+    "featured": true,
+    "order": 11.25,
+    "edgeColor": "#1f1f1f"
+  },
+  {
+    "id": "70_the_minbar",
+    "file": "../../assets/gallery_bw/70_the_minbar.jpg",
+    "title": "The Minbar",
+    "tone": "dark",
+    "aspect": "square",
+    "featured": true,
+    "order": 32.25,
+    "edgeColor": "#1f1f1f"
+  },
+  {
+    "id": "71_water_between_peaks",
+    "file": "../../assets/gallery_bw/71_water_between_peaks.jpg",
+    "title": "Water between Peaks",
+    "tone": "mid",
+    "aspect": "landscape",
+    "featured": true,
+    "order": 15.25,
+    "edgeColor": "#494949"
+  },
+  {
+    "id": "72_broom_and_bucket",
+    "file": "../../assets/gallery_bw/72_broom_and_bucket.jpg",
+    "title": "Broom and Bucket",
+    "tone": "mid",
+    "aspect": "square",
+    "featured": true,
+    "order": 26.25,
+    "edgeColor": "#7c7c7c"
+  },
+  {
+    "id": "73_cherry_in_blossom",
+    "file": "../../assets/gallery_bw/73_cherry_in_blossom.jpg",
+    "title": "Cherry in Blossom",
+    "tone": "dark",
+    "aspect": "landscape",
+    "featured": true,
+    "order": 38.25,
+    "edgeColor": "#292929"
   }
 ]
