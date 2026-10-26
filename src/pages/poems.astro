@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PERSON_NAME, pageTitle } from '../utils/site';
+import { getCollection } from 'astro:content';
+
+// The pieces from the diaries, newest first, gathered under their year the way
+// /birds gathers species under their family.
+const pieces = (await getCollection('poems'))
+  .map((entry) => entry.data)
+  .sort((a, b) => b.date.localeCompare(a.date));
+
+const years: { year: string; pieces: typeof pieces }[] = [];
+for (const piece of pieces) {
+  const year = piece.date.slice(0, 4);
+  let group = years.find((y) => y.year === year);
+  if (!group) {
+    group = { year, pieces: [] };
+    years.push(group);
+  }
+  group.pieces.push(piece);
+}
+
+const first = pieces.at(-1)!.date.slice(0, 4);
+const last = pieces[0].date.slice(0, 4);
+
+// "2015-11" → "November 2015". UTC so the build machine's zone can't shift it.
+const monthYear = (date: string) =>
+  new Date(`${date}-01T00:00:00Z`).toLocaleDateString('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+
+// A blank line ends a stanza. A stanza in Arabic script is set right to left.
+// Latin stanzas are decomposed, as the signature is: the prose subset carries
+// the combining macron but not precomposed ā or ū. Arabic stays composed, since
+// NFD would split its hamza letters.
+const stanzas = (text: string) =>
+  text.split(/\n{2,}/).map((stanza) => {
+    const arabic = /[؀-ۿ]/.test(stanza);
+    return { lines: (arabic ? stanza : stanza.normalize('NFD')).split('\n'), arabic };
+  });
+---
+
+<BaseLayout
+  preloadProse
+  title={pageTitle('Poems')}
+  description={`Poems from ${PERSON_NAME}’s diaries, ${first} to ${last}.`}
+>
+  <main id="main-content" class="page-content poems" tabindex="-1">
+    <h1 class="sr-only">Poems</h1>
+    <p class="invocation">
+      In the name of God,<br>
+      the Most Gracious, the Most Merciful.
+    </p>
+    <p class="poems-note">
+      Poems from my diaries, {first} to {last}.
+    </p>
+
+    {years.map(({ year, pieces }) => (
+      <section class="poems-year" id={`y${year}`} aria-labelledby={`y${year}-label`}>
+        <h2 class="poems-year-label" id={`y${year}-label`}>{year}</h2>
+        {pieces.map((piece) => (
+          <article class="poem" id={piece.id}>
+            <h3 class="poem-title">{piece.title.normalize('NFD')}</h3>
+            <p class="poem-date"><time datetime={piece.date}>{monthYear(piece.date)}</time></p>
+            <div class="poem-body">
+              {stanzas(piece.text).map(({ lines, arabic }) => (
+                <p lang={arabic ? 'ar' : undefined} dir={arabic ? 'rtl' : undefined}>
+                  {lines.map((line) => <span class="poem-line">{line}</span>)}
+                </p>
+              ))}
+            </div>
+          </article>
+        ))}
+      </section>
+    ))}
+  </main>
+
+  <script>
+    let controller: AbortController;
+
+    document.addEventListener('astro:page-load', () => {
+      controller?.abort();
+      // The poem nearest the reading line, two fifths down the window, is the
+      // one being read; the rest step back until the reader reaches them.
+      // Where CSS can tie the fade to the scroll itself, it does this alone.
+      const main = document.querySelector<HTMLElement>('main.poems');
+      if (!main || CSS.supports('animation-timeline: view()')) return;
+      controller = new AbortController();
+
+      const poems = Array.from(main.querySelectorAll<HTMLElement>('.poem'));
+      let current: HTMLElement | undefined;
+      let queued = false;
+
+      const update = () => {
+        queued = false;
+        const line = window.innerHeight * 0.4;
+        let nearest: HTMLElement | undefined;
+        let distance = Infinity;
+        for (const poem of poems) {
+          const { top, bottom } = poem.getBoundingClientRect();
+          const d = top > line ? top - line : bottom < line ? line - bottom : 0;
+          if (d < distance) [nearest, distance] = [poem, d];
+          if (top > line) break; // in page order, so the rest are further away
+        }
+        if (nearest === current) return;
+        current?.classList.remove('is-current');
+        nearest?.classList.add('is-current');
+        current = nearest;
+      };
+
+      const queue = () => {
+        if (!queued) requestAnimationFrame(update);
+        queued = true;
+      };
+
+      update();
+      main.dataset.focus = '';
+      window.addEventListener('scroll', queue, { passive: true, signal: controller.signal });
+      window.addEventListener('resize', queue, { passive: true, signal: controller.signal });
+    });
+  </script>
+</BaseLayout>

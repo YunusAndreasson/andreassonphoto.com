@@ -2,12 +2,31 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import GalleryView from '../components/GalleryView.astro';
 import { getGalleryImages } from '../utils/gallery';
-import { PERSON_NAME } from '../utils/site';
+import { PERSON_ID, PERSON_NAME } from '../utils/site';
+
+// The intro below is where Yunus says who he is, so the home page is the hub
+// for his identity: a ProfilePage whose mainEntity is the canonical Person
+// (defined in BaseLayout). dateModified is the build time, regenerated each build.
+const profilePageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  dateModified: new Date().toISOString(),
+  mainEntity: { '@id': PERSON_ID },
+};
 ---
 
 <BaseLayout
-  title={`${PERSON_NAME} — Black-and-White Landscape Photography`}
+  preloadProse
+  title={`${PERSON_NAME} — Black-and-white photography`}
   description={`Black-and-white photographs by ${PERSON_NAME}, mostly of landscapes and the small things people walk past.`}
 >
-  <GalleryView images={await getGalleryImages()} />
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(profilePageSchema)} slot="head" />
+  <GalleryView images={await getGalleryImages()}>
+    <!-- Decomposed accents use the combining glyphs in our Latin font subset. -->
+    <p class="gallery-intro">
+      I’m {'Yūnus'.normalize('NFD')}. These are my black-and-white photographs, mostly of
+      landscapes and the small things people walk past.
+      There are also <a href="/poems">poems</a>, <a href="/birds">birds</a> and <a href="/code">code</a>.
+    </p>
+  </GalleryView>
 </BaseLayout>

@@ -1,0 +1,59 @@
+[
+  {
+    "id": "islam-se",
+    "url": "https://islam.se",
+    "desc": "Essays and answers about Islam in Swedish, with prayer times and a mosque map.",
+    "image": "../../assets/code/islam-se.jpg",
+    "order": 1
+  },
+  {
+    "id": "open-arabic",
+    "url": "https://openarabic.io",
+    "desc": "Classical Arabic texts with English translations. Tap words to hear them and save them for practice.",
+    "image": "../../assets/code/open-arabic.jpg",
+    "order": 2
+  },
+  {
+    "id": "al-ibadah",
+    "url": "https://al-ibadah.com",
+    "desc": "Scholars’ answers on prayer, fasting and other religious questions, translated into Swedish.",
+    "image": "../../assets/code/al-ibadah.jpg",
+    "order": 3
+  },
+  {
+    "id": "zuhd-news",
+    "url": "https://zuhd.news",
+    "desc": "World news from the past two weeks, with short reports and a map.",
+    "image": "../../assets/code/zuhd-news.jpg",
+    "order": 4
+  },
+  {
+    "id": "qamar360",
+    "url": "https://qamar360.com",
+    "desc": "Keep track of daily habits and routines from the Sunnah.",
+    "image": "../../assets/code/qamar360.jpg",
+    "order": 5
+  },
+  {
+    "id": "edenmind",
+    "url": "https://edenmind.com",
+    "desc": "Read about science and history, then answer questions out loud to test your memory.",
+    "image": "../../assets/code/edenmind.jpg",
+    "order": 6
+  },
+  {
+    "id": "mygjakova",
+    "url": "https://mygjakova.com",
+    "desc": "A guide to Gjakova in Kosovo: its old bazaar, mosques and history.",
+    "image": "../../assets/code/mygjakova.jpg",
+    "order": 7
+  },
+  {
+    "id": "markaryds-fagelklubb",
+    "url": "https://markarydsfagelklubb.nu",
+    "capture": "https://mafk-web.jonas-268.workers.dev/",
+    "desc": "Sightings and outings from the bird club in Markaryd, a small municipality in southern Sweden.",
+    "image": "../../assets/code/markaryds-fagelklubb.jpg",
+    "order": 8
+  }
+]

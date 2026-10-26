@@ -27,6 +27,11 @@
   /* Every link brightens to this on hover — one hover language site-wide. */
   --ink-bright: #ffffff;
   --detail-bg: #0a0a0a;
+  /* The photo viewer: the wall's own warm hue, taken down into shade, so
+     opening a print feels like stepping closer to the wall. Dark enough for
+     white prints to glow, light enough that a black-edged print still keeps
+     its edge (with its shadow). */
+  --viewer-bg: #292825;
   /* Header scrim drawn in the wall's own warm hue, so it reads as shade
      falling across the wall rather than a black band. */
   --scrim: 18 17 15;
@@ -38,8 +43,27 @@
 
   /* Fluid spacing — replaces the old per-breakpoint magic numbers */
   --gap: clamp(20px, 3vw, 56px);
+
+  /* ── The wall ── one coordinate system for every page. Each page is a
+     --wall-max box (padding included) centred in the body, padded by --gap;
+     prose keeps to --measure from the same left edge. src/utils/layout.ts
+     mirrors these for build-time estimates. */
+  --wall-max: 1200px;
+  /* rem, so a reader's larger default text keeps the same words to a line. */
+  --measure: 40rem;
+  /* From the edge of an in-flow full-width element to the wall's content
+     edge. `100%` resolves where it is used, against that element's width;
+     the body's padding already keeps it clear of a notch. */
+  --wall-inset: max(var(--gap), (100% - var(--wall-max)) / 2 + var(--gap));
+  /* The same for the fixed header, whose `100%` is the whole window: it adds
+     the notch itself and centres within what is left, as the body does. */
+  --bar-inset: max(
+    var(--gap),
+    (100% - env(safe-area-inset-left) - env(safe-area-inset-right) - var(--wall-max)) / 2 + var(--gap)
+  );
   /* Room the fixed header takes; every page's content starts below it. */
   --header-h: 72px;
+  --page-top: calc(var(--header-h) + env(safe-area-inset-top) + var(--gap));
   /* The air between a page's lead and its body, and before its closing line. */
   --section-gap: 4.5rem;
 
@@ -77,6 +101,30 @@
     --prose-ink: #ffffff;
     --ink: #e8e5de;
     --nav-fg: #ffffff;
+  }
+}
+
+/* Print: paper, not the wall. The light inks would vanish on white, so every
+   tone turns to dark ink, and the header prints once at the top rather than
+   floating over each page. Unlayered for the same reason as above. */
+@media print {
+  :root {
+    color-scheme: light;
+    --wall-bg: #ffffff;
+    --wall-glow: #ffffff;
+    --prose-ink: #1c1b19;
+    --ink: #55524c;
+    --nav-fg: #1c1b19;
+    --ink-bright: #000000;
+  }
+
+  .site-header {
+    position: static;
+
+    /* The shadow lifts the nav off the prints on screen; on paper it blurs. */
+    & * {
+      text-shadow: none;
+    }
   }
 }
 
@@ -201,7 +249,8 @@
   .site-nav a,
   .footer-social a,
   .section-label,
-  .bird-tally-caption {
+  .bird-tally-caption,
+  .poem-date {
     font-family: var(--font);
     font-size: var(--fs--2);
     font-weight: 500;
@@ -209,11 +258,13 @@
     text-transform: uppercase;
   }
 
-  /* Display — a name set large and light: projects, birds, the way back home. */
-  .project-list a,
+  /* Display — a name set large and light: websites, birds, the way back home. */
+  .code-name,
   .bird-sv,
   .not-found-back a,
-  .bird-tally-figure {
+  .bird-tally-figure,
+  .poems-year-label,
+  .poem-title {
     font-family: var(--font);
     font-size: var(--fs-2);
     font-weight: 300;
@@ -221,18 +272,20 @@
   }
 
   /* Repeated reading-size names need a firmer stroke than display titles. */
+  .code-name,
   .bird-sv {
     font-size: var(--fs-1);
     font-weight: 500;
   }
 
   /* Note — the quiet italic line under or beside a name. */
-  .footer-note,
-  .project-desc,
+  .code-desc,
   .bird-meta,
   .bird-legend,
   .bird-group-count,
-  .bird-source {
+  .bird-source,
+  .poems-note,
+  .gallery-intro {
     font-family: var(--font-prose);
     font-size: var(--fs-0);
     font-style: italic;
@@ -243,8 +296,7 @@
     color: var(--ink);
   }
 
-  /* Small notes step down one size: footer, legends, counts, the source line. */
-  .footer-note,
+  /* Small notes step down one size: legends, counts, the source line. */
   .bird-legend,
   .bird-group-count,
   .bird-source {
@@ -254,9 +306,9 @@
   /* ── Link states ── one hover, one underline, used everywhere. */
 
   .site-name:hover,
+  .gallery-intro a:hover,
   .footer-byline:hover,
   .footer-social a:hover,
-  .project-list a:hover,
   .not-found-back a:hover {
     color: var(--ink-bright);
   }
@@ -264,8 +316,8 @@
   /* The underline means "you are here" in the nav, marks a lone prose link,
      and appears on hover where a list of names is already clearly links. */
   .site-nav a[aria-current='page'],
-  .project-list a:hover,
-  .not-found-back a {
+  .not-found-back a,
+  .gallery-intro a {
     text-decoration-line: underline;
     text-decoration-thickness: 1px;
     text-decoration-color: color-mix(in oklab, currentColor 55%, transparent);
@@ -283,8 +335,9 @@
     z-index: 100;
     /* max()/env(): with viewport-fit=cover a fixed bar ignores the body's
        safe-area padding, so it keeps the name clear of a landscape notch itself. */
-    padding: calc(1.4rem + env(safe-area-inset-top)) max(2rem, env(safe-area-inset-right)) 2.2rem
-      max(2rem, env(safe-area-inset-left));
+    padding-block: calc(1.4rem + env(safe-area-inset-top)) 2.2rem;
+    padding-inline: calc(env(safe-area-inset-left) + var(--bar-inset))
+      calc(env(safe-area-inset-right) + var(--bar-inset));
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -336,12 +389,20 @@
   /* ── Gallery Wall ── */
 
   .gallery-wall {
-    padding: calc(var(--header-h) + env(safe-area-inset-top) + var(--gap)) var(--gap) calc(var(--gap) * 1.5);
-    max-width: 1200px;
+    padding: var(--page-top) var(--gap) calc(var(--gap) * 1.5);
+    max-width: var(--wall-max);
     margin-inline: auto;
     display: flex;
     flex-direction: column;
     gap: var(--gap);
+  }
+
+  /* One short line over the wall: who took these, and the doors to the
+     other pages. Narrow enough that the first prints still show above the
+     fold. */
+  .gallery-intro {
+    max-width: 52ch;
+    text-wrap: pretty;
   }
 
   /* Each row sizes its images from real aspect ratios (flex-grow = ratio, see
@@ -350,6 +411,17 @@
     display: flex;
     gap: var(--gap);
     align-items: flex-start;
+  }
+
+  /* A hero print hangs alone at full width with a little more wall around it,
+     so it reads as a pause between the pairs. Heroes are wide (1.7:1 or more),
+     so they never need the 80dvh cap that keeps tall prints on screen. */
+  .gallery-row.is-hero {
+    margin-block: calc(var(--gap) * 0.5);
+
+    & img {
+      max-height: none;
+    }
   }
 
   /* A real <button>: keyboard, focus and activation come from the platform. */
@@ -418,14 +490,17 @@
     z-index: 1000;
     border: none;
     padding: 0;
-    max-width: 100dvw;
-    max-height: 100dvh;
-    width: 100dvw;
-    height: 100dvh;
+    /* 100%, not 100dvw: with the scrollbar's space reserved (scrollbar-gutter
+       on html), dvw is wider than the window you can see, which pushed the
+       right-hand controls off screen. The top layer's 100% is that window. */
+    max-width: none;
+    max-height: none;
+    width: 100%;
+    height: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: var(--detail-bg);
+    background: var(--viewer-bg);
     color: var(--nav-fg);
     cursor: default;
     touch-action: pinch-zoom;
@@ -433,7 +508,6 @@
     opacity: 0;
     transition:
       opacity 0.6s ease,
-      background-color 0.8s ease,
       display 0.6s allow-discrete,
       overlay 0.6s allow-discrete;
 
@@ -448,6 +522,12 @@
 
     &::backdrop {
       background: transparent;
+    }
+
+    /* The open viewer is itself the focus; its buttons still ring when
+       reached with Tab. */
+    &:focus-visible {
+      outline: none;
     }
   }
 
@@ -465,11 +545,15 @@
     position: absolute;
     inset: 0;
     margin: auto;
-    max-width: min(85dvw, 800px);
-    max-height: 75dvh;
+    /* As large as the screen allows, up to the print's own pixel size, with a
+       4rem margin for the close button, the arrows and the caption. */
+    max-width: calc(100% - 8rem);
+    max-height: calc(100% - 8rem);
     width: auto;
     height: auto;
     object-fit: contain;
+    /* Hung, not pasted: the same soft lift the prints have on the wall. */
+    box-shadow: 0 28px 64px -18px rgb(0 0 0 / 0.65), 0 4px 14px -6px rgb(0 0 0 / 0.4);
     opacity: 0;
     transition: opacity 0.8s ease;
     pointer-events: none;
@@ -499,18 +583,25 @@
     z-index: 5;
     display: flex;
     align-items: center;
+    cursor: pointer;
 
+    /* A bare drawn chevron in a 44px target, 1rem from the edge like the
+       close button: quiet until reached for. */
     & span {
       display: grid;
       place-items: center;
       width: 44px;
       height: 44px;
-      margin-inline: max(0.5rem, env(safe-area-inset-left)) max(0.5rem, env(safe-area-inset-right));
+      margin-inline: max(1rem, env(safe-area-inset-left)) max(1rem, env(safe-area-inset-right));
       border-radius: 50%;
-      background: rgb(10 10 10 / 0.8);
       color: var(--nav-fg);
-      font-size: 2rem;
-      line-height: 1;
+      opacity: 0.6;
+      transition: opacity 0.4s ease, background-color 0.3s ease;
+    }
+
+    &:hover span,
+    &:focus-visible span {
+      opacity: 1;
     }
 
     /* The zones run to the screen edge, so the ring sits just inside them. */
@@ -521,35 +612,31 @@
 
   .detail-nav-prev {
     inset-inline-start: 0;
-    cursor: w-resize;
   }
 
   .detail-nav-next {
     inset-inline-end: 0;
-    cursor: e-resize;
     justify-content: flex-end;
   }
 
   .detail-close {
     appearance: none;
-    background: rgb(10 10 10 / 0.8);
+    background: none;
     border-radius: 50%;
     border: none;
     position: absolute;
-    inset-block-start: calc(0.8rem + env(safe-area-inset-top));
-    inset-inline-end: calc(1rem + env(safe-area-inset-right));
+    inset-block-start: max(1rem, env(safe-area-inset-top));
+    inset-inline-end: max(1rem, env(safe-area-inset-right));
     color: inherit;
-    font-size: var(--fs-2);
-    font-family: var(--font-prose);
-    font-weight: 400;
-    opacity: 1;
     cursor: pointer;
     z-index: 10;
-    padding: 0.6rem;
-    min-width: 44px; /* ≥44px touch target (Fitts / WCAG 2.5.5) */
-    min-height: 44px;
-    line-height: 1;
-    transition: opacity 0.3s;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    width: 44px; /* ≥44px touch target (Fitts / WCAG 2.5.5) */
+    height: 44px;
+    opacity: 0.6;
+    transition: opacity 0.4s ease, background-color 0.3s ease;
 
     &:hover,
     &:focus-visible {
@@ -557,67 +644,110 @@
     }
   }
 
-  .detail-status {
+  /* The label under the print, set like the site's: the title in small
+     caps, the count in the italic note beside it. The script sets its top
+     from the print's lower edge; until then it waits at the foot. */
+  .detail-caption {
     position: absolute;
-    inset-block-end: calc(1rem + env(safe-area-inset-bottom));
-    max-width: min(85%, 52ch);
-    padding: 0.5rem 0.8rem;
-    border-radius: 0.25rem;
-    background: rgb(10 10 10 / 0.8);
-    color: var(--nav-fg);
-    font-family: var(--font-prose);
-    font-size: var(--fs-0);
-    font-variant-numeric: lining-nums tabular-nums;
-    line-height: 1.4;
+    inset-block-end: calc(1.4rem + env(safe-area-inset-bottom));
+    inset-inline: 1rem;
+
+    &[style*='inset-block-start'] {
+      inset-block-end: auto;
+    }
+
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.9rem;
     text-align: center;
     pointer-events: none;
+    transition: opacity 0.4s ease;
 
-    &:empty {
+    &:has(.detail-title:empty) {
       display: none;
     }
   }
 
-  /* ── Site footer ──
-     A plain signature closing every page: the maker's name (to the hub /about),
-     a one-line note, and an email link. Restraint from size + tracking +
-     whitespace, echoing the header — no badges or icons. */
-
-  .site-footer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: calc(var(--gap) * 1.6) var(--gap) calc(var(--gap) * 1.8 + env(safe-area-inset-bottom));
-    border-block-start: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
-    margin-block-start: var(--gap);
+  .detail-title {
+    font-family: var(--font);
+    font-size: var(--fs--1);
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--nav-fg);
   }
 
-  .footer-note {
-    max-width: 42ch;
-    margin-block-start: 0.5rem;
+  .detail-count {
+    font-family: var(--font-prose);
+    font-size: var(--fs--1);
+    font-style: italic;
+    font-variant-numeric: lining-nums tabular-nums;
+    color: var(--ink);
+  }
+
+  /* Resting pointer (see the script): the controls and label fade out and the
+     cursor hides, leaving the print. A button that has keyboard focus stays. */
+  .detail-overlay.is-idle {
+    cursor: none;
+
+    & .detail-nav-prev,
+    & .detail-nav-next {
+      cursor: none;
+    }
+
+    & .detail-close:not(:focus-visible),
+    & .detail-nav-prev:not(:focus-visible) span,
+    & .detail-nav-next:not(:focus-visible) span,
+    & .detail-caption {
+      opacity: 0;
+    }
+  }
+
+  /* ── Site footer ──
+     A plain signature closing every page, the header's mirror: the maker's
+     name (home) on the wall's left edge, the email link on its right.
+     Restraint from size + tracking + whitespace — no badges or icons. */
+  .site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem 2rem;
+    padding-block: calc(var(--gap) * 1.6) calc(var(--gap) * 1.8 + env(safe-area-inset-bottom));
+    padding-inline: var(--wall-inset);
+    border-block-start: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+    margin-block-start: var(--gap);
   }
 
   .footer-social {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 2rem;
-    margin-block-start: 1.2rem;
 
     & a {
       padding-block: 0.6rem; /* generous touch target (Fitts / WCAG 2.5.5) */
     }
   }
 
-  /* ── Text pages (/about, /projects, /birds, 404) ── */
+  /* ── Text pages (/poems, /code, /birds, 404) ── */
 
+  /* Every page hangs on the gallery's wall: the same box and side padding as
+     .gallery-wall, so the first line of each page starts at the same left
+     edge. Prose keeps its --measure from that edge; only the wide pieces (the
+     bird ledger, the website prints) use the whole wall. */
   .page-content {
-    max-width: 640px;
+    max-width: var(--wall-max);
     margin-inline: auto;
-    padding: calc(var(--header-h) + env(safe-area-inset-top) + var(--gap)) 2rem 4rem;
+    padding: var(--page-top) var(--gap) 4rem;
     color: var(--prose-ink);
     font-family: var(--font-prose);
     font-weight: 400;
+
+    & > :where(:not(.bird-ledger, .code-wall)) {
+      max-width: var(--measure);
+    }
 
     /* The lead every text page opens with: its restraint comes from size +
        italic, at full prose strength. */
@@ -627,23 +757,6 @@
       line-height: 1.8;
       text-wrap: balance;
       margin-block-end: 3rem;
-    }
-
-    & .verse {
-      margin-block-end: 1.5rem;
-
-      & p {
-        margin-block-end: 1.2em;
-      }
-    }
-
-    & .about-signature {
-      margin-block-start: var(--section-gap);
-      /* The prose italic covers u + combining macron in Yūnus as well as è. */
-      font-size: var(--fs-0);
-      font-style: italic;
-      letter-spacing: 0.01em;
-      color: var(--ink);
     }
   }
 
@@ -664,28 +777,294 @@
     margin-block-end: 1.6rem;
   }
 
-  /* ── /projects ── a label, then the sites: a name over its note. */
+  /* ── /poems ──
+     A collection, not an archive: the invocation and one quiet line, then
+     the pieces, read slowly. There is no index of years at the top; time is
+     marked in the reading instead. Each year opens with its
+     figure set large and light, a chapter mark rather than a heading; each
+     piece is a display title over its month in small caps, with the verse
+     beneath at prose size. Like the rest of the site there are no rules or
+     ornaments; the pace comes from whitespace alone, close to a screen of it
+     between pieces and more between years, so one poem is read at a time.
+     While scrolling, the poem at the reading line holds full strength and
+     the others step back (the script on the page). The signature closes the
+     whole collection. */
 
-  .also-building {
-    margin-block-start: var(--section-gap);
+  .poems-note {
+    max-width: 42ch;
   }
 
-  .project-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1.15rem;
+  /* The header slides back in on scroll up, so a link to a year or a piece
+     lands clear of it either way. */
+  .poems-year,
+  .poem {
+    scroll-margin-block-start: calc(var(--header-h) + env(safe-area-inset-top) + 1.5rem);
+  }
 
-    & li {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
+  .poems-year {
+    margin-block-start: clamp(9rem, 30vh, 15rem);
+
+    /* The first year follows the opening line, not a poem: a pause, not a
+       chapter break. */
+    &:first-of-type {
+      margin-block-start: clamp(4.5rem, 12vh, 7rem);
+    }
+  }
+
+  .poems-year-label {
+    font-size: clamp(3rem, 2.2rem + 3vw, 4.75rem);
+    font-variant-numeric: lining-nums;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin-block-end: clamp(4rem, 12vh, 6rem);
+  }
+
+  .poem + .poem {
+    margin-block-start: clamp(7rem, 24vh, 12rem);
+  }
+
+  /* A step above the verse so each piece has a clear beginning; the firmer
+     stroke holds at a hundred repeats, and lining figures keep "1.1x" from
+     reading as "I.IX". Medium, named outright: only Light and Medium ship, and
+     a 400 here silently resolved to Medium anyway. */
+  .poem-title {
+    font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
+    font-weight: 500;
+    font-variant-numeric: lining-nums;
+    line-height: 1.2;
+    text-wrap: balance;
+    color: var(--prose-ink);
+  }
+
+  .poem-date {
+    margin-block: 0.7rem 2rem;
+    font-variant-numeric: lining-nums;
+    color: var(--ink);
+  }
+
+  /* Verse sits a little tighter than prose (1.7) so the lines of a stanza
+     hold together and the stanza break reads clearly as a pause. */
+  .poem-body p {
+    line-height: 1.6;
+    margin-block-end: 1.3em;
+
+    &:last-child {
+      margin-block-end: 0;
+    }
+  }
+
+  /* Focus, two ways to the same reading. Where an animation can follow the
+     scroll (Chrome, Edge, Safari 26), CSS alone does it: each poem brightens
+     as it crosses a reading band around two fifths down the window (25–55%,
+     wider than the gap between poems, so one fades in as the other fades
+     out) and steps back as it leaves, tied to the scroll itself, with no
+     script. The first poem is already lit when the page opens and the last
+     stays lit at the end, which the band alone would miss; the script gets
+     both from picking the nearest poem. The page script stands down there. Elsewhere (Firefox, Zen)
+     the script marks the poem at the reading line and sets data-focus, and
+     the rest fade. With neither, nothing is dimmed. */
+  @keyframes poem-focus {
+    entry 0%,
+    exit 100% {
+      opacity: 0.3;
     }
 
-    & a {
-      width: fit-content;
-      color: var(--prose-ink);
-      padding-block: 0.15rem;
+    entry 100%,
+    exit 0% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes poem-focus-first {
+    exit 0% {
+      opacity: 1;
+    }
+
+    exit 100% {
+      opacity: 0.3;
+    }
+  }
+
+  @keyframes poem-focus-last {
+    entry 0% {
+      opacity: 0.3;
+    }
+
+    entry 100% {
+      opacity: 1;
+    }
+  }
+
+  /* Longhands on purpose: with the shorthand, the minifier folds the timeline
+     into `animation`, a form Chrome rejects, and the whole rule is dropped.
+     Screen only, and not under high contrast, so nothing has to undo it. */
+  @supports (animation-timeline: view()) {
+    @media screen and (not (prefers-contrast: more)) {
+      .poems .poem {
+        animation-name: poem-focus;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view(block 25% 45%);
+
+        &:focus-within {
+          animation: none;
+        }
+      }
+
+      .poems-year:first-of-type .poem:first-of-type {
+        animation-name: poem-focus-first;
+      }
+
+      .poems-year:last-of-type .poem:last-of-type {
+        animation-name: poem-focus-last;
+      }
+    }
+  }
+
+  .poems[data-focus] .poem {
+    transition: opacity 0.9s ease;
+
+    &:not(.is-current, :focus-within) {
+      opacity: 0.3;
+    }
+  }
+
+  /* The scroll-tied fade moves only as the reader scrolls, so it stays under
+     reduced motion; the timed fade does not. */
+  @media (prefers-reduced-motion: reduce) {
+    .poems[data-focus] .poem {
+      transition: none;
+    }
+  }
+
+  @media (prefers-contrast: more), print {
+    .poems[data-focus] .poem:not(.is-current) {
+      opacity: 1;
+    }
+  }
+
+  /* On paper the screen-sized pauses would be half a page each: poems sit
+     closer, each kept whole on its page, a year never stranded at a foot. */
+  @media print {
+    .poems-year,
+    .poems-year:first-of-type {
+      margin-block-start: 3rem;
+    }
+
+    .poems-year-label {
+      margin-block-end: 1.5rem;
+      break-after: avoid;
+    }
+
+    .poem + .poem {
+      margin-block-start: 2.5rem;
+    }
+
+    .poem {
+      break-inside: avoid;
+    }
+  }
+
+  /* One line of the poem per span. A line too long for a phone wraps with a
+     hanging indent, so the turn still reads as verse rather than prose, and
+     balanced, so the turn carries half the line rather than a stray word
+     (pretty, inherited from prose, is not in Firefox). */
+  .poem-line {
+    display: block;
+    padding-inline-start: 1.2em;
+    text-indent: -1.2em;
+    text-wrap: balance;
+  }
+
+  /* The prose subset has no Arabic, so the shahada takes the reader's own
+     naskh, set a little larger and looser for its marks. Shrunk to its longest
+     line, the block stays on the poem's left edge while its lines still align
+     to the right, as Arabic should. */
+  .poem-body [lang='ar'] {
+    width: fit-content;
+    font-family: 'Noto Naskh Arabic', 'Amiri', 'Geeza Pro', 'Traditional Arabic', serif;
+    font-size: clamp(1.3rem, 1.1rem + 0.7vw, 1.6rem);
+    line-height: 2;
+    /* The looser leading already adds air below; this evens the gap to the
+       transliteration with the other stanza breaks. */
+    margin-block-end: 0.75em;
+  }
+
+  /* ── /code ── the websites hung as prints, two to a row on the gallery's
+     wall width, each with a museum label beneath: the name over its note.
+     They hang in black and white like the photographs; reaching for one
+     (hover or keyboard focus) brings up its own colours as it lifts. */
+
+  .code-wall {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: calc(var(--gap) * 1.6) var(--gap);
+  }
+
+  /* Fades in as it scrolls into view, as the gallery prints do (the script
+     on the page; the first row is there at once). */
+  .code-print {
+    display: flex;
+    flex-direction: column;
+    color: var(--prose-ink);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    opacity: 0;
+    transition: opacity 1s ease;
+
+    &.is-visible,
+    &.is-early {
+      opacity: 1;
+    }
+  }
+
+  /* Shadow on the frame, not the <img>, as on the gallery prints. */
+  .code-frame {
+    display: block;
+    aspect-ratio: 1440 / 900;
+    overflow: hidden;
+    box-shadow: var(--print-shadow);
+    transition: box-shadow 0.5s ease, transform 0.5s ease;
+
+    & img {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: grayscale(1);
+      transition: filter 0.8s ease;
+    }
+  }
+
+  .code-name {
+    margin-block-start: 1.2rem;
+  }
+
+  .code-desc {
+    margin-block-start: 0.3rem;
+    max-width: 48ch;
+    text-wrap: pretty;
+  }
+
+  .code-print:focus-visible img {
+    filter: none;
+  }
+
+  @media (hover: hover) {
+    .code-print:hover {
+      & .code-frame {
+        transform: translateY(-3px);
+        box-shadow: var(--print-shadow-hover);
+      }
+
+      & img {
+        filter: none;
+      }
+
+      & .code-name {
+        color: var(--ink-bright);
+      }
     }
   }
 
@@ -696,10 +1075,11 @@
   }
 
   /* ── /birds ──
-     The Sweden list, assembled from the roles above. It takes the plain
-     .page-content measure, so every edge lines up with /about and /projects,
+     The Sweden list, assembled from the roles above. The intro keeps the
+     prose measure and the ledger spreads across the wall, both from the
+     same left edge as every other page,
      and each family is a .section-label with its species beneath — the
-     "label, then list" shape of /projects, gridded into columns because there
+     "label, then list" shape of /code, gridded into columns because there
      are 314 entries rather than seven. The page is long; that is the content,
      not the layout, and the rarities filter is the short view.
 
@@ -794,7 +1174,7 @@
     display: none;
   }
 
-  /* Same shape as .project-list: a column of entries, each a name over a note.
+  /* Same shape as the /code labels: entries, each a name over a note.
      Only the grid is new, because there are 314 of them. */
   .bird-list {
     list-style: none;
@@ -880,7 +1260,8 @@
   /* The scroll-in reveal needs JS (GalleryView's IntersectionObserver). With
      scripting off, or motion reduced, every print is simply there. */
   @media (prefers-reduced-motion: reduce), (scripting: none) {
-    .gallery-item {
+    .gallery-item,
+    .code-print {
       opacity: 1;
     }
   }
@@ -896,8 +1277,7 @@
 
   @media (width <= 768px) {
     .site-header {
-      padding: calc(1rem + env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 1rem
-        max(1rem, env(safe-area-inset-left));
+      padding-block: calc(1rem + env(safe-area-inset-top)) 1rem;
       flex-wrap: wrap;
       row-gap: 0.2rem;
     }
@@ -939,8 +1319,8 @@
     }
 
     .detail-img {
-      max-width: 98dvw;
-      max-height: 80dvh;
+      max-width: 98%;
+      max-height: 80%;
     }
 
     .detail-nav-prev,
@@ -948,21 +1328,30 @@
       width: 45%;
     }
 
+    /* On a phone the print runs edge to edge under the controls, so they get
+       a faint disc to stay legible over a light photograph. */
+    .detail-nav-prev span,
+    .detail-nav-next span,
+    .detail-close {
+      background: rgb(10 10 10 / 0.45);
+      opacity: 0.9;
+    }
+
     .page-content {
-      padding-inline: 1.2rem;
       padding-block-end: 3rem;
     }
 
-    /* "Rarities & vagrants" is too wide to sit three-across on a phone, so the
-       tally becomes a proper two-column grid rather than a ragged flex wrap. */
+    .code-wall {
+      grid-template-columns: 1fr;
+    }
+
+    /* Three across on a phone too: a grid, so a caption that wraps ("Seen in
+       Sweden") stays in its column rather than pushing the next one down. */
     .bird-tally {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.4rem 1rem;
-
-      & .bird-tally-cell:last-child {
-        grid-column: 1 / -1;
-      }
+      grid-template-columns: repeat(3, auto);
+      justify-content: space-between;
+      gap: 1rem;
     }
 
     .bird-list {
@@ -988,6 +1377,14 @@
       & a {
         padding-block: 0.5rem;
       }
+    }
+  }
+
+  /* The smallest phones (320px): tighter tracking keeps all four labels on
+     one line. */
+  @media (width <= 340px) {
+    .site-nav a {
+      letter-spacing: 0.06em;
     }
   }
 }

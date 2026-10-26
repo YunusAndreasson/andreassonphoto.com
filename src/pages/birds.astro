@@ -28,18 +28,18 @@ for (const bird of species) {
 
 const collectionSchema = collectionPageSchema(
   '/birds',
-  `Birds seen in Sweden — ${PERSON_NAME}`,
+  `Birds — ${PERSON_NAME}`,
   `Every bird species ${PERSON_NAME} has seen in Sweden, ${total} so far.`,
 );
 ---
 
 <BaseLayout preloadProse
-  title={pageTitle('Birds Seen in Sweden')}
+  title={pageTitle('Birds')}
   description={`Every bird species ${PERSON_NAME} has seen in Sweden: ${total} so far, ${rarities} of them rarities.`}
 >
   <script type="application/ld+json" is:inline set:html={JSON.stringify(collectionSchema)} slot="head" />
   <main id="main-content" class="page-content" tabindex="-1">
-    <h1 class="sr-only">Birds seen in Sweden</h1>
+    <h1 class="sr-only">Birds</h1>
     <p class="invocation">
       Every bird I have seen in Sweden.<br>
       Most of them heard before they were seen,<br>
@@ -58,7 +58,7 @@ const collectionSchema = collectionPageSchema(
       </div>
       <div class="bird-tally-cell">
         <span class="bird-tally-figure">{rarities}</span>
-        <span class="bird-tally-caption">Rarities &amp; vagrants</span>
+        <span class="bird-tally-caption">Rarities</span>
       </div>
     </section>
 
@@ -85,7 +85,7 @@ const collectionSchema = collectionPageSchema(
             {group.birds.map((bird) => (
               <li class:list={['bird', { 'is-rare': !bird.regular }]}>
                 <span class="bird-sv">{bird.sv}{!bird.regular && <span class="sr-only"> (a rarity)</span>}</span>
-                <span class="bird-meta">{bird.en}<i>{bird.la}</i></span>
+                <span class="bird-meta">{bird.en.replaceAll("'", '’')}<i>{bird.la}</i></span>
               </li>
             ))}
           </ul>

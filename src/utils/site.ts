@@ -3,8 +3,7 @@
 // from `site` in astro.config, so no page hardcodes the domain.
 
 export const SITE_NAME = 'Andrèasson Photo';
-export const PERSON_NAME = 'Yūnus Andrèasson';
-export const PERSON_FULL_NAME = `Jonas ${PERSON_NAME}`;
+export const PERSON_NAME = 'Jonas Yūnus Andrèasson';
 export const SITE_ORIGIN = new URL(import.meta.env.SITE).origin;
 export const PERSON_ID = `${SITE_ORIGIN}/#person`;
 
@@ -19,16 +18,15 @@ export const SAME_AS = [
 ];
 
 export const NAV = [
-  { href: '/', label: 'Work' },
-  { href: '/about', label: 'Words' },
-  { href: '/birds', label: 'Wings' },
-  { href: '/projects', label: 'Webs' },
+  { href: '/poems', label: 'Poems' },
+  { href: '/birds', label: 'Birds' },
+  { href: '/code', label: 'Code' },
 ];
 
 // "Page — Andrèasson Photo"-style titles stay consistent across pages.
 export const pageTitle = (page: string) => `${SITE_NAME} — ${page}`;
 
-// The CollectionPage node /projects and /birds both carry, authored by the Person.
+// The CollectionPage node /code and /birds both carry, authored by the Person.
 export function collectionPageSchema(path: string, name: string, description?: string) {
   return {
     '@context': 'https://schema.org',

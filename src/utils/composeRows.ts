@@ -1,4 +1,5 @@
 import type { CollectionEntry } from 'astro:content';
+import { CONTENT_W, GAP } from './layout';
 
 // Single source of truth: inferred from the gallery collection schema
 // (src/content.config.ts).
@@ -26,10 +27,9 @@ export interface Row {
 
 // ── Layout tuning ──────────────────────────────────────────────────────────
 // Approximate: flex-grow does the exact pixel work in the browser at the live
-// viewport width. These steer how the curated order is broken into rows, and
-// GalleryView uses them to estimate each print's rendered width for `sizes`.
-export const CONTENT_W = 1120; // ~1200px max-width minus the wall padding
-export const GAP = 40; // representative --gap (clamp(20px, 3vw, 56px))
+// viewport width. These and the wall's CONTENT_W / GAP (src/utils/layout.ts)
+// steer how the curated order is broken into rows; GalleryView uses rowHeight
+// to estimate each print's rendered width for `sizes`.
 const TARGET_H = 500; // preferred print height — every row is justified toward this
 const MAX_PER_ROW = 3; // keep prints large; never cram a row
 
@@ -45,29 +45,53 @@ export function rowHeight(sumAr: number, n: number): number {
  *
  * Never reorders. Every row spans the full content width, so the wall's outer
  * edges are dead-straight top to bottom (a premium museum hang) — there are no
- * centered/inset rows and no lone floating prints. Row breaks are chosen by
- * dynamic programming to minimise the total squared deviation of each row's
- * height from TARGET_H, so heights stay tight and balanced and nothing is
- * crammed. An image explicitly flagged `hero` in the content is honoured as its
- * own full-width print (still straight-edged); otherwise the grid is uniform.
+ * centered/inset rows and no lone floating prints.
+ *
+ * Rows are the curator's where given: consecutive prints sharing a `row`
+ * number hang together exactly as chosen (a print alone in its row is a
+ * pause), and only their widths are computed. Prints without a `row` (and any
+ * flagged `hero`, which hang alone) are broken into rows by dynamic
+ * programming, minimising each row's squared deviation from TARGET_H so
+ * heights stay tight and nothing is crammed.
  */
 export function composeRows(items: Item[]): Row[] {
   const rows: Row[] = [];
+  const seenRows = new Set<number>();
   let segment: Item[] = [];
+  let curated: Item[] = [];
 
+  const toRow = (run: Item[]): Row => ({ cells: run.map((it) => ({ img: it.img, ar: it.ar, grow: it.ar })) });
   const flushSegment = () => {
     if (segment.length) rows.push(...justify(segment));
     segment = [];
   };
+  const flushCurated = () => {
+    if (curated.length) rows.push(toRow(curated));
+    curated = [];
+  };
 
   for (const it of items) {
-    if (it.img.hero) {
+    const row = it.img.row;
+    if (row !== undefined) {
       flushSegment();
-      rows.push({ cells: [{ img: it.img, ar: it.ar, grow: it.ar }] });
+      if (curated.length && curated[0].img.row !== row) flushCurated();
+      if (!curated.length) {
+        // A row number met again after another row has hung means its prints
+        // are not next to each other in `order`; say so rather than split it.
+        if (seenRows.has(row)) throw new Error(`Gallery: row ${row} is split by other prints ("${it.img.title}").`);
+        seenRows.add(row);
+      }
+      curated.push(it);
+    } else if (it.img.hero) {
+      flushCurated();
+      flushSegment();
+      rows.push(toRow([it]));
     } else {
+      flushCurated();
       segment.push(it);
     }
   }
+  flushCurated();
   flushSegment();
 
   return rows;

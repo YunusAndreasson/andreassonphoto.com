@@ -2,7 +2,7 @@
 import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
-import { NAV, PERSON_FULL_NAME, PERSON_ID, PERSON_NAME, SAME_AS, SITE_NAME, SITE_ORIGIN } from '../utils/site';
+import { NAV, PERSON_ID, PERSON_NAME, SAME_AS, SITE_NAME, SITE_ORIGIN } from '../utils/site';
 
 interface Props {
   title?: string;
@@ -32,7 +32,7 @@ const personSchema = {
   '@type': 'Person',
   '@id': PERSON_ID,
   name: PERSON_NAME,
-  alternateName: [PERSON_FULL_NAME, 'Yunus Andreasson'],
+  alternateName: ['Yūnus Andrèasson', 'Jonas Yunus Andreasson', 'Yunus Andreasson'],
   url: SITE_ORIGIN,
   jobTitle: 'Photographer & software developer',
   description:
@@ -40,7 +40,7 @@ const personSchema = {
   knowsAbout: [
     'Photography',
     'Black and white photography',
-    'Islamic knowledge apps',
+    'Islamic knowledge websites',
     'Software development',
     'Arabic',
   ],
@@ -96,7 +96,7 @@ const personSchema = {
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <header class="site-header">
-      <a href="/" class="site-name">{SITE_NAME}</a>
+      <a href="/" class="site-name" aria-current={navPath === '/' ? 'page' : undefined}>{SITE_NAME}</a>
       <nav class="site-nav" aria-label="Main">
         {NAV.map(({ href, label }) => (
           <a href={href} aria-current={navPath === href ? 'page' : undefined}>{label}</a>
@@ -108,8 +108,7 @@ const personSchema = {
 
     <footer class="site-footer">
       <!-- Decomposed accents use the combining glyphs in our Latin font subset. -->
-      <a href="/about" class="footer-byline">{PERSON_NAME.normalize('NFD')}</a>
-      <p class="footer-note">Photographs in black and white.</p>
+      <a href="/" class="footer-byline">{PERSON_NAME.normalize('NFD')}</a>
       <nav class="footer-social" aria-label="Contact">
         <a href="mailto:yunus@edenmind.com">Email</a>
       </nav>

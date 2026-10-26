@@ -8,6 +8,7 @@
     "check": "astro check",
     "verify": "npm run check && npm run build",
     "preview": "astro preview",
+    "capture-sites": "node scripts/capture-sites.mjs",
     "deploy": "npm run build && npx wrangler pages deploy --branch main"
   },
   "dependencies": {
