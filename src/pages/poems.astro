@@ -9,12 +9,15 @@ const pieces = (await getCollection('poems'))
   .map((entry) => entry.data)
   .sort((a, b) => b.date.localeCompare(a.date));
 
-const years: { year: string; pieces: typeof pieces }[] = [];
+// Each year carries its title, a line from its own pieces, where it has one.
+const titles = new Map((await getCollection('poemYears')).map((entry) => [entry.data.id, entry.data.title]));
+
+const years: { year: string; title?: string; pieces: typeof pieces }[] = [];
 for (const piece of pieces) {
   const year = piece.date.slice(0, 4);
   let group = years.find((y) => y.year === year);
   if (!group) {
-    group = { year, pieces: [] };
+    group = { year, title: titles.get(year), pieces: [] };
     years.push(group);
   }
   group.pieces.push(piece);
@@ -23,9 +26,9 @@ for (const piece of pieces) {
 const first = pieces.at(-1)!.date.slice(0, 4);
 const last = pieces[0].date.slice(0, 4);
 
-// "2015-11" → "November 2015". UTC so the build machine's zone can't shift it.
-const monthYear = (date: string) =>
-  new Date(`${date}-01T00:00:00Z`).toLocaleDateString('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+// "2015-11" → "November". UTC so the build machine's zone can't shift it.
+const month = (date: string) =>
+  new Date(`${date}-01T00:00:00Z`).toLocaleDateString('en-GB', { month: 'long', timeZone: 'UTC' });
 
 // A blank line ends a stanza. A stanza in Arabic script is set right to left.
 // Latin stanzas are decomposed, as the signature is: the prose subset carries
@@ -53,22 +56,29 @@ const stanzas = (text: string) =>
       Poems from my diaries, {first} to {last}.
     </p>
 
-    {years.map(({ year, pieces }) => (
+    {years.map(({ year, title, pieces }) => (
       <section class="poems-year" id={`y${year}`} aria-labelledby={`y${year}-label`}>
-        <h2 class="poems-year-label" id={`y${year}-label`}>{year}</h2>
-        {pieces.map((piece) => (
-          <article class="poem" id={piece.id}>
-            <h3 class="poem-title">{piece.title.normalize('NFD')}</h3>
-            <p class="poem-date"><time datetime={piece.date}>{monthYear(piece.date)}</time></p>
-            <div class="poem-body">
-              {stanzas(piece.text).map(({ lines, arabic }) => (
-                <p lang={arabic ? 'ar' : undefined} dir={arabic ? 'rtl' : undefined}>
-                  {lines.map((line) => <span class="poem-line">{line}</span>)}
-                </p>
-              ))}
-            </div>
-          </article>
-        ))}
+        <header class="poems-year-head">
+          <h2 class="poems-year-label" id={`y${year}-label`}>{year}</h2>
+          {title && <p class="poems-year-title">{title.normalize('NFD')}</p>}
+        </header>
+        <div class="poems-year-pieces">
+          {pieces.map((piece) => (
+            <article class="poem" id={piece.id}>
+              <h3 class="poem-title">{piece.title.normalize('NFD')}</h3>
+              <p class="poem-date">
+                <time datetime={piece.date}>{month(piece.date)}<span class="poem-date-year"> {year}</span></time>
+              </p>
+              <div class="poem-body">
+                {stanzas(piece.text).map(({ lines, arabic }) => (
+                  <p lang={arabic ? 'ar' : undefined} dir={arabic ? 'rtl' : undefined}>
+                    {lines.map((line) => <span class="poem-line">{line}</span>)}
+                  </p>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
     ))}
   </main>

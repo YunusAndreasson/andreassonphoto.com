@@ -19,7 +19,7 @@
     "featured": true,
     "order": 2,
     "row": 1,
-    "edgeColor": "#0d0d0d"
+    "edgeColor": "#0a0a0a"
   },
   {
     "id": "04_drooping_bloom",
@@ -118,7 +118,7 @@
     "featured": true,
     "order": 11,
     "row": 6,
-    "edgeColor": "#5c5c5c"
+    "edgeColor": "#414141"
   },
   {
     "id": "10_two_posts",
@@ -261,7 +261,7 @@
     "featured": true,
     "order": 24,
     "row": 12,
-    "edgeColor": "#3a3a3a"
+    "edgeColor": "#3d3d3d"
   },
   {
     "id": "17_ghost_flower",
@@ -283,7 +283,7 @@
     "featured": true,
     "order": 26,
     "row": 13,
-    "edgeColor": "#767676"
+    "edgeColor": "#7a7a7a"
   },
   {
     "id": "44_sleeping_cat",
@@ -668,7 +668,7 @@
     "featured": false,
     "order": 61,
     "row": 32,
-    "edgeColor": "#0b0b0b"
+    "edgeColor": "#0a0a0a"
   },
   {
     "id": "37_town_at_night",

@@ -17,14 +17,17 @@ export const SAME_AS = [
   'https://www.linkedin.com/in/yunusandreasson/',
 ];
 
+// With the trailing slash: Cloudflare Pages serves each page at its folder
+// URL and answers /poems with a 308 to /poems/, a round trip per click.
 export const NAV = [
-  { href: '/poems', label: 'Poems' },
-  { href: '/birds', label: 'Birds' },
-  { href: '/code', label: 'Code' },
+  { href: '/poems/', label: 'Poems' },
+  { href: '/birds/', label: 'Birds' },
+  { href: '/code/', label: 'Code' },
 ];
 
-// "Page — Andrèasson Photo"-style titles stay consistent across pages.
-export const pageTitle = (page: string) => `${SITE_NAME} — ${page}`;
+// "Poems — Andrèasson Photo": the page first, so a row of tabs tells the
+// pages apart before the site name is cut off.
+export const pageTitle = (page: string) => `${page} — ${SITE_NAME}`;
 
 // The CollectionPage node /code and /birds both carry, authored by the Person.
 export function collectionPageSchema(path: string, name: string, description?: string) {

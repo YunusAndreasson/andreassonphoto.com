@@ -59,6 +59,17 @@ const poems = defineCollection({
   }),
 });
 
+// A title for each year of poems, a line taken from that year's own pieces
+// (never a piece's title, so nothing shows twice). Kept by hand, apart from
+// the generated pieces.json; `id` is the year.
+const poemYears = defineCollection({
+  loader: file('src/content/poems/years.json'),
+  schema: z.object({
+    id: z.string().regex(/^\d{4}$/),
+    title: z.string(),
+  }),
+});
+
 // The websites on /code, in page order, each labelled by its domain (from `url`). `image` is a 1440×900 screenshot of
 // the site's front page, taken by scripts/capture-sites.mjs; the page hangs it
 // in black and white, like the prints.
@@ -76,4 +87,4 @@ const code = defineCollection({
   }),
 });
 
-export const collections = { gallery, birds, poems, code };
+export const collections = { gallery, birds, poems, poemYears, code };

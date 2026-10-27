@@ -1,4 +1,4 @@
 # Pages renamed to match the nav. Old links (and the "Made by" links on the
 # other sites, which pointed at /projects) still land.
-/about     /poems  301
-/projects  /code   301
+/about     /poems/  301
+/projects  /code/   301

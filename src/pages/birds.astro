@@ -27,7 +27,7 @@ for (const bird of species) {
 }
 
 const collectionSchema = collectionPageSchema(
-  '/birds',
+  '/birds/',
   `Birds — ${PERSON_NAME}`,
   `Every bird species ${PERSON_NAME} has seen in Sweden, ${total} so far.`,
 );
@@ -75,7 +75,7 @@ const collectionSchema = collectionPageSchema(
       {groups.map((group) => (
         <section class="bird-group">
           <h2 class="section-label">
-            {group.name}
+            {group.name}<span class="sr-only">, </span>
             <span class="bird-group-count">
               <span class="bird-count-all">{group.birds.length}<span class="sr-only"> species</span></span>
               <span class="bird-count-rare">{group.rare}<span class="sr-only"> rarities</span></span>
@@ -84,8 +84,8 @@ const collectionSchema = collectionPageSchema(
           <ul class="bird-list">
             {group.birds.map((bird) => (
               <li class:list={['bird', { 'is-rare': !bird.regular }]}>
-                <span class="bird-sv">{bird.sv}{!bird.regular && <span class="sr-only"> (a rarity)</span>}</span>
-                <span class="bird-meta">{bird.en.replaceAll("'", '’')}<i>{bird.la}</i></span>
+                <span class="bird-sv" lang="sv">{bird.sv}{!bird.regular && <span class="sr-only" lang="en"> (a rarity)</span>}</span>
+                <span class="bird-meta">{bird.en.replaceAll("'", '’')}<i lang="la">{bird.la}</i></span>
               </li>
             ))}
           </ul>

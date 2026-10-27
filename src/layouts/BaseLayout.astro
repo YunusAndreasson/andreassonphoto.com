@@ -9,6 +9,9 @@ interface Props {
   description?: string;
   ogImage?: string;
   preloadProse?: boolean;
+  // A page with no address of its own (the 404, served for any unknown URL):
+  // kept out of search, and naming no canonical URL for crawlers to follow.
+  noindex?: boolean;
 }
 
 const {
@@ -16,13 +19,15 @@ const {
   description = `Black-and-white photographs by ${PERSON_NAME}`,
   ogImage = '/og/the-lone-tree.jpg',
   preloadProse = false,
+  noindex = false,
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, SITE_ORIGIN);
 const ogImageUrl = new URL(ogImage, SITE_ORIGIN).href;
 
 // Current page, so the nav can show "you are here" (Nielsen #1 / aria-current).
-const navPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+// Folder form, as the nav links are, whether or not the request had the slash.
+const navPath = Astro.url.pathname.replace(/\/*$/, '/');
 
 // The maker's identity node — canonical across every site Yunus builds; this
 // personal site is the hub, so the Person stands alone (no Organization node).
@@ -55,7 +60,9 @@ const personSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />
     <meta name="author" content={PERSON_NAME} />
-    <meta name="theme-color" content="#4f4d49" />
+    <!-- The header's top edge (its scrim over the wall), so the browser's bar
+         runs into the header without a seam. -->
+    <meta name="theme-color" content="#24231f" />
     <!-- Paints the first frame dark, before the stylesheet arrives. -->
     <meta name="color-scheme" content="dark" />
     <!-- The manifest (display: standalone) is the standard home-screen opt-in,
@@ -66,7 +73,7 @@ const personSchema = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalUrl} />
+    {!noindex && <meta property="og:url" content={canonicalUrl} />}
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
@@ -82,7 +89,7 @@ const personSchema = {
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
-    <link rel="canonical" href={canonicalUrl} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalUrl} />}
     <!-- The shared navigation always needs Medium. Text pages also preload
          their italic lead; other faces stay on demand beside the photographs. -->
     <Font cssVariable="--font-cormorant" preload={[{ weight: 500, style: 'normal' }]} />
@@ -134,6 +141,27 @@ const personSchema = {
           header.classList.toggle('is-hidden', y > lastY && y > 80);
           lastY = y;
         }, { passive: true, signal: controller.signal });
+      });
+
+      // Each page loads only the faces it sets, so the next page could open in
+      // the fallback and change its letters a beat later as its own faces
+      // arrive. Once this page has loaded and the browser is idle, fetch the
+      // rest (four small subsets in all) so the next page opens in its own
+      // type. Not on a data saver; after the first page this finds nothing
+      // left to load.
+      const warmFonts = () => {
+        if ((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData) return;
+        const idle = window.requestIdleCallback ?? ((fn: () => void) => setTimeout(fn, 200));
+        idle(() => {
+          document.fonts.forEach((face) => {
+            if (face.status === 'unloaded') face.load().catch(() => {});
+          });
+        });
+      };
+
+      document.addEventListener('astro:page-load', () => {
+        if (document.readyState === 'complete') warmFonts();
+        else window.addEventListener('load', warmFonts, { once: true });
       });
     </script>
   </body>

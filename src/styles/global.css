@@ -146,6 +146,22 @@
     /* Reserve the scrollbar's space, so locking scroll under the dialog
        doesn't shift the wall sideways. */
     scrollbar-gutter: stable;
+    /* The scrollbar in the wall's own tones rather than the browser's grey:
+       a thumb halfway from the wall to the secondary ink (2.8:1). */
+    scrollbar-color: color-mix(in srgb, var(--ink) 50%, var(--wall-bg)) var(--wall-bg);
+  }
+
+  /* Selected text falls into shade, the header's own scrim, rather than
+     under the browser's blue: verse keeps its ink, at 12:1 on the shade. */
+  ::selection {
+    background-color: rgb(var(--scrim) / 0.55);
+  }
+
+  /* The page-to-page crossfade (ClientRouter), quicker than the browser's
+     0.25s: from the gallery to a text page, the prints would otherwise show
+     through the incoming verse long enough to read as a glitch. */
+  ::view-transition-group(root) {
+    animation-duration: 150ms;
   }
 
   body {
@@ -228,6 +244,11 @@
     &:focus {
       transform: none;
     }
+
+    /* Paper has no keyboard; fixed, it would print at the foot of a page. */
+    @media print {
+      display: none;
+    }
   }
 
   /* ── Type roles ──
@@ -285,6 +306,7 @@
   .bird-group-count,
   .bird-source,
   .poems-note,
+  .poems-year-title,
   .gallery-intro {
     font-family: var(--font-prose);
     font-size: var(--fs-0);
@@ -403,6 +425,10 @@
   .gallery-intro {
     max-width: 52ch;
     text-wrap: pretty;
+    /* At the wall's own gap the line read as one more row of the hang; a
+       pause of its own (~70px wide, ~40px on a phone, as the other pages
+       leave under their opening lines) makes it the caption over the wall. */
+    margin-block-end: clamp(1.25rem, 2vw, 1.75rem);
   }
 
   /* Each row sizes its images from real aspect ratios (flex-grow = ratio, see
@@ -717,8 +743,19 @@
     gap: 0.5rem 2rem;
     padding-block: calc(var(--gap) * 1.6) calc(var(--gap) * 1.8 + env(safe-area-inset-bottom));
     padding-inline: var(--wall-inset);
-    border-block-start: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+    /* The hairline spans the wall, not the window: drawn as a background so
+       it starts and ends on the same edges as the name and the link beneath
+       it, and as everything above. */
+    --rule: color-mix(in oklab, var(--ink) 12%, transparent);
+    background: linear-gradient(var(--rule), var(--rule)) top center / calc(100% - 2 * var(--wall-inset)) 1px no-repeat;
     margin-block-start: var(--gap);
+
+    /* Printers drop backgrounds; on paper the page has no wall to align to,
+       so the hairline returns as a plain border. */
+    @media print {
+      background: none;
+      border-block-start: 1px solid var(--rule);
+    }
   }
 
   .footer-social {
@@ -811,13 +848,77 @@
     }
   }
 
+  .poems-year-head {
+    margin-block-end: clamp(4rem, 12vh, 6rem);
+  }
+
   .poems-year-label {
     font-size: clamp(3rem, 2.2rem + 3vw, 4.75rem);
     font-variant-numeric: lining-nums;
     line-height: 1;
     letter-spacing: 0.02em;
     color: var(--ink);
-    margin-block-end: clamp(4rem, 12vh, 6rem);
+  }
+
+  /* The year's title, a line from its own pieces, takes the note role (as
+     the line under the invocation does): a voice beside the poems, a step
+     under the verse, so the margin never competes with what is read. */
+  .poems-year-title {
+    text-wrap: balance;
+    margin-block: 0.8rem 0;
+  }
+
+  /* Where the wall is wide enough (56rem leaves the margin ~200px, room for
+     the year and its title in a half-screen window), the year moves out to
+     the right margin, beside the verse rather than over it: it opens level
+     with the year's first title and then holds below the header, a running
+     head, while that year's pieces pass, so the reader always knows where in
+     the years they are. It weighs against the verse's ragged right edge, and
+     steps back a tone so the poem stays the thing being read: the softened
+     ink is 3.6:1 on the wall (AA at the year's size), and full ink under high
+     contrast. The title beneath keeps full --ink, being reading size. With
+     the year held in the margin, each date gives only its month. Phones and
+     paper keep the year as a chapter mark over its pieces. */
+  @media screen and (width >= 56rem) {
+    /* The year no longer takes a screen of its own over its pieces, so the
+       pause before it grows instead, keeping a new year about twice the
+       gap between two poems. */
+    .poems-year {
+      display: grid;
+      grid-template-columns: minmax(0, var(--measure)) 1fr;
+      column-gap: var(--gap);
+      max-width: none;
+      margin-block-start: clamp(14rem, 45vh, 26rem);
+    }
+
+    .poems-year-pieces {
+      grid-area: 1 / 1;
+    }
+
+    .poems-year-head {
+      grid-area: 1 / 2;
+      justify-self: end;
+      align-self: start;
+      max-width: 15rem;
+      text-align: end;
+      position: sticky;
+      top: var(--page-top);
+      margin-block-end: 0;
+    }
+
+    .poems-year-label {
+      color: color-mix(in srgb, var(--ink) 70%, var(--wall-bg));
+    }
+
+    .poem-date-year {
+      display: none;
+    }
+  }
+
+  @media screen and (width >= 56rem) and (prefers-contrast: more) {
+    .poems-year-label {
+      color: var(--ink);
+    }
   }
 
   .poem + .poem {
@@ -952,9 +1053,16 @@
       margin-block-start: 3rem;
     }
 
-    .poems-year-label {
+    .poems-year-head {
       margin-block-end: 1.5rem;
+      break-inside: avoid;
       break-after: avoid;
+    }
+
+    /* The wrapper the margin layout needs would put the first piece a level
+       below the head, where break-after no longer reaches it. */
+    .poems-year-pieces {
+      display: contents;
     }
 
     .poem + .poem {
@@ -996,11 +1104,15 @@
      They hang in black and white like the photographs; reaching for one
      (hover or keyboard focus) brings up its own colours as it lifts. */
 
+  /* Between rows at least twice the print-to-name gap, so each label stays
+     with the print above it rather than reaching for the one below (on a
+     phone the wall's gap alone left it 32px from the next print, 24px from
+     its own). */
   .code-wall {
     list-style: none;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: calc(var(--gap) * 1.6) var(--gap);
+    gap: max(var(--gap) * 1.6, 3.5rem) var(--gap);
   }
 
   /* Fades in as it scrolls into view, as the gallery prints do (the script
@@ -1058,6 +1170,20 @@
         box-shadow: var(--print-shadow-hover);
       }
 
+      & img {
+        filter: none;
+      }
+
+      & .code-name {
+        color: var(--ink-bright);
+      }
+    }
+  }
+
+  /* Touch screens never hover: there each site brightens as it crosses the
+     middle of the screen instead (the script on the page). */
+  @media (hover: none) {
+    .code-print.is-lit {
       & img {
         filter: none;
       }
@@ -1157,11 +1283,19 @@
     margin-block-end: 0;
   }
 
+  /* Three distances, each clearly apart: a family's label sits closer to its
+     first row than the rows sit to each other, and a family stands a full
+     section gap from the next (three rows' worth), so the 34 families read
+     as 34 groups rather than one long grid. */
   .bird-ledger {
     display: flex;
     flex-direction: column;
-    gap: 3.4rem;
+    gap: var(--section-gap);
     margin-block-start: var(--section-gap);
+  }
+
+  .bird-group .section-label {
+    margin-block-end: 1.1rem;
   }
 
   .bird-group-count {

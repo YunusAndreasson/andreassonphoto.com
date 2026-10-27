@@ -9,7 +9,7 @@ import { PERSON_NAME, collectionPageSchema, pageTitle } from '../utils/site';
 // The websites Yunus makes alongside the photography. This is the single page
 // every site links back to ("Made by Yunus Andreasson"), so the sites
 // themselves stay uncluttered — the full list lives here, not in each site.
-const collectionSchema = collectionPageSchema('/code', `Code — ${PERSON_NAME}`);
+const collectionSchema = collectionPageSchema('/code/', `Code — ${PERSON_NAME}`);
 
 // The sites in page order, each with a screenshot of its front page
 // (scripts/capture-sites.mjs retakes them).
@@ -65,13 +65,13 @@ const printWidths = [column, Math.round(column * 1.5), column * 2, 1440];
   <script>
     let controller: AbortController;
 
-    // The same scroll-in reveal as the gallery prints (see GalleryView).
     document.addEventListener('astro:page-load', () => {
       controller?.abort();
-      const prints = document.querySelectorAll<HTMLElement>('.code-print:not(.is-early)');
+      const prints = document.querySelectorAll<HTMLElement>('.code-print');
       if (!prints.length) return;
       controller = new AbortController();
 
+      // The same scroll-in reveal as the gallery prints (see GalleryView).
       const reveal = new IntersectionObserver((entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
@@ -79,8 +79,20 @@ const printWidths = [column, Math.round(column * 1.5), column * 2, 1440];
           reveal.unobserve(entry.target);
         }
       }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-      for (const el of prints) reveal.observe(el);
-      controller.signal.addEventListener('abort', () => reveal.disconnect());
+      for (const el of prints) if (!el.classList.contains('is-early')) reveal.observe(el);
+
+      // A touch screen never hovers, so there a site takes its colours while
+      // it crosses the middle third of the screen and gives them back as it
+      // leaves. The CSS applies this only where hover is unavailable.
+      const lit = new IntersectionObserver((entries) => {
+        for (const entry of entries) entry.target.classList.toggle('is-lit', entry.isIntersecting);
+      }, { rootMargin: '-33% 0px -33% 0px' });
+      for (const el of prints) lit.observe(el);
+
+      controller.signal.addEventListener('abort', () => {
+        reveal.disconnect();
+        lit.disconnect();
+      });
     });
   </script>
 </BaseLayout>
