@@ -85,7 +85,7 @@
     "featured": false,
     "order": 8,
     "row": 4,
-    "edgeColor": "#0f0f0f"
+    "edgeColor": "#0d0d0d"
   },
   {
     "id": "62_peaks_under_cloud",
@@ -107,7 +107,7 @@
     "featured": true,
     "order": 10,
     "row": 6,
-    "edgeColor": "#020202"
+    "edgeColor": "#030303"
   },
   {
     "id": "59_snowy_forest",
@@ -140,7 +140,7 @@
     "featured": true,
     "order": 13,
     "row": 7,
-    "edgeColor": "#040404"
+    "edgeColor": "#050505"
   },
   {
     "id": "15_two_trees",
@@ -173,7 +173,7 @@
     "featured": true,
     "order": 16,
     "row": 8,
-    "edgeColor": "#050505"
+    "edgeColor": "#080808"
   },
   {
     "id": "54_barn_in_snow",
@@ -195,7 +195,7 @@
     "featured": false,
     "order": 18,
     "row": 9,
-    "edgeColor": "#2e2e2e"
+    "edgeColor": "#272727"
   },
   {
     "id": "11_geese_in_mist",
@@ -206,7 +206,7 @@
     "featured": true,
     "order": 19,
     "row": 10,
-    "edgeColor": "#2d2d2d"
+    "edgeColor": "#252525"
   },
   {
     "id": "53_black_sand",
@@ -239,7 +239,7 @@
     "featured": true,
     "order": 22,
     "row": 11,
-    "edgeColor": "#6c6c6c"
+    "edgeColor": "#373737"
   },
   {
     "id": "61_rain_over_ridges",
@@ -272,7 +272,7 @@
     "featured": true,
     "order": 25,
     "row": 13,
-    "edgeColor": "#7c7c7c"
+    "edgeColor": "#787878"
   },
   {
     "id": "34_misty_bog",
@@ -305,7 +305,7 @@
     "featured": false,
     "order": 28,
     "row": 14,
-    "edgeColor": "#0b0b0b"
+    "edgeColor": "#0c0c0c"
   },
   {
     "id": "57_bridge_at_dusk",
@@ -316,7 +316,7 @@
     "featured": true,
     "order": 29,
     "row": 15,
-    "edgeColor": "#5d5d5d"
+    "edgeColor": "#585858"
   },
   {
     "id": "49_the_sentinels",
@@ -327,7 +327,7 @@
     "featured": true,
     "order": 30,
     "row": 16,
-    "edgeColor": "#1c1c1c"
+    "edgeColor": "#171717"
   },
   {
     "id": "27_twin_minarets",
@@ -349,7 +349,7 @@
     "featured": false,
     "order": 32,
     "row": 16,
-    "edgeColor": "#151515"
+    "edgeColor": "#121212"
   },
   {
     "id": "55_twisted_beeches",
@@ -382,7 +382,7 @@
     "featured": true,
     "order": 35,
     "row": 18,
-    "edgeColor": "#545454"
+    "edgeColor": "#515151"
   },
   {
     "id": "38_the_lone_pole",
@@ -404,7 +404,7 @@
     "featured": true,
     "order": 37,
     "row": 19,
-    "edgeColor": "#2f2f2f"
+    "edgeColor": "#2c2c2c"
   },
   {
     "id": "08_night_restaurant",
@@ -415,7 +415,7 @@
     "featured": false,
     "order": 38,
     "row": 19,
-    "edgeColor": "#030303"
+    "edgeColor": "#040404"
   },
   {
     "id": "69_passing_rain",
@@ -426,7 +426,7 @@
     "featured": true,
     "order": 39,
     "row": 20,
-    "edgeColor": "#3f3f3f"
+    "edgeColor": "#3c3c3c"
   },
   {
     "id": "43_misty_island",
@@ -448,7 +448,7 @@
     "featured": false,
     "order": 41,
     "row": 21,
-    "edgeColor": "#6e6e6e"
+    "edgeColor": "#383838"
   },
   {
     "id": "67_through_the_gate",
@@ -470,7 +470,7 @@
     "featured": false,
     "order": 43,
     "row": 22,
-    "edgeColor": "#474747"
+    "edgeColor": "#393939"
   },
   {
     "id": "70_the_minbar",
@@ -481,7 +481,7 @@
     "featured": true,
     "order": 44,
     "row": 23,
-    "edgeColor": "#0f0f0f"
+    "edgeColor": "#090909"
   },
   {
     "id": "72_broom_and_bucket",
@@ -492,7 +492,7 @@
     "featured": true,
     "order": 45,
     "row": 23,
-    "edgeColor": "#343434"
+    "edgeColor": "#333333"
   },
   {
     "id": "56_hepatica",
@@ -514,7 +514,7 @@
     "featured": true,
     "order": 47,
     "row": 24,
-    "edgeColor": "#0b0b0b"
+    "edgeColor": "#0a0a0a"
   },
   {
     "id": "74_beyond_the_ridge",
@@ -547,7 +547,7 @@
     "featured": true,
     "order": 50,
     "row": 26,
-    "edgeColor": "#070707"
+    "edgeColor": "#090909"
   },
   {
     "id": "60_light_over_the_peaks",
@@ -569,7 +569,7 @@
     "featured": false,
     "order": 52,
     "row": 27,
-    "edgeColor": "#e4e4e4"
+    "edgeColor": "#e3e3e3"
   },
   {
     "id": "07_three_posts",
@@ -591,7 +591,7 @@
     "featured": true,
     "order": 54,
     "row": 28,
-    "edgeColor": "#161616"
+    "edgeColor": "#262626"
   },
   {
     "id": "65_whooper_swan",
@@ -602,7 +602,7 @@
     "featured": true,
     "order": 55,
     "row": 29,
-    "edgeColor": "#030303"
+    "edgeColor": "#040404"
   },
   {
     "id": "41_water_lilies",
@@ -635,7 +635,7 @@
     "featured": true,
     "order": 58,
     "row": 30,
-    "edgeColor": "#0d0d0d"
+    "edgeColor": "#0f0f0f"
   },
   {
     "id": "18_white_anemones",
@@ -646,7 +646,7 @@
     "featured": false,
     "order": 59,
     "row": 31,
-    "edgeColor": "#131313"
+    "edgeColor": "#101010"
   },
   {
     "id": "30_the_lone_tree",
@@ -668,7 +668,7 @@
     "featured": false,
     "order": 61,
     "row": 32,
-    "edgeColor": "#0a0a0a"
+    "edgeColor": "#0b0b0b"
   },
   {
     "id": "37_town_at_night",
@@ -679,7 +679,7 @@
     "featured": false,
     "order": 62,
     "row": 32,
-    "edgeColor": "#040404"
+    "edgeColor": "#060606"
   },
   {
     "id": "01_pilgrims_at_night",
@@ -690,7 +690,7 @@
     "featured": true,
     "order": 63,
     "row": 33,
-    "edgeColor": "#171717"
+    "edgeColor": "#121212"
   },
   {
     "id": "39_sea_stones",

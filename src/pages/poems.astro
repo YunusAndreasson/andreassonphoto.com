@@ -69,10 +69,12 @@ const stanzas = (text: string) =>
               <p class="poem-date">
                 <time datetime={piece.date}>{month(piece.date)}<span class="poem-date-year"> {year}</span></time>
               </p>
-              <div class="poem-body">
+              <div class:list={['poem-body', { 'is-prose': piece.form === 'prose' }]}>
                 {stanzas(piece.text).map(({ lines, arabic }) => (
                   <p lang={arabic ? 'ar' : undefined} dir={arabic ? 'rtl' : undefined}>
-                    {lines.map((line) => <span class="poem-line">{line}</span>)}
+                    {piece.form === 'prose'
+                      ? lines.join(' ')
+                      : lines.map((line) => <span class="poem-line">{line}</span>)}
                   </p>
                 ))}
               </div>

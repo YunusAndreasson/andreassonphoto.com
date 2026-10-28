@@ -48,14 +48,17 @@ const birds = defineCollection({
 // Short pieces from Yunus's diaries, mostly written in Swedish and translated
 // for the Poems page. Generated from the private diary repository, which keeps
 // the sources; only what is published lives here. `date` is year and month
-// (YYYY-MM), never the day. Stanzas are separated by a blank line in `text`.
+// (YYYY-MM), never the day. `text` is a YAML block (`|-`): write the lines
+// as they read, indented under it, with a blank line between stanzas.
+// `form: "prose"` marks a thought set as paragraphs rather than lines.
 const poems = defineCollection({
-  loader: file('src/content/poems/pieces.json'),
+  loader: file('src/content/poems/pieces.yaml'),
   schema: z.object({
     id: z.string(),
     title: z.string(),
     date: z.string().regex(/^\d{4}-\d{2}$/),
     text: z.string(),
+    form: z.literal('prose').optional(),
   }),
 });
 

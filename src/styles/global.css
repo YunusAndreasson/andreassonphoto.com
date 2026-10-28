@@ -955,6 +955,12 @@
     }
   }
 
+  /* A thought set as prose runs on in paragraphs at the prose leading, with
+     no hanging indent: only verse is broken into lines. */
+  .poem-body.is-prose p {
+    line-height: 1.7;
+  }
+
   /* Focus, two ways to the same reading. Where an animation can follow the
      scroll (Chrome, Edge, Safari 26), CSS alone does it: each poem brightens
      as it crosses a reading band around two fifths down the window (25–55%,
