@@ -385,6 +385,17 @@
     "edgeColor": "#515151"
   },
   {
+    "id": "76_flat_iron",
+    "file": "../../assets/gallery_bw/76_flat_iron.jpg",
+    "title": "Flat Iron",
+    "tone": "dark",
+    "aspect": "portrait",
+    "featured": false,
+    "order": 35.5,
+    "row": 18,
+    "edgeColor": "#191919"
+  },
+  {
     "id": "38_the_lone_pole",
     "file": "../../assets/gallery_bw/38_the_lone_pole.jpg",
     "title": "The Lone Pole",
@@ -416,6 +427,17 @@
     "order": 38,
     "row": 19,
     "edgeColor": "#040404"
+  },
+  {
+    "id": "50_valley_light",
+    "file": "../../assets/gallery_bw/50_valley_light.jpg",
+    "title": "Valley Light",
+    "tone": "dark",
+    "aspect": "square",
+    "featured": false,
+    "order": 38.5,
+    "row": 19,
+    "edgeColor": "#393939"
   },
   {
     "id": "69_passing_rain",
@@ -462,15 +484,26 @@
     "edgeColor": "#111111"
   },
   {
-    "id": "50_valley_light",
-    "file": "../../assets/gallery_bw/50_valley_light.jpg",
-    "title": "Valley Light",
+    "id": "75_spruce_in_mist",
+    "file": "../../assets/gallery_bw/75_spruce_in_mist.jpg",
+    "title": "Spruce in Mist",
     "tone": "dark",
-    "aspect": "square",
+    "aspect": "landscape",
     "featured": false,
     "order": 43,
     "row": 22,
-    "edgeColor": "#393939"
+    "edgeColor": "#1b1b1b"
+  },
+  {
+    "id": "77_tree_in_fog",
+    "file": "../../assets/gallery_bw/77_tree_in_fog.jpg",
+    "title": "Tree in Fog",
+    "tone": "light",
+    "aspect": "portrait",
+    "featured": false,
+    "order": 43.5,
+    "row": 23,
+    "edgeColor": "#a0a0a0"
   },
   {
     "id": "70_the_minbar",
