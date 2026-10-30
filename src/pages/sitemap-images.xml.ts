@@ -10,9 +10,9 @@ import { SITE_ORIGIN } from '../utils/site';
 // astro.config's serialize hook). So this endpoint renders the image sitemap
 // directly — this is a photographer's site, and Google Images is the channel.
 //
-// Image URLs are GalleryView's fullscreen variant (the shared getFullscreenImage),
-// so Astro dedupes to the already-emitted AVIF file rather than generating extra
-// assets. AVIF is never touched by prune-orphan-images.
+// Image URLs are each print at full size (getFullscreenImage), the same file as
+// `src` on the wall's <img>, so Astro dedupes to the already-emitted AVIF rather
+// than generating extra assets. AVIF is never touched by prune-orphan-images.
 
 function xmlEscape(value: string): string {
   return value

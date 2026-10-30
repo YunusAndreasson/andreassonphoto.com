@@ -6,10 +6,6 @@ export default defineConfig({
   site: 'https://andreassonphoto.com',
   output: 'static',
   integrations: [sitemap()],
-  prefetch: {
-    prefetchAll: true,
-    defaultStrategy: 'hover',
-  },
   // Self-hosted through the Fonts API: Astro emits the @font-face rules, hashed
   // (immutable-cached) files, and metric-matched fallbacks so the swap from
   // Times to Garamond doesn't shift the layout. Only faces the CSS uses.

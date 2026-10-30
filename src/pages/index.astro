@@ -22,7 +22,7 @@ const profilePageSchema = {
 >
   <script type="application/ld+json" is:inline set:html={JSON.stringify(profilePageSchema)} slot="head" />
   <GalleryView images={await getGalleryImages()}>
-    <!-- Decomposed accents use the combining glyphs in our Latin font subset. -->
+    {/* Decomposed accents use the combining glyphs in our Latin font subset. */}
     <p class="gallery-intro">
       I’m {'Yūnus'.normalize('NFD')}. These are my black-and-white photographs, mostly of
       landscapes and the small things people walk past.

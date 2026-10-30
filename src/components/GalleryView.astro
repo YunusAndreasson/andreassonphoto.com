@@ -1,9 +1,9 @@
 ---
 import { Image } from 'astro:assets';
 import { PERSON_NAME } from '../utils/site';
-import { AVIF_QUALITY, getFullscreenImage } from '../utils/gallery';
+import { AVIF_QUALITY } from '../utils/gallery';
 import { composeRows, rowHeight, type GalleryImage } from '../utils/composeRows';
-import { PHONE_MAX } from '../utils/layout';
+import { WIDEST_SCALE, wallSizes } from '../utils/layout';
 
 interface Props {
   images: GalleryImage[];
@@ -17,50 +17,54 @@ const { images } = Astro.props;
 // composeRows.
 const rows = composeRows(images.map((img) => ({ img, ar: img.file.width / img.file.height })));
 
-// 1x / 1.5x / 2x widths, never upscaling past the source.
+// Every width a print can be asked for: its place on the wall at 1x, 1.5x and
+// 2x, the same at 2x on the widest wall, and a whole column on a 2x or 3x phone,
+// where even a print hanging narrow on the wall fills the screen. Never past
+// the source. Neighbours within 15% merge upward: the browser takes the next
+// size up, so one encode serves both and the build stays small.
 function widthsFor(px: number, intrinsic: number): number[] {
-  const set = new Set<number>();
-  for (const w of [px, px * 1.5, px * 2]) set.add(Math.min(Math.round(w), intrinsic));
-  return [...set].sort((a, b) => a - b);
+  const wanted = [px, px * 1.5, px * 2, px * 2 * WIDEST_SCALE, 780, 1170]
+    .map((w) => Math.min(Math.round(w), intrinsic))
+    .sort((a, b) => b - a);
+  const kept: number[] = [];
+  for (const w of wanted) if (!kept.length || w < kept.at(-1)! * 0.85) kept.push(w);
+  return kept.reverse();
 }
 
-// Pre-resolve a high-res variant (for the fullscreen detail view) + responsive
-// data per cell. Each print renders at the row's common height, so its width
-// is that height times its aspect ratio; `sizes`/`widths` request a right-sized
-// resolution from it. (No global image `layout` in astro.config: these explicit
-// widths/sizes keep the gallery CSS in full control of image sizing.)
-const renderRows = await Promise.all(
-  rows.map(async (row, ri) => {
-    const sumAr = row.cells.reduce((s, c) => s + c.ar, 0);
-    // Reserve each row's REAL rendered height for off-screen items (they are
-    // content-visibility:auto). A flat estimate makes the scroll position jump
-    // as rows render in — matching the true height keeps CLS ~0 (Web Vitals).
-    const rowH = rowHeight(sumAr, row.cells.length);
-    const cells = await Promise.all(
-      row.cells.map(async (cell) => {
-        const meta = cell.img.file;
-        const px = Math.max(1, Math.round(cell.ar * rowH));
-        const isEarly = ri < 3;
-        return {
-          img: cell.img,
-          meta,
-          grow: cell.grow,
-          fullSrc: (await getFullscreenImage(meta)).src,
-          widths: widthsFor(px, meta.width),
-          // Lazy prints let the browser use their real laid-out width
-          // (`sizes="auto"`); the estimate after it is the fallback for
-          // browsers without it. Eager ones are fetched before layout, so they
-          // keep the estimate alone.
-          sizes: `${isEarly ? '' : 'auto, '}(max-width: ${PHONE_MAX}px) 100vw, ${px}px`,
-          isEarly,
-        };
-      }),
-    );
-    // A print hanging alone at full width is a pause in the rhythm of pairs.
-    const isHero = row.cells.length === 1;
-    return { intrinsicH: Math.round(rowH), cells, isHero };
-  }),
-);
+// Each print renders at the row's common height, so its width is that height
+// times its aspect ratio; `sizes`/`widths` request a right-sized resolution from
+// it. (No global image `layout` in astro.config: these explicit widths/sizes
+// keep the gallery CSS in full control of image sizing.)
+const renderRows = rows.map((row, ri) => {
+  const sumAr = row.cells.reduce((s, c) => s + c.ar, 0);
+  const rowH = rowHeight(sumAr, row.cells.length);
+  const cells = row.cells.map((cell) => {
+    const meta = cell.img.file;
+    const px = Math.max(1, Math.round(cell.ar * rowH));
+    // The first row holds the page's largest paint; the second shows at the
+    // fold; the rest wait until the visitor walks to them.
+    const isLazy = ri > 1;
+    return {
+      img: cell.img,
+      meta,
+      ar: cell.ar,
+      // The print's address: /#the-lone-boat opens it (see the script).
+      slug: cell.img.id.replace(/^\d+_/, '').replaceAll('_', '-'),
+      grow: cell.grow,
+      widths: widthsFor(px, meta.width),
+      // Lazy prints let the browser use their real laid-out width
+      // (`sizes="auto"`); the estimate after it is the fallback for browsers
+      // without it. Eager ones are fetched before layout, so they keep the
+      // estimate alone.
+      sizes: `${isLazy ? 'auto, ' : ''}${wallSizes(px)}`,
+      isFirstRow: ri === 0,
+      isLazy,
+    };
+  });
+  // A print hanging alone at full width is a pause in the rhythm of pairs.
+  const isHero = row.cells.length === 1;
+  return { cells, isHero };
+});
 ---
 
 <main id="main-content" class="gallery-wall" tabindex="-1">
@@ -69,40 +73,42 @@ const renderRows = await Promise.all(
   {renderRows.map((row) => (
     <div class:list={['gallery-row', row.isHero && 'is-hero']}>
       {row.cells.map((cell) => (
-        <button
-          type="button"
-          disabled
-          class:list={['gallery-item', cell.isEarly && 'is-early']}
-          commandfor="detail-view"
-          command="show-modal"
-          aria-haspopup="dialog"
-          data-full={cell.fullSrc}
-          style={`flex-grow:${cell.grow.toFixed(4)};background-color:${cell.img.edgeColor};contain-intrinsic-size:auto ${row.intrinsicH}px`}
-        >
-          <Image
-            src={cell.meta}
-            alt={cell.img.title}
-            widths={cell.widths}
-            sizes={cell.sizes}
-            format="avif"
-            quality={AVIF_QUALITY}
-            loading={cell.isEarly ? 'eager' : 'lazy'}
-            decoding={cell.isEarly ? 'sync' : 'async'}
-            fetchpriority={cell.isEarly ? 'high' : undefined}
-          />
-        </button>
+        <div class="gallery-cell" style={`flex-grow:${cell.grow.toFixed(4)};--ar:${cell.ar.toFixed(4)}`}>
+          <button
+            id={cell.slug}
+            type="button"
+            disabled
+            class:list={['gallery-item', !cell.isLazy && 'is-early']}
+            commandfor="detail-view"
+            command="show-modal"
+            aria-haspopup="dialog"
+            style={`background-color:${cell.img.edgeColor}`}
+          >
+            <Image
+              src={cell.meta}
+              alt={cell.img.title}
+              widths={cell.widths}
+              sizes={cell.sizes}
+              format="avif"
+              quality={AVIF_QUALITY}
+              priority={cell.isFirstRow}
+              loading={cell.isFirstRow ? undefined : cell.isLazy ? 'lazy' : 'eager'}
+            />
+          </button>
+          {/* The wall label: the title, as you lean in. The button already says it. */}
+          <span class="gallery-label" aria-hidden="true">{cell.img.title}</span>
+        </div>
       ))}
     </div>
   ))}
 </main>
 
-<!-- Every control here is declarative: invoker commands (command/commandfor)
-     open and close the dialog natively, and the two custom commands below
-     (--prev/--next) arrive as `command` events on the dialog. `autofocus`
-     focuses the dialog itself on open, so no button wears a focus ring before
-     anyone has pressed a key; arrows and Escape work from there. The icons
-     are drawn, not typed, so they sit centred in their circles in every
-     browser and font. -->
+{/* Every control here is declarative: invoker commands (command/commandfor)
+    arrive as `command` events on the dialog, including the two custom ones
+    (--prev/--next), and the script carries them out. `autofocus` focuses the
+    dialog itself on open, so no button wears a focus ring before anyone has
+    pressed a key; arrows and Escape work from there. The icons are drawn, not
+    typed, so they sit centred in their circles in every browser and font. */}
 <dialog id="detail-view" class="detail-overlay" aria-label="Image view" aria-describedby="detail-help" tabindex="-1" autofocus>
   <p id="detail-help" class="sr-only">Use the arrow keys or swipe to browse photographs. Press Escape to close.</p>
   <button class="detail-close" type="button" commandfor="detail-view" command="close" aria-label="Close"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
@@ -112,13 +118,25 @@ const renderRows = await Promise.all(
     <img class="detail-img" alt="" draggable="false" aria-hidden="true" />
     <button class="detail-nav-next" type="button" commandfor="detail-view" command="--next" aria-label="Next image"><span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5 16 12l-6.5 6.5"/></svg></span></button>
   </div>
-  <!-- A museum label for sighted visitors; the status line says the same to
-       screen readers, including "loading" and errors. -->
+  {/* A museum label for sighted visitors; the status line says the same to
+      screen readers, including "loading" and errors. */}
   <p class="detail-caption" aria-hidden="true"><span class="detail-title"></span><span class="detail-count"></span></p>
   <p class="detail-status sr-only" role="status" aria-atomic="true"></p>
 </dialog>
 
 <script>
+  interface Print {
+    item: HTMLButtonElement;
+    thumb: HTMLImageElement;
+    alt: string;
+    slug: string;
+    srcset: string;
+    sizes: string;
+    full: string;
+    fullWidth: number;
+    ar: number;
+  }
+
   let controller: AbortController;
 
   // Firefox (and Zen) sometimes reject decode() with "Invalid image request"
@@ -137,10 +155,27 @@ const renderRows = await Promise.all(
     }
   }
 
+  // The width a print takes in the viewer, for choosing its source: the same
+  // sum as .detail-img in the stylesheet, with its margins and breakpoints.
+  function viewerSizes(ar: number, width: number) {
+    const fit = (x: string, y: string) => `min(100vw - ${x}, (100vh - ${y}) * ${+ar.toFixed(3)}, ${width}px)`;
+    return `(height <= 500px) ${fit('0px', '6rem')}, (width <= 768px) ${fit('0px', '20vh')}, ${fit('8rem', '8rem')}`;
+  }
+
+  // The print's proportions and full size go to CSS, which sizes the frame from
+  // them: the frame is right before any pixels arrive, whichever copy they are.
+  function hang(img: HTMLImageElement, print: Print) {
+    img.style.setProperty('--ar', String(print.ar));
+    img.style.setProperty('--print-width', `${print.fullWidth}px`);
+    img.alt = print.alt;
+  }
+
   // Fetch and decode off-screen, so stepping to it later is instant.
-  function preload(src: string) {
+  function preload({ sizes, srcset, full }: Print) {
     const img = new Image();
-    img.src = src;
+    img.sizes = sizes;
+    img.srcset = srcset;
+    img.src = full;
     img.decode().catch(() => {});
   }
 
@@ -152,25 +187,10 @@ const renderRows = await Promise.all(
     const overlay = document.querySelector<HTMLDialogElement>('#detail-view');
     if (!overlay) return;
     const status = overlay.querySelector<HTMLElement>('.detail-status')!;
-    const caption = overlay.querySelector<HTMLElement>('.detail-caption')!;
     const title = overlay.querySelector<HTMLElement>('.detail-title')!;
     const count = overlay.querySelector<HTMLElement>('.detail-count')!;
 
-    // A wall label hangs just under its print, not at the foot of the screen:
-    // a wide print sits high in the middle, so place the label from where the
-    // print actually ends (kept on screen), and again whenever the size changes.
-    function placeCaption() {
-      if (!activeImg.classList.contains('is-active')) return;
-      const view = overlay!.getBoundingClientRect();
-      const print = activeImg.getBoundingClientRect();
-      const top = Math.min(print.bottom - view.top + 16, view.height - caption.offsetHeight - 16);
-      caption.style.insetBlockStart = `${Math.round(top)}px`;
-    }
-    const resized = new ResizeObserver(placeCaption);
-    resized.observe(overlay);
-    signal.addEventListener('abort', () => resized.disconnect());
-
-    const galleryItems = document.querySelectorAll<HTMLElement>('.gallery-item');
+    const galleryItems = [...document.querySelectorAll<HTMLButtonElement>('.gallery-item')];
 
     // Prints fade in as they scroll into view (CSS keeps them visible with
     // scripting off or motion reduced). Scroll-driven animations would do this
@@ -189,87 +209,232 @@ const renderRows = await Promise.all(
     // two crossfade.
     let [activeImg, nextImg] = overlay.querySelectorAll<HTMLImageElement>('.detail-img');
 
-    const itemIndex = new Map<Element, number>();
-    const navList = [...galleryItems].map((el, i) => {
-      itemIndex.set(el, i);
-      return { src: el.dataset.full!, alt: el.querySelector('img')!.alt };
+    // Everything the viewer needs is already on the wall's own <img>: its
+    // `src` is the print at full size, its `width` and `height` the source's.
+    const prints: Print[] = galleryItems.map((item) => {
+      const thumb = item.querySelector('img')!;
+      const full = thumb.getAttribute('src')!;
+      const fullWidth = Number(thumb.getAttribute('width'));
+      const ar = fullWidth / Number(thumb.getAttribute('height'));
+      return {
+        item,
+        thumb,
+        alt: thumb.alt,
+        slug: item.id,
+        full,
+        fullWidth,
+        ar,
+        srcset: `${thumb.srcset}, ${full} ${fullWidth}w`,
+        sizes: viewerSizes(ar, fullWidth),
+      };
     });
 
-    let currentNav = 0;
+    // A print develops over its tone once its pixels are here (see the CSS).
+    for (const { thumb } of prints) {
+      const developed = () => thumb.classList.add('is-loaded');
+      if (thumb.complete) developed();
+      else {
+        thumb.addEventListener('load', developed, { once: true, signal });
+        thumb.addEventListener('error', developed, { once: true, signal });
+      }
+    }
 
-    // Bumped on every showImage, so a decode that finishes after the user has
-    // moved on can't swap a stale image in.
+    let currentNav = 0;
+    let opener: HTMLButtonElement | undefined;
+
+    // Bumped whenever the print changes, so a decode that finishes after the
+    // user has moved on can't swap a stale image in.
     let loadToken = 0;
 
-    async function showImage(isFirst = false) {
-      const data = navList[currentNav];
-      const token = ++loadToken;
-      if (isFirst) title.textContent = count.textContent = '';
-      status.textContent = `Loading photograph ${currentNav + 1} of ${navList.length}…`;
-
-      // On open the print goes straight into the visible slot; after that into
-      // the hidden one, which then fades in over the old.
-      const img = isFirst ? activeImg : nextImg;
-      if (isFirst) {
-        nextImg.classList.remove('is-active');
-        nextImg.setAttribute('aria-hidden', 'true');
-      }
-      img.classList.remove('is-active');
+    // Load the print's right-sized source into a hidden <img>.
+    function load(img: HTMLImageElement, print: Print) {
+      img.classList.remove('is-active', 'is-under');
       img.setAttribute('aria-hidden', 'true');
-      img.src = data.src;
-      img.alt = data.alt;
+      hang(img, print);
+      img.sizes = print.sizes;
+      img.srcset = print.srcset;
+      img.src = print.full;
+    }
 
+    function preloadNeighbours() {
+      preload(prints[(currentNav + 1) % prints.length]);
+      preload(prints[(currentNav - 1 + prints.length) % prints.length]);
+    }
+
+    // Sets the label and the address (the page's own history state is kept).
+    function announce() {
+      const { alt, slug } = prints[currentNav];
+      status.textContent = `${currentNav + 1} of ${prints.length} · ${alt}`;
+      title.textContent = alt;
+      count.textContent = `${currentNav + 1} / ${prints.length}`;
+      history.replaceState(history.state, '', `#${slug}`);
+    }
+
+    // The print fades up over what is there, then the two change places. The
+    // old one holds full strength underneath when the new one is only a
+    // sharper copy of it (`keep`), so the swap shows no dip in the light.
+    function swapIn(img: HTMLImageElement, keep = false) {
+      const old = activeImg;
+      img.classList.add('is-active');
+      img.removeAttribute('aria-hidden');
+      old.classList.remove('is-active');
+      old.setAttribute('aria-hidden', 'true');
+      if (keep) {
+        old.classList.add('is-under');
+        setTimeout(() => old.classList.remove('is-under'), 500);
+      }
+      [activeImg, nextImg] = [img, old];
+    }
+
+    async function navigate(dir: number) {
+      currentNav = (currentNav + dir + prints.length) % prints.length;
+      const print = prints[currentNav];
+      const token = ++loadToken;
+      status.textContent = `Loading photograph ${currentNav + 1} of ${prints.length}…`;
+      const img = nextImg;
+      load(img, print);
       try {
         await ready(img); // pixels ready to paint, so the fade never stutters
       } catch {
-        if (token === loadToken) {
-          status.textContent = 'This photograph could not load. Try the next or previous image.';
-        }
+        if (token === loadToken) status.textContent = 'This photograph could not load. Try the next or previous image.';
         return;
       }
       if (token !== loadToken) return;
+      swapIn(img);
+      announce();
+      preloadNeighbours();
+    }
 
-      img.classList.add('is-active');
-      img.removeAttribute('aria-hidden');
-      if (!isFirst) {
-        activeImg.classList.remove('is-active');
-        activeImg.setAttribute('aria-hidden', 'true');
-        [activeImg, nextImg] = [nextImg, activeImg];
+    // The print moving between the wall and the viewer is one view transition:
+    // the frame carries the name in whichever state holds it. Older browsers
+    // and reduced motion get the dialog's plain fade instead.
+    const canMorph = () =>
+      'startViewTransition' in document &&
+      CSS.supports('selector(:active-view-transition-type(print))') &&
+      !matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    async function openViewer(index: number, fromWall = true) {
+      if (overlay!.open) return;
+      currentNav = index;
+      const print = prints[index];
+      const token = ++loadToken;
+      opener = print.item;
+      activeImg.classList.remove('is-active', 'is-under');
+      nextImg.classList.remove('is-active', 'is-under');
+      title.textContent = count.textContent = '';
+
+      // The copy on the wall is already decoded, so the print is there at once;
+      // the sharper source fades in over it when it arrives.
+      const hasCopy = fromWall && print.thumb.complete && print.thumb.naturalWidth > 0;
+      if (hasCopy) {
+        hang(activeImg, print);
+        activeImg.removeAttribute('srcset');
+        activeImg.removeAttribute('sizes');
+        activeImg.src = print.thumb.currentSrc;
+        await ready(activeImg).catch(() => {});
+        if (token !== loadToken || overlay!.open) return;
       }
-      status.textContent = `${currentNav + 1} of ${navList.length} · ${data.alt}`;
-      title.textContent = data.alt;
-      count.textContent = `${currentNav + 1} / ${navList.length}`;
-      placeCaption();
 
-      preload(navList[(currentNav + 1) % navList.length].src);
-      preload(navList[(currentNav - 1 + navList.length) % navList.length].src);
-    }
+      const show = () => {
+        overlay!.showModal();
+        // Not every engine honours `autofocus` on the dialog yet: hold focus on
+        // the dialog rather than its first button.
+        if (document.activeElement !== overlay) overlay!.focus();
+        if (hasCopy) {
+          activeImg.classList.add('is-active');
+          activeImg.removeAttribute('aria-hidden');
+          announce();
+        }
+      };
 
-    function navigate(dir: number) {
-      currentNav = (currentNav + dir + navList.length) % navList.length;
-      showImage();
-    }
-
-    // `command` fires on the dialog before the browser acts on it, so the
-    // print is already loading when show-modal opens the dialog.
-    function handleCommand(command: string, source: Element | null) {
-      if (command === 'show-modal' && source && itemIndex.has(source)) {
-        currentNav = itemIndex.get(source)!;
-        showImage(true);
-        // Not every engine honours `autofocus` on the dialog yet; once it is
-        // open, hold focus on the dialog rather than its first button.
-        requestAnimationFrame(() => {
-          if (overlay!.open && document.activeElement !== overlay) overlay!.focus();
+      let settled: Promise<unknown> = Promise.resolve();
+      if (hasCopy && canMorph()) {
+        print.item.style.viewTransitionName = 'print';
+        const transition = document.startViewTransition({
+          update() {
+            print.item.style.viewTransitionName = '';
+            activeImg.style.viewTransitionName = 'print';
+            show();
+          },
+          types: ['print'],
         });
-        wake();
-      } else if (command === '--next') {
-        navigate(1);
-      } else if (command === '--prev') {
-        navigate(-1);
+        settled = transition.finished.catch(() => {}).then(() => {
+          activeImg.style.viewTransitionName = '';
+        });
+      } else {
+        show();
       }
+
+      wake();
+
+      const target = nextImg;
+      if (!hasCopy) status.textContent = `Loading photograph ${index + 1} of ${prints.length}…`;
+      load(target, print);
+      try {
+        await ready(target);
+      } catch {
+        if (token === loadToken && !hasCopy) status.textContent = 'This photograph could not load. Try the next or previous image.';
+        return;
+      }
+      await settled;
+      if (token !== loadToken || !overlay!.open) return;
+      swapIn(target, hasCopy);
+      if (!hasCopy) announce();
+      preloadNeighbours();
     }
 
+    // Back on the wall, you stand in front of the print you were last looking
+    // at: scrolled to it if you walked away from where you opened, and with the
+    // keyboard's focus on it, whichever way you got there.
+    function returnToWall() {
+      const { item } = prints[currentNav];
+      item.classList.add('is-visible');
+      const { top, bottom } = item.getBoundingClientRect();
+      if (item !== opener && (top < 0 || bottom > innerHeight)) {
+        item.scrollIntoView({ block: 'center', behavior: 'instant' });
+      }
+      if (document.activeElement !== item) item.focus({ preventScroll: true });
+    }
+
+    function closeViewer() {
+      if (!overlay!.open) return;
+      const { item, thumb } = prints[currentNav];
+      if (!canMorph() || !activeImg.classList.contains('is-active')) {
+        overlay!.close();
+        return;
+      }
+      activeImg.style.viewTransitionName = 'print';
+      const transition = document.startViewTransition({
+        async update() {
+          activeImg.style.viewTransitionName = '';
+          overlay!.close();
+          returnToWall();
+          item.style.viewTransitionName = 'print';
+          // A print you reached in the viewer may never have loaded on the
+          // wall: give it a moment, so the frame doesn't land on an empty mat.
+          thumb.loading = 'eager';
+          await Promise.race([thumb.decode().catch(() => {}), new Promise((resolve) => setTimeout(resolve, 250))]);
+          if (thumb.complete) thumb.classList.add('is-loaded');
+        },
+        types: ['print'],
+      });
+      transition.finished.catch(() => {}).then(() => {
+        item.style.viewTransitionName = '';
+      });
+    }
+
+    function handleCommand(command: string, source: Element | null) {
+      const index = galleryItems.indexOf(source as HTMLButtonElement);
+      if (command === 'show-modal' && index >= 0) openViewer(index);
+      else if (command === 'close') closeViewer();
+      else if (command === '--next') navigate(1);
+      else if (command === '--prev') navigate(-1);
+    }
+
+    // The buttons name the commands and the handler carries them out, so the
+    // print can travel as the dialog opens and closes.
     overlay.addEventListener('command', (e) => {
+      e.preventDefault();
       const { command, source } = e as CommandEvent;
       handleCommand(command, source);
     }, { signal });
@@ -279,18 +444,25 @@ const renderRows = await Promise.all(
       document.addEventListener('click', (e) => {
         const button = (e.target as Element).closest<HTMLButtonElement>('[commandfor="detail-view"]');
         if (!button || e.defaultPrevented) return;
-        const command = button.getAttribute('command')!;
-        handleCommand(command, button);
-        if (command === 'show-modal') overlay.showModal();
-        if (command === 'close') overlay.close();
+        handleCommand(button.getAttribute('command')!, button);
       }, { signal });
     }
+
+    // Escape, or the back gesture on Android. The browser allows holding the
+    // close back once per user action; if it won't, it closes as a plain fade.
+    overlay.addEventListener('cancel', (e) => {
+      if (!e.cancelable || !canMorph()) return;
+      e.preventDefault();
+      closeViewer();
+    }, { signal });
 
     overlay.addEventListener('close', () => {
       ++loadToken;
       status.textContent = '';
       clearTimeout(idleTimer);
       overlay.classList.remove('is-idle');
+      returnToWall();
+      history.replaceState(history.state, '', location.pathname + location.search);
     }, { signal });
 
     // With a mouse, the controls and label fade away while the pointer rests
@@ -308,10 +480,11 @@ const renderRows = await Promise.all(
     overlay.addEventListener('pointerdown', wake, { passive: true, signal });
     signal.addEventListener('abort', () => clearTimeout(idleTimer));
 
-    // Clicking the empty ground around the print closes, like a lightbox.
+    // Clicking the print or the ground around it steps back, as you came in.
     overlay.addEventListener('click', (e) => {
-      if (e.target === overlay || (e.target as Element).classList.contains('detail-image-wrap')) {
-        overlay.close();
+      const { classList } = e.target as Element;
+      if (e.target === overlay || classList.contains('detail-image-wrap') || classList.contains('detail-img')) {
+        closeViewer();
       }
     }, { signal });
 
@@ -343,7 +516,7 @@ const renderRows = await Promise.all(
         navigate(dx < 0 ? 1 : -1);
       } else if (Math.abs(dy) > 80) {
         suppressClick = true;
-        overlay.close();
+        closeViewer();
       }
     }, { passive: true, signal });
 
@@ -359,6 +532,15 @@ const renderRows = await Promise.all(
 
     // Enable only when the viewer is ready. With scripting disabled the wall
     // remains readable without opening an empty native dialog.
-    for (const item of galleryItems) (item as HTMLButtonElement).disabled = false;
+    for (const item of galleryItems) item.disabled = false;
+
+    // A link to one print (/#the-lone-boat) opens straight onto it, whether it
+    // loads the page or, from the wall itself, only changes the address.
+    const openLinked = () => {
+      const linked = prints.findIndex(({ slug }) => `#${slug}` === location.hash);
+      if (linked >= 0) openViewer(linked, false);
+    };
+    window.addEventListener('hashchange', openLinked, { signal });
+    openLinked();
   });
 </script>

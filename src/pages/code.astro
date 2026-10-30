@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { AVIF_QUALITY } from '../utils/gallery';
-import { CONTENT_W, GAP, PHONE_MAX, WALL_MAX } from '../utils/layout';
+import { CONTENT_W, GAP, wallSizes } from '../utils/layout';
 import { PERSON_NAME, collectionPageSchema, pageTitle } from '../utils/site';
 
 // The websites Yunus makes alongside the photography. This is the single page
@@ -20,7 +20,7 @@ const sites = (await getCollection('code'))
 // Two prints to a row on the wall, one on a phone. Requested widths are the
 // column at 1x, 1.5x and 2x, plus the full 1440px screenshot.
 const column = Math.round((CONTENT_W - GAP) / 2);
-const printSizes = `(width <= ${PHONE_MAX}px) 100vw, (width <= ${WALL_MAX}px) 50vw, ${column}px`;
+const printSizes = wallSizes(column);
 const printWidths = [column, Math.round(column * 1.5), column * 2, 1440];
 ---
 
@@ -36,8 +36,8 @@ const printWidths = [column, Math.round(column * 1.5), column * 2, 1440];
       and one for the birds of Markaryd.
     </p>
 
-    <!-- Each site hangs as a print: in black and white on the wall, in its
-         own colours when you reach for it. -->
+    {/* Each site hangs as a print: in black and white on the wall, in its
+        own colours when you reach for it. */}
     <ul class="code-wall">
       {sites.map((site, i) => (
         <li>
@@ -50,7 +50,7 @@ const printWidths = [column, Math.round(column * 1.5), column * 2, 1440];
                 sizes={printSizes}
                 format="avif"
                 quality={AVIF_QUALITY}
-                loading={i < 2 ? 'eager' : 'lazy'}
+                priority={i < 2}
               />
             </span>
             <span class="code-name">{new URL(site.url).hostname}</span>

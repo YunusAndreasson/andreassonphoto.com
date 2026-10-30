@@ -18,13 +18,14 @@ pnpm build     # astro build + scripts/prune-orphan-images.mjs
 pnpm check     # astro check
 pnpm preview   # Preview the built site locally
 pnpm verify    # check + build (full check — run before finishing)
-pnpm deploy    # Build + wrangler pages deploy (see Deploy)
+pnpm run deploy    # Build + wrangler pages deploy (see Deploy)
 ```
 
 ## Deploy
 
-`npm run deploy` (or `pnpm deploy`) builds the site and runs
+`pnpm run deploy` builds the site and runs
 `wrangler pages deploy --branch main`, uploading `dist/` to the
 `andreassonphoto` Cloudflare Pages project (config in `wrangler.jsonc`,
-`pages_build_output_dir: dist`). No CI — deploys are direct uploads from this
+`pages_build_output_dir: dist`). The `run` matters: a bare `pnpm deploy` is
+pnpm's own workspace command. No CI — deploys are direct uploads from this
 machine. Requires wrangler auth (`wrangler login`).

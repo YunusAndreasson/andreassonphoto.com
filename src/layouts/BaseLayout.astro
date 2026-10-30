@@ -8,6 +8,7 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  ogImageAlt?: string;
   preloadProse?: boolean;
   // A page with no address of its own (the 404, served for any unknown URL):
   // kept out of search, and naming no canonical URL for crawlers to follow.
@@ -18,6 +19,7 @@ const {
   title = SITE_NAME,
   description = `Black-and-white photographs by ${PERSON_NAME}`,
   ogImage = '/og/the-lone-tree.jpg',
+  ogImageAlt = `The Lone Tree, a black-and-white photograph by ${PERSON_NAME}`,
   preloadProse = false,
   noindex = false,
 } = Astro.props;
@@ -60,13 +62,13 @@ const personSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />
     <meta name="author" content={PERSON_NAME} />
-    <!-- The header's top edge (its scrim over the wall), so the browser's bar
-         runs into the header without a seam. -->
-    <meta name="theme-color" content="#24231f" />
-    <!-- Paints the first frame dark, before the stylesheet arrives. -->
+    {/* The top of the wall (--wall-glow), so the browser's bar runs into the
+        page without a seam. */}
+    <meta name="theme-color" content="#57554f" />
+    {/* Paints the first frame dark, before the stylesheet arrives. */}
     <meta name="color-scheme" content="dark" />
-    <!-- The manifest (display: standalone) is the standard home-screen opt-in,
-         replacing the deprecated apple-mobile-web-app-capable. -->
+    {/* The manifest (display: standalone) is the standard home-screen opt-in,
+        replacing the deprecated apple-mobile-web-app-capable. */}
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
@@ -78,6 +80,7 @@ const personSchema = {
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="800" />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:locale" content="en_GB" />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -86,18 +89,20 @@ const personSchema = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title}</title>
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalUrl} />}
-    <!-- The shared navigation always needs Medium. Text pages also preload
-         their italic lead; other faces stay on demand beside the photographs. -->
+    {/* The shared navigation always needs Medium. Text pages also preload
+        their italic lead; other faces stay on demand beside the photographs. */}
     <Font cssVariable="--font-cormorant" preload={[{ weight: 500, style: 'normal' }]} />
     <Font cssVariable="--font-eb-garamond" preload={preloadProse ? [{ weight: 400, style: 'italic' }] : false} />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
     <slot name="head" />
-    <!-- Page transitions via startViewTransition (same-document). Kept over
-         native cross-document @view-transition, which Firefox/Zen lack. -->
+    {/* Page transitions via startViewTransition (same-document). Kept over
+        native cross-document @view-transition, which Firefox/Zen lack. */}
     <ClientRouter />
   </head>
   <body>
@@ -114,7 +119,7 @@ const personSchema = {
     <slot />
 
     <footer class="site-footer">
-      <!-- Decomposed accents use the combining glyphs in our Latin font subset. -->
+      {/* Decomposed accents use the combining glyphs in our Latin font subset. */}
       <a href="/" class="footer-byline">{PERSON_NAME.normalize('NFD')}</a>
       <nav class="footer-social" aria-label="Contact">
         <a href="mailto:yunus@edenmind.com">Email</a>
@@ -133,14 +138,21 @@ const personSchema = {
         const header = document.querySelector<HTMLElement>('.site-header');
         if (!header) return;
 
-        // Hide while scrolling down past the top; any scroll up brings it back.
+        // At the top of a page the header rests on the bare wall; its shade
+        // comes in once something is passing beneath it. It hides while
+        // scrolling down past the top, and a real scroll up brings it back:
+        // the few pixels a trackpad drifts when it settles don't count.
         let lastY = window.scrollY;
-        header.classList.remove('is-hidden');
-        window.addEventListener('scroll', () => {
+        const update = () => {
           const y = window.scrollY;
+          header.classList.toggle('is-scrolled', y > 16);
+          if (Math.abs(y - lastY) < 6) return;
           header.classList.toggle('is-hidden', y > lastY && y > 80);
           lastY = y;
-        }, { passive: true, signal: controller.signal });
+        };
+        header.classList.remove('is-hidden');
+        update();
+        window.addEventListener('scroll', update, { passive: true, signal: controller.signal });
       });
 
       // Each page loads only the faces it sets, so the next page could open in

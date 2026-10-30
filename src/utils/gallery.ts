@@ -23,10 +23,9 @@ export async function getGalleryImages() {
 // bytes.
 export const AVIF_QUALITY = 70;
 
-// The large AVIF the fullscreen view shows: the print at its own size (up to
-// 2400px), so the viewer can fill a big screen without upscaling. The image
-// sitemap lists the same file, and because the options match, Astro emits it
-// only once.
+// The print at its own size (up to 2400px) as an AVIF, for the image sitemap.
+// It is the same file as `src` on the wall's <img>, which the viewer uses as the
+// top of its srcset: the options match, so Astro emits it only once.
 export function getFullscreenImage(meta: ImageMetadata) {
   return getImage({ src: meta, width: Math.min(2400, meta.width), format: 'avif', quality: AVIF_QUALITY });
 }
