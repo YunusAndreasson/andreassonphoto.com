@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GalleryView from '../components/GalleryView.astro';
+import HomeIntro from '../components/HomeIntro.astro';
+import { getFullscreenImage, getGalleryImages, printPlace, printSlug } from '../utils/gallery';
+import { PERSON_ID, PERSON_NAME, SITE_ORIGIN, pageTitle } from '../utils/site';
+
+// Each photograph's own address (/whooper-swan/): the wall, opened onto that
+// print in the viewer, which keeps this address while it is open. It has its
+// own title, and its link preview is the print hung on the wall with its label
+// (scripts/make-og.mjs), so a photograph sent to someone arrives as itself.
+// Closing the viewer leaves the visitor on the wall, at /.
+export async function getStaticPaths() {
+  // Addresses that belong to something else; a print never takes one.
+  const TAKEN = new Set(['poems', 'birds', 'code', 'og', '404', '_astro']);
+  const images = await getGalleryImages();
+  return images.map((img) => {
+    const slug = printSlug(img.id);
+    if (TAKEN.has(slug)) throw new Error(`Print ${img.id} would take the address /${slug}/`);
+    return { params: { print: slug }, props: { title: img.title, file: img.file, slug, year: img.year, place: img.place } };
+  });
+}
+
+interface Props {
+  title: string;
+  file: ImageMetadata;
+  slug: string;
+  year?: number;
+  place?: string;
+}
+
+const { title, file, slug, year, place } = Astro.props;
+// "Whooper Swan, Halland, 2021": the label as one line, where it is known.
+const label = [title, printPlace({ place, year })].filter(Boolean).join(', ');
+const full = new URL((await getFullscreenImage(file)).src, SITE_ORIGIN).href;
+
+const photographSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Photograph',
+  name: title,
+  url: `${SITE_ORIGIN}/${slug}/`,
+  image: full,
+  ...(year && { dateCreated: String(year) }),
+  ...(place && { contentLocation: { '@type': 'Place', name: place } }),
+  creator: { '@id': PERSON_ID },
+  isPartOf: { '@id': `${SITE_ORIGIN}/` },
+};
+---
+
+<BaseLayout
+  preloadProse
+  title={pageTitle(title)}
+  description={`${label}. A black-and-white photograph by ${PERSON_NAME}.`}
+  ogImage={`/og/prints/${slug}.jpg`}
+  ogImageAlt={`${label}. A black-and-white photograph by ${PERSON_NAME}, hung on the wall.`}
+>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(photographSchema)} slot="head" />
+  <GalleryView images={await getGalleryImages()} open={slug}>
+    <HomeIntro />
+  </GalleryView>
+</BaseLayout>

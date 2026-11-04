@@ -26,6 +26,17 @@ for (const bird of species) {
   if (!bird.regular) group.rare += 1;
 }
 
+// Anchors for linking straight to a family or a bird: "Herons, Storks &
+// Ibises" → herons-storks-ibises; a bird keeps its id, the Latin name.
+const slug = (name: string) => name.toLowerCase().replace(/[^a-z]+/g, '-').replace(/^-|-$/g, '');
+
+// The few birds that appear elsewhere on the site. Most were gone before the
+// camera was up, so the list is names; these open onto where they stayed.
+const elsewhere: Record<string, { href: string; label: string }> = {
+  'cygnus-cygnus': { href: '/whooper-swan/', label: 'In a photograph' },
+  'apus-apus': { href: '/poems/swifts/', label: 'In a poem' },
+};
+
 const collectionSchema = collectionPageSchema(
   '/birds/',
   `Birds — ${PERSON_NAME}`,
@@ -36,6 +47,8 @@ const collectionSchema = collectionPageSchema(
 <BaseLayout preloadProse
   title={pageTitle('Birds')}
   description={`Every bird species ${PERSON_NAME} has seen in Sweden: ${total} so far, ${rarities} of them rarities.`}
+  ogImage="/og/birds.jpg"
+  ogImageAlt={`Whooper Swan, a black-and-white photograph by ${PERSON_NAME}, beside the words: Every bird I have seen in Sweden. ${total} seen in Sweden.`}
 >
   <script type="application/ld+json" is:inline set:html={JSON.stringify(collectionSchema)} slot="head" />
   <main id="main-content" class="page-content" tabindex="-1">
@@ -43,8 +56,8 @@ const collectionSchema = collectionPageSchema(
     <p class="invocation">
       Every bird I have seen in Sweden.<br>
       Most of them heard before they were seen,<br>
-      and gone before the camera was up &mdash;<br>
-      so they are kept here instead, as a list.
+      and gone before the camera was up.<br>
+      So I keep them here instead, as names.
     </p>
 
     <section class="bird-tally" aria-label="Tally">
@@ -68,14 +81,14 @@ const collectionSchema = collectionPageSchema(
         <span class="bird-toggle-dot" aria-hidden="true"></span>
         <span>Show only the {rarities} rarities</span>
       </label>
-      <p class="bird-legend">A rarity or vagrant is a bird that turns up in Sweden, rather than one that lives here.</p>
+      <p class="bird-legend">Birds that stray to Sweden, rather than live here.</p>
     </div>
 
     <div class="bird-ledger">
       {groups.map((group) => (
-        <section class="bird-group">
+        <section class="bird-group" id={slug(group.name)} style={`--n:${group.birds.length}`}>
           <h2 class="section-label">
-            {group.name}<span class="sr-only">, </span>
+            {group.name.split(' & ').map((part, i) => (i ? <>{' '}<span class="amp">&amp;</span>{' '}{part}</> : part))}<span class="sr-only">, </span>
             <span class="bird-group-count">
               <span class="bird-count-all">{group.birds.length}<span class="sr-only"> species</span></span>
               <span class="bird-count-rare">{group.rare}<span class="sr-only"> rarities</span></span>
@@ -83,9 +96,10 @@ const collectionSchema = collectionPageSchema(
           </h2>
           <ul class="bird-list">
             {group.birds.map((bird) => (
-              <li class:list={['bird', { 'is-rare': !bird.regular }]}>
+              <li class:list={['bird', { 'is-rare': !bird.regular }]} id={bird.id}>
                 <span class="bird-sv" lang="sv">{bird.sv}{!bird.regular && <span class="sr-only" lang="en"> (a rarity)</span>}</span>
                 <span class="bird-meta">{bird.en.replaceAll("'", '’')}<i lang="la">{bird.la}</i></span>
+                {elsewhere[bird.id] && <a class="bird-elsewhere" href={elsewhere[bird.id].href}>{elsewhere[bird.id].label}</a>}
               </li>
             ))}
           </ul>

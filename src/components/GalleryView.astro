@@ -1,15 +1,17 @@
 ---
 import { Image } from 'astro:assets';
-import { PERSON_NAME } from '../utils/site';
-import { AVIF_QUALITY } from '../utils/gallery';
+import { PERSON_NAME, WALL_TITLE } from '../utils/site';
+import { AVIF_QUALITY, printPlace, printSlug } from '../utils/gallery';
 import { composeRows, rowHeight, type GalleryImage } from '../utils/composeRows';
 import { WIDEST_SCALE, wallSizes } from '../utils/layout';
 
 interface Props {
   images: GalleryImage[];
+  // On a print's own page (/whooper-swan/), the print the wall opens onto.
+  open?: string;
 }
 
-const { images } = Astro.props;
+const { images, open } = Astro.props;
 
 // `img.file` is already ImageMetadata (the collection's image() schema), so the
 // real dimensions are known up front: the justified layout sizes every row from
@@ -48,8 +50,10 @@ const renderRows = rows.map((row, ri) => {
       img: cell.img,
       meta,
       ar: cell.ar,
-      // The print's address: /#the-lone-boat opens it (see the script).
-      slug: cell.img.id.replace(/^\d+_/, '').replaceAll('_', '-'),
+      // The print's address: /the-lone-boat/ is the wall opened on it.
+      slug: printSlug(cell.img.id),
+      // The label's second line, for the viewer: "Halland, 2021".
+      place: printPlace(cell.img) || undefined,
       grow: cell.grow,
       widths: widthsFor(px, meta.width),
       // Lazy prints let the browser use their real laid-out width
@@ -67,7 +71,7 @@ const renderRows = rows.map((row, ri) => {
 });
 ---
 
-<main id="main-content" class="gallery-wall" tabindex="-1">
+<main id="main-content" class="gallery-wall" tabindex="-1" data-open={open} data-wall-title={WALL_TITLE}>
   <h1 class="sr-only">{PERSON_NAME} — black-and-white photography</h1>
   <slot />
   {renderRows.map((row) => (
@@ -82,6 +86,7 @@ const renderRows = rows.map((row, ri) => {
             commandfor="detail-view"
             command="show-modal"
             aria-haspopup="dialog"
+            data-place={cell.place}
             style={`background-color:${cell.img.edgeColor}`}
           >
             <Image
@@ -120,15 +125,18 @@ const renderRows = rows.map((row, ri) => {
   </div>
   {/* A museum label for sighted visitors; the status line says the same to
       screen readers, including "loading" and errors. */}
-  <p class="detail-caption" aria-hidden="true"><span class="detail-title"></span><span class="detail-count"></span></p>
+  <p class="detail-caption" aria-hidden="true"><span class="detail-label"><span class="detail-title"></span><span class="detail-place"></span></span><span class="detail-count"></span></p>
   <p class="detail-status sr-only" role="status" aria-atomic="true"></p>
 </dialog>
 
 <script>
+  import { pageTitle } from '../utils/site';
+
   interface Print {
     item: HTMLButtonElement;
     thumb: HTMLImageElement;
     alt: string;
+    place: string;
     slug: string;
     srcset: string;
     sizes: string;
@@ -186,15 +194,18 @@ const renderRows = rows.map((row, ri) => {
 
     const overlay = document.querySelector<HTMLDialogElement>('#detail-view');
     if (!overlay) return;
+    const main = document.querySelector<HTMLElement>('.gallery-wall')!;
     const status = overlay.querySelector<HTMLElement>('.detail-status')!;
     const title = overlay.querySelector<HTMLElement>('.detail-title')!;
+    const place = overlay.querySelector<HTMLElement>('.detail-place')!;
     const count = overlay.querySelector<HTMLElement>('.detail-count')!;
 
     const galleryItems = [...document.querySelectorAll<HTMLButtonElement>('.gallery-item')];
 
     // Prints fade in as they scroll into view (CSS keeps them visible with
-    // scripting off or motion reduced). Scroll-driven animations would do this
-    // without JS, but Firefox/Zen don't ship them yet.
+    // scripting off or motion reduced). A fade in time, once, not one tied to
+    // the scroll: a scroll-driven fade would leave a print half there for as
+    // long as someone scrolls slowly past it.
     const reveal = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
@@ -220,6 +231,7 @@ const renderRows = rows.map((row, ri) => {
         item,
         thumb,
         alt: thumb.alt,
+        place: item.dataset.place ?? '',
         slug: item.id,
         full,
         fullWidth,
@@ -263,11 +275,13 @@ const renderRows = rows.map((row, ri) => {
 
     // Sets the label and the address (the page's own history state is kept).
     function announce() {
-      const { alt, slug } = prints[currentNav];
-      status.textContent = `${currentNav + 1} of ${prints.length} · ${alt}`;
+      const { alt, place: where, slug } = prints[currentNav];
+      status.textContent = `${currentNav + 1} of ${prints.length} · ${[alt, where].filter(Boolean).join(', ')}`;
       title.textContent = alt;
+      place.textContent = where;
       count.textContent = `${currentNav + 1} / ${prints.length}`;
-      history.replaceState(history.state, '', `#${slug}`);
+      history.replaceState(history.state, '', `/${slug}/`);
+      document.title = pageTitle(alt);
     }
 
     // The print fades up over what is there, then the two change places. The
@@ -321,7 +335,7 @@ const renderRows = rows.map((row, ri) => {
       opener = print.item;
       activeImg.classList.remove('is-active', 'is-under');
       nextImg.classList.remove('is-active', 'is-under');
-      title.textContent = count.textContent = '';
+      title.textContent = place.textContent = count.textContent = '';
 
       // The copy on the wall is already decoded, so the print is there at once;
       // the sharper source fades in over it when it arrives.
@@ -462,7 +476,8 @@ const renderRows = rows.map((row, ri) => {
       clearTimeout(idleTimer);
       overlay.classList.remove('is-idle');
       returnToWall();
-      history.replaceState(history.state, '', location.pathname + location.search);
+      history.replaceState(history.state, '', '/');
+      document.title = main.dataset.wallTitle!;
     }, { signal });
 
     // With a mouse, the controls and label fade away while the pointer rests
@@ -534,10 +549,15 @@ const renderRows = rows.map((row, ri) => {
     // remains readable without opening an empty native dialog.
     for (const item of galleryItems) item.disabled = false;
 
-    // A link to one print (/#the-lone-boat) opens straight onto it, whether it
-    // loads the page or, from the wall itself, only changes the address.
+    // Each print has its own page (/the-lone-boat/): the wall, opened onto
+    // it. The viewer keeps that address while the print is open, so it can be
+    // copied and sent, with the print as its preview; closing returns to /.
+    // The older form, /#the-lone-boat, still opens it, whether it loads the
+    // page or, from the wall itself, only changes the address.
     const openLinked = () => {
-      const linked = prints.findIndex(({ slug }) => `#${slug}` === location.hash);
+      const wanted = location.hash ? location.hash.slice(1) : main.dataset.open;
+      delete main.dataset.open; // once: a later change of address mustn't reopen it
+      const linked = prints.findIndex(({ slug }) => slug === wanted);
       if (linked >= 0) openViewer(linked, false);
     };
     window.addEventListener('hashchange', openLinked, { signal });

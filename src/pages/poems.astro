@@ -1,13 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PoemBody from '../components/PoemBody.astro';
 import { PERSON_NAME, pageTitle } from '../utils/site';
 import { getCollection } from 'astro:content';
+import { getPoems, month } from '../utils/poems';
 
 // The pieces from the diaries, newest first, gathered under their year the way
 // /birds gathers species under their family.
-const pieces = (await getCollection('poems'))
-  .map((entry) => entry.data)
-  .sort((a, b) => b.date.localeCompare(a.date));
+const pieces = await getPoems();
 
 // Each year carries its title, a line from its own pieces, where it has one.
 const titles = new Map((await getCollection('poemYears')).map((entry) => [entry.data.id, entry.data.title]));
@@ -25,59 +25,39 @@ for (const piece of pieces) {
 
 const first = pieces.at(-1)!.date.slice(0, 4);
 const last = pieces[0].date.slice(0, 4);
-
-// "2015-11" → "November". UTC so the build machine's zone can't shift it.
-const month = (date: string) =>
-  new Date(`${date}-01T00:00:00Z`).toLocaleDateString('en-GB', { month: 'long', timeZone: 'UTC' });
-
-// A blank line ends a stanza. A stanza in Arabic script is set right to left.
-// Latin stanzas are decomposed, as the signature is: the prose subset carries
-// the combining macron but not precomposed ā or ū. Arabic stays composed, since
-// NFD would split its hamza letters.
-const stanzas = (text: string) =>
-  text.split(/\n{2,}/).map((stanza) => {
-    const arabic = /[؀-ۿ]/.test(stanza);
-    return { lines: (arabic ? stanza : stanza.normalize('NFD')).split('\n'), arabic };
-  });
 ---
 
 <BaseLayout
   preloadProse
   title={pageTitle('Poems')}
   description={`Poems from ${PERSON_NAME}’s diaries, ${first} to ${last}.`}
+  ogImage="/og/poems.jpg"
+  ogImageAlt="The poem Swifts, July 2025: Swifts teasing the falling dark, going nowhere, never still."
 >
   <main id="main-content" class="page-content poems" tabindex="-1">
     <h1 class="sr-only">Poems</h1>
     <p class="invocation">
-      In the name of God,<br>
+      In the name of Allāh,<br>
       the Most Gracious, the Most Merciful.
     </p>
     <p class="poems-note">
-      Poems from my diaries, {first} to {last}.
+      Poems from my diaries, {first} to {last}, most of them first written in Swedish.
     </p>
 
     {years.map(({ year, title, pieces }) => (
       <section class="poems-year" id={`y${year}`} aria-labelledby={`y${year}-label`}>
         <header class="poems-year-head">
           <h2 class="poems-year-label" id={`y${year}-label`}>{year}</h2>
-          {title && <p class="poems-year-title">{title.normalize('NFD')}</p>}
+          {title && <p class="poems-year-title">{title}</p>}
         </header>
         <div class="poems-year-pieces">
           {pieces.map((piece) => (
             <article class="poem" id={piece.id}>
-              <h3 class="poem-title">{piece.title.normalize('NFD')}</h3>
+              <h3 class="poem-title"><a href={`/poems/${piece.id}/`}>{piece.title}</a></h3>
               <p class="poem-date">
                 <time datetime={piece.date}>{month(piece.date)}<span class="poem-date-year"> {year}</span></time>
               </p>
-              <div class:list={['poem-body', { 'is-prose': piece.form === 'prose' }]}>
-                {stanzas(piece.text).map(({ lines, arabic }) => (
-                  <p lang={arabic ? 'ar' : undefined} dir={arabic ? 'rtl' : undefined}>
-                    {piece.form === 'prose'
-                      ? lines.join(' ')
-                      : lines.map((line) => <span class="poem-line">{line}</span>)}
-                  </p>
-                ))}
-              </div>
+              <PoemBody piece={piece} />
             </article>
           ))}
         </div>

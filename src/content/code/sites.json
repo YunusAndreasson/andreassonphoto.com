@@ -9,7 +9,7 @@
   {
     "id": "open-arabic",
     "url": "https://openarabic.io",
-    "desc": "Classical Arabic texts with English translations. Tap words to hear them and save them for practice.",
+    "desc": "Classical Arabic texts with English translations. Every word can be heard and saved for practice.",
     "image": "../../assets/code/open-arabic.jpg",
     "order": 2
   },
@@ -30,14 +30,14 @@
   {
     "id": "qamar360",
     "url": "https://qamar360.com",
-    "desc": "Keep track of daily habits and routines from the Sunnah.",
+    "desc": "Small daily acts from the Sunnah, tied to the prayers.",
     "image": "../../assets/code/qamar360.jpg",
     "order": 5
   },
   {
     "id": "edenmind",
     "url": "https://edenmind.com",
-    "desc": "Read about science and history, then answer questions out loud to test your memory.",
+    "desc": "Articles on science and history, with questions you answer out loud.",
     "image": "../../assets/code/edenmind.jpg",
     "order": 6
   },
@@ -52,7 +52,7 @@
     "id": "markaryds-fagelklubb",
     "url": "https://markarydsfagelklubb.nu",
     "capture": "https://mafk-web.jonas-268.workers.dev/",
-    "desc": "Sightings and outings from the bird club in Markaryd, a small municipality in southern Sweden.",
+    "desc": "Sightings and outings from the bird club in Markaryd, a small town in southern Sweden.",
     "image": "../../assets/code/markaryds-fagelklubb.jpg",
     "order": 8
   }

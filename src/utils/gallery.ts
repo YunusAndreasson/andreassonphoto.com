@@ -18,6 +18,15 @@ export async function getGalleryImages() {
   return images;
 }
 
+// A print's address: 65_whooper_swan → /whooper-swan/, the wall opened on it.
+export const printSlug = (id: string) => id.replace(/^\d+_/, '').replaceAll('_', '-');
+
+// The second line of a print's label: "Halland, 2021", "Halland", "2021",
+// or nothing. The viewer, the print's own page and its link preview
+// (scripts/make-og.mjs, which repeats this one line) all say it the same way.
+export const printPlace = ({ place, year }: { place?: string; year?: number }) =>
+  [place, year].filter(Boolean).join(', ');
+
 // AVIF quality for every gallery variant. The encoder default (50) smooths
 // away the film grain the prints are made of; 70 keeps it for about twice the
 // bytes.

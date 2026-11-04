@@ -27,7 +27,8 @@ const {
 const canonicalUrl = new URL(Astro.url.pathname, SITE_ORIGIN);
 const ogImageUrl = new URL(ogImage, SITE_ORIGIN).href;
 
-// Current page, so the nav can show "you are here" (Nielsen #1 / aria-current).
+// Current page, so the nav can show "you are here" (Nielsen #1 / aria-current):
+// `page` on the section itself, `true` on a page inside it (a poem's own page).
 // Folder form, as the nav links are, whether or not the request had the slash.
 const navPath = Astro.url.pathname.replace(/\/*$/, '/');
 
@@ -108,10 +109,13 @@ const personSchema = {
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <header class="site-header">
-      <a href="/" class="site-name" aria-current={navPath === '/' ? 'page' : undefined}>{SITE_NAME}</a>
+      {/* The four ways around are fetched as soon as the header is on screen,
+          not on hover (ClientRouter's default): a touch screen never hovers,
+          and each page is ~11 KB. Astro skips this on a data saver. */}
+      <a href="/" class="site-name" data-astro-prefetch="viewport" aria-current={navPath === '/' ? 'page' : undefined}>{SITE_NAME}</a>
       <nav class="site-nav" aria-label="Main">
         {NAV.map(({ href, label }) => (
-          <a href={href} aria-current={navPath === href ? 'page' : undefined}>{label}</a>
+          <a href={href} data-astro-prefetch="viewport" aria-current={navPath === href ? 'page' : navPath.startsWith(href) ? 'true' : undefined}>{label}</a>
         ))}
       </nav>
     </header>
@@ -119,14 +123,15 @@ const personSchema = {
     <slot />
 
     <footer class="site-footer">
-      {/* Decomposed accents use the combining glyphs in our Latin font subset. */}
-      <a href="/" class="footer-byline">{PERSON_NAME.normalize('NFD')}</a>
+      <a href="/" class="footer-byline">{PERSON_NAME}</a>
       <nav class="footer-social" aria-label="Contact">
         <a href="mailto:yunus@edenmind.com">Email</a>
       </nav>
     </footer>
 
     <script>
+      import '../scripts/poem-travel';
+
       let controller: AbortController;
 
       document.addEventListener('astro:page-load', () => {

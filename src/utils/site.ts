@@ -25,6 +25,10 @@ export const NAV = [
   { href: '/code/', label: 'Code' },
 ];
 
+// The home page's title: the wall, and the tab's title again when the viewer
+// closes onto it from a print.
+export const WALL_TITLE = `${PERSON_NAME} — Black-and-white photography`;
+
 // "Poems — Andrèasson Photo": the page first, so a row of tabs tells the
 // pages apart before the site name is cut off.
 export const pageTitle = (page: string) => `${page} — ${SITE_NAME}`;

@@ -22,6 +22,12 @@ const gallery = defineCollection({
     // one are broken into rows automatically.
     row: z.number().int().positive().optional(),
     edgeColor: z.string(),
+    // The rest of a museum label, as far as it is known: the year the
+    // photograph was taken and where ("Halland", "Prizren, Kosovo"). Either
+    // can be left out; nothing is shown for what isn't given. Never guessed:
+    // the files carry no EXIF, so these come from Yunus.
+    year: z.number().int().min(1990).max(2100).optional(),
+    place: z.string().min(1).optional(),
   }),
 });
 

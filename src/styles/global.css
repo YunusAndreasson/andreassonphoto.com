@@ -17,14 +17,23 @@
      4.88:1 ceiling, so every tone below clears WCAG AA with room to spare. */
   --wall-bg: #4f4d49;
   --wall-glow: #57554f; /* overhead-light tone for the faint top gradient */
-  /* Secondary text (notes, captions, Latin names): 5.5:1 on the wall, 4.8:1
-     on the glow — quieter than prose, still AA everywhere it can sit. */
+  /* The light itself, fixed to the window: body::before, and anything that
+     has to stand on the wall exactly (the held family labels on /birds). */
+  --wall-light: linear-gradient(180deg, var(--wall-glow) 0%, var(--wall-bg) 45svh);
+  /* Three inks, each with one meaning, about ten steps of lightness apart
+     (L* 84 → 94 → 100) so the difference reads at a glance:
+     --prose-ink   what you read and the way around: verse, names, titles,
+                   the header and the viewer. Warm paper-white, 7.3:1 on the
+                   wall, 6.4:1 on the glow; softer than pure white so long
+                   reading doesn't glare against the deeper grey.
+     --ink         what describes it: notes, dates, captions, Latin names,
+                   the labels over a title. 5.5:1 on the wall, 4.8:1 on the
+                   glow; quieter than prose, still AA everywhere it can sit.
+     --ink-bright  the thing under the pointer. Only six steps above prose,
+                   so a link already in prose ink also takes the underline on
+                   hover; brightness alone would hardly show. */
   --ink: #d3d0c8;
-  --nav-fg: #f4f2ec; /* 7.5:1 */
-  /* Warm paper-white prose: 7.3:1 on the wall, 6.5:1 on the glow. Softer than
-     pure white so long reading doesn't glare against the deeper grey. */
   --prose-ink: #f1eee7;
-  /* Every link brightens to this on hover — one hover language site-wide. */
   --ink-bright: #ffffff;
   --detail-bg: #0a0a0a;
   /* The photo viewer: the wall's own warm hue, taken down into shade, so
@@ -103,7 +112,6 @@
     --wall-glow: #3f3d3a;
     --prose-ink: #ffffff;
     --ink: #e8e5de;
-    --nav-fg: #ffffff;
   }
 }
 
@@ -117,7 +125,6 @@
     --wall-glow: #ffffff;
     --prose-ink: #1c1b19;
     --ink: #55524c;
-    --nav-fg: #1c1b19;
     --ink-bright: #000000;
   }
 
@@ -188,6 +195,16 @@
     font-synthesis: none;
     font-kerning: normal;
     font-variant-ligatures: common-ligatures contextual;
+    /* Figures in the text's own measure: old-style, proportional, so a year
+       or a count sits in a line of lowercase rather than standing up out of
+       it, as in a set book. Where a figure has to stand level with capitals
+       (a poem's date, the year in the margin, the tally) the role sets
+       lining figures itself. */
+    font-variant-numeric: oldstyle-nums proportional-nums;
+    /* Light type on a dark wall: subpixel smoothing (macOS) thickens it and
+       blurs the hairlines, so the strokes are smoothed by greyscale. */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     color: var(--ink);
     /* clip, not hidden: trims sideways overflow without making the body a
        scroll container. */
@@ -202,7 +219,7 @@
     position: fixed;
     inset: 0;
     z-index: -1;
-    background-image: linear-gradient(180deg, var(--wall-glow) 0%, var(--wall-bg) 45svh);
+    background-image: var(--wall-light);
     pointer-events: none;
   }
 
@@ -257,7 +274,7 @@
     z-index: 200;
     padding: 0.75rem 1rem;
     background: var(--detail-bg);
-    color: var(--nav-fg);
+    color: var(--prose-ink);
     /* Reuse the navigation face rather than fetching prose for a hidden link. */
     font-family: var(--font);
     font-weight: 500;
@@ -284,7 +301,8 @@
     font-weight: 500;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--nav-fg);
+    font-feature-settings: 'case';
+    color: var(--prose-ink);
     padding-block: 0.4rem; /* ≥24px touch target (WCAG 2.5.8) */
   }
 
@@ -294,32 +312,56 @@
   .section-label,
   .bird-tally-caption,
   .gallery-label,
-  .poem-date {
+  .poem-date,
+  .poem-turn-label {
     font-family: var(--font);
     font-size: var(--fs--2);
     font-weight: 500;
     letter-spacing: 0.15em;
     text-transform: uppercase;
+    /* Case forms: punctuation set for capitals, not for lowercase. */
+    font-feature-settings: 'case';
   }
 
-  /* Display — a name set large and light: websites, birds, the way back home. */
-  .code-name,
-  .bird-sv,
+  /* The ampersand in a label in capitals ("Gulls & Terns"): the italic
+     Garamond one, the most beautiful character in either family, a little
+     larger so it holds its own among the capitals. */
+  .amp {
+    font-family: var(--font-prose);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.2em;
+    line-height: 0;
+    /* The label's own tracking (0.15em at 1/1.2 the size), so the space after
+       it matches the space before. */
+    letter-spacing: 0.125em;
+    text-transform: none;
+    font-feature-settings: normal;
+  }
+
+  /* Display — figures and the one way home, set large and Light: the year
+     in the margin, the tally, the 404's way back. Cormorant's hairlines are
+     drawn for this size and up. */
   .not-found-back a,
   .bird-tally-figure,
-  .poems-year-label,
-  .poem-title {
+  .poems-year-label {
     font-family: var(--font);
     font-size: var(--fs-2);
     font-weight: 300;
     letter-spacing: 0.01em;
   }
 
-  /* Repeated reading-size names need a firmer stroke than display titles. */
+  /* Title — the name of a thing: a poem, a website, a bird. Medium, a firmer
+     stroke than Display, because titles come by the dozen at reading size and
+     Light thins out there. A poem's title steps up a size (below). */
   .code-name,
-  .bird-sv {
+  .bird-sv,
+  .poem-title,
+  .poem-turn-title {
+    font-family: var(--font);
     font-size: var(--fs-1);
     font-weight: 500;
+    letter-spacing: 0.01em;
   }
 
   /* Note — the quiet italic line under or beside a name. */
@@ -354,6 +396,13 @@
     text-box: trim-both cap alphabetic;
   }
 
+  /* Each page's first line opens on a swash capital, the italic's own: one
+     flourish to a page, where a book would set its initial. */
+  .invocation::first-letter,
+  .gallery-intro::first-letter {
+    font-feature-settings: 'swsh';
+  }
+
   /* Small notes step down one size: legends, counts, the source line. */
   .bird-legend,
   .bird-group-count,
@@ -364,10 +413,13 @@
   /* ── Link states ── one hover, one underline, used everywhere. */
 
   .site-name:hover,
-  .gallery-intro a:hover,
   .footer-byline:hover,
   .footer-social a:hover,
-  .not-found-back a:hover {
+  .not-found-back a:hover,
+  .poem-title a:hover,
+  .poem-turn:hover .poem-turn-title,
+  .bird-elsewhere:hover,
+  .poem-back a:hover {
     color: var(--ink-bright);
   }
 
@@ -376,18 +428,19 @@
      link you are reaching for in the nav gets it a little fainter than the page
      you are on. It has no line at rest, not a clear one: a clear line would
      still cast the header's text-shadow, and read as underlined in Chromium. */
-  .site-nav a[aria-current='page'],
+  .site-nav a[aria-current],
   .site-nav a:hover,
   .site-nav a:focus-visible,
   .not-found-back a,
-  .gallery-intro a {
+  .bird-elsewhere,
+  .poem-back a {
     text-decoration-line: underline;
     text-decoration-thickness: 1px;
     text-decoration-color: color-mix(in oklab, currentColor 55%, transparent);
     text-underline-offset: 5px;
   }
 
-  .site-nav a:not([aria-current='page']) {
+  .site-nav a:not([aria-current]) {
     text-decoration-color: transparent;
     transition: text-decoration-color 0.3s, opacity 0.3s;
 
@@ -395,6 +448,26 @@
     &:focus-visible {
       text-decoration-color: color-mix(in oklab, currentColor 35%, transparent);
     }
+  }
+
+  /* A link already in prose ink can brighten only six steps on hover, too
+     little to see, so there the nav's faint underline fades in as well: the
+     poem titles, the turns at a poem's foot, the email in the footer. The
+     maker's name is left plain; it is the site's mark. */
+  .poem-title a,
+  .poem-turn-title,
+  .footer-social a {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.2em;
+    transition: color 0.3s, text-decoration-color 0.3s;
+  }
+
+  .poem-title a:hover,
+  .poem-turn:hover .poem-turn-title,
+  .footer-social a:hover {
+    text-decoration-color: color-mix(in oklab, currentColor 35%, transparent);
   }
 
   /* ── Header ── */
@@ -472,7 +545,7 @@
     gap: 2rem;
 
     & a {
-      color: var(--nav-fg);
+      color: var(--prose-ink);
       opacity: 0.92;
       padding-block: 0.4rem; /* ≥24px touch target (WCAG 2.5.8) */
 
@@ -480,7 +553,7 @@
          the active section is unambiguous (Nielsen #1). */
       &:hover,
       &:focus-visible,
-      &[aria-current='page'] {
+      &[aria-current] {
         opacity: 1;
       }
     }
@@ -643,6 +716,31 @@
     animation-duration: 0.35s;
   }
 
+  /* A poem's title travels the same way, at the same pace, between its place
+     among the rest and the heading of its own page (src/scripts/poem-travel).
+     The two ends are set at different sizes and may break differently, so
+     each image keeps its own proportions and holds to the left edge, where
+     both are set, while the group moves between them. */
+  ::view-transition-group(poem) {
+    animation-duration: 0.45s;
+    animation-timing-function: cubic-bezier(0.22, 0.61, 0.21, 1);
+  }
+
+  ::view-transition-old(poem),
+  ::view-transition-new(poem) {
+    height: 100%;
+    object-fit: contain;
+    object-position: left center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(poem),
+    ::view-transition-old(poem),
+    ::view-transition-new(poem) {
+      animation-duration: 0s;
+    }
+  }
+
   /* During it everything is simply in its final state, so that is what gets
      captured; the transitions below would otherwise still be under way. */
   :root:active-view-transition {
@@ -684,7 +782,7 @@
     align-items: center;
     justify-content: center;
     background: var(--viewer-bg);
-    color: var(--nav-fg);
+    color: var(--prose-ink);
     cursor: zoom-out;
     touch-action: pinch-zoom;
     overscroll-behavior: contain;
@@ -779,7 +877,7 @@
       height: 44px;
       margin-inline: max(1rem, env(safe-area-inset-left)) max(1rem, env(safe-area-inset-right));
       border-radius: 50%;
-      color: var(--nav-fg);
+      color: var(--prose-ink);
       opacity: 0.6;
       transition: opacity 0.4s ease, background-color 0.3s ease;
     }
@@ -870,13 +968,41 @@
     font-weight: 500;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--nav-fg);
+    color: var(--prose-ink);
+  }
+
+  /* The museum label: the title, then where and when, in the note's italic
+     beside it, as a wall label sets its second line. The count stands apart:
+     it is the viewer's, not the print's. */
+  .detail-label {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0.2rem 0.7rem;
+  }
+
+  .detail-place {
+    font-family: var(--font-prose);
+    font-size: var(--fs--1);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink);
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .detail-caption:has(.detail-place:not(:empty)) {
+    column-gap: 1.5rem;
   }
 
   .detail-count {
     font-family: var(--font-prose);
     font-size: var(--fs--1);
     font-style: italic;
+    font-weight: 400;
     font-variant-numeric: lining-nums tabular-nums;
     color: var(--ink);
   }
@@ -974,7 +1100,6 @@
   /* Headings inside a text page: a small-caps label over what it names. */
   .section-label {
     font-size: var(--fs--1);
-    letter-spacing: 0.16em;
     color: var(--prose-ink);
     margin-block-end: 1.6rem;
   }
@@ -989,8 +1114,8 @@
      ornaments; the pace comes from whitespace alone, close to a screen of it
      between pieces and more between years, so one poem is read at a time.
      While scrolling, the poem at the reading line holds full strength and
-     the others step back (the script on the page). The signature closes the
-     whole collection. */
+     the others step back. Each title links to its own poem, the way to pass
+     one on. */
 
   .poems-note {
     max-width: 42ch;
@@ -1091,13 +1216,11 @@
     margin-block-start: clamp(7rem, 24vh, 12rem);
   }
 
-  /* A step above the verse so each piece has a clear beginning; the firmer
-     stroke holds at a hundred repeats, and lining figures keep "1.1x" from
-     reading as "I.IX". Medium, named outright: only Light and Medium ship, and
-     a 400 here silently resolved to Medium anyway. */
+  /* The Title role, stepped up above the verse so each piece has a clear
+     beginning; lining figures keep "1.1x" from reading as "I.IX". */
   .poem-title {
+    width: fit-content; /* the words alone, for the title's travel */
     font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
-    font-weight: 500;
     font-variant-numeric: lining-nums;
     line-height: 1.2;
     text-wrap: balance;
@@ -1130,45 +1253,34 @@
     line-height: 1.7;
   }
 
-  /* Focus, two ways to the same reading. Where an animation can follow the
-     scroll (Chrome, Edge, Safari 26), CSS alone does it: each poem brightens
-     as it crosses a reading band around two fifths down the window (25–55%,
-     wider than the gap between poems, so one fades in as the other fades
-     out) and steps back as it leaves, tied to the scroll itself, with no
-     script. The first poem is already lit when the page opens and the last
-     stays lit at the end, which the band alone would miss; the script gets
-     both from picking the nearest poem. The page script stands down there. Elsewhere (Firefox, Zen)
-     the script marks the poem at the reading line and sets data-focus, and
-     the rest fade. With neither, nothing is dimmed. */
-  @keyframes poem-focus {
-    entry 0%,
-    exit 100% {
-      opacity: 0.3;
-    }
-
-    entry 100%,
-    exit 0% {
-      opacity: 1;
-    }
-  }
-
-  @keyframes poem-focus-first {
-    exit 0% {
-      opacity: 1;
-    }
-
-    exit 100% {
+  /* Focus, two ways to the same reading: the poem at the reading line, about
+     two fifths down the window, holds full strength and the rest step back.
+     Where an animation can follow the scroll (Chrome, Edge, Safari 26), CSS
+     alone does it, in two halves keyed to the poem's own edges rather than to
+     a band it must fit inside (a band made every poem taller than it, which
+     is most of them, read its first and last stanzas half dimmed). The poem
+     brightens as its title rises from three quarters to three fifths down the
+     window, and its contents step back as its last line rises from 30% to
+     15%. The halves sit on two layers, the poem and its children, so their
+     opacities multiply instead of overriding each other. A poem is lit from
+     the moment its title nears the reading line until its last line has
+     passed it, the next brightens as the last one leaves, and a link to a
+     poem opens on it lit. The first poem never waits to brighten and the last
+     never steps back, so the page opens and ends lit. The page script stands
+     down there. In a browser that can't (Zen can from 1.24), the script
+     marks the poem nearest the reading line and sets data-focus, and the
+     rest fade. With neither,
+     nothing is dimmed. Keyboard focus in a poem (its title link) keeps it lit;
+     a mouse click on the title doesn't, or it would stay lit once read. */
+  @keyframes poem-brighten {
+    from {
       opacity: 0.3;
     }
   }
 
-  @keyframes poem-focus-last {
-    entry 0% {
+  @keyframes poem-step-back {
+    to {
       opacity: 0.3;
-    }
-
-    entry 100% {
-      opacity: 1;
     }
   }
 
@@ -1178,22 +1290,32 @@
   @supports (animation-timeline: view()) {
     @media screen and (not (prefers-contrast: more)) {
       .poems .poem {
-        animation-name: poem-focus;
+        view-timeline-name: --poem;
+        animation-name: poem-brighten;
         animation-timing-function: linear;
         animation-fill-mode: both;
-        animation-timeline: view(block 25% 45%);
+        animation-timeline: --poem;
+        animation-range-start: cover 25vh;
+        animation-range-end: cover 40vh;
 
-        &:focus-within {
-          animation: none;
+        & > * {
+          animation-name: poem-step-back;
+          animation-timing-function: linear;
+          animation-fill-mode: both;
+          animation-timeline: --poem;
+          animation-range-start: cover calc(100% - 30vh);
+          animation-range-end: cover calc(100% - 15vh);
+        }
+
+        &:has(:focus-visible),
+        &:has(:focus-visible) > * {
+          animation-name: none;
         }
       }
 
-      .poems-year:first-of-type .poem:first-of-type {
-        animation-name: poem-focus-first;
-      }
-
-      .poems-year:last-of-type .poem:last-of-type {
-        animation-name: poem-focus-last;
+      .poems-year:first-of-type .poem:first-of-type,
+      .poems-year:last-of-type .poem:last-of-type > * {
+        animation-name: none;
       }
     }
   }
@@ -1201,7 +1323,7 @@
   .poems[data-focus] .poem {
     transition: opacity 0.9s ease;
 
-    &:not(.is-current, :focus-within) {
+    &:not(.is-current, :has(:focus-visible)) {
       opacity: 0.3;
     }
   }
@@ -1274,6 +1396,69 @@
     margin-block-end: 0.75em;
   }
 
+  /* ── A poem's own page (/poems/swifts/) ──
+     One piece alone on the wall, set exactly as in the collection, its title
+     at the height where every page's first line stands. Under it, after a
+     pause the size of the gap between two poems, the turns: the poem written
+     just after it, on the left, and just before it, on the right, so the
+     right hand carries on down the collection as the page itself reads. Each
+     is a label over a title, the shape of the /code labels. Then the way
+     back to its place among the rest. */
+  .poem-page .poem-title {
+    margin-block-start: 0;
+    view-transition-name: poem;
+  }
+
+  .poem-turns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--gap);
+    margin-block-start: clamp(7rem, 24vh, 12rem);
+  }
+
+  .poem-turn {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    color: var(--prose-ink);
+    padding-block: 0.3rem;
+
+    &.is-older {
+      grid-column: 2;
+      align-items: end;
+      text-align: end;
+    }
+  }
+
+  .poem-turn-label {
+    color: var(--ink);
+  }
+
+  .poem-turn-title {
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+
+  /* Set as the page's other controls in its own words are ("Show only the
+     52 rarities"): the italic, in prose ink. */
+  .poem-back {
+    margin-block: 3.5rem 0;
+    font-size: var(--fs-0);
+    font-style: italic;
+  }
+
+  .page-content .poem-back a {
+    color: var(--prose-ink);
+  }
+
+  /* On paper, the poem alone: the turns and the way back are for the screen. */
+  @media print {
+    .poem-turns,
+    .poem-back {
+      display: none;
+    }
+  }
+
   /* ── /code ── the websites hung as prints, two to a row on the gallery's
      wall width, each with a museum label beneath: the name over its note.
      They hang in black and white like the photographs; reaching for one
@@ -1338,7 +1523,18 @@
     filter: none;
   }
 
+  /* Each site has an anchor (/code/#open-arabic), so a site's own "made by"
+     link can land on its print: clear of the header, and, where a pointer
+     would otherwise have to reach for it, already in its colours. */
+  .code-wall > li {
+    scroll-margin-block-start: calc(var(--header-h) + env(safe-area-inset-top) + 1.5rem);
+  }
+
   @media (hover: hover) {
+    .code-wall > :target img {
+      filter: none;
+    }
+
     .code-print:hover {
       & .code-frame {
         transform: translateY(-3px);
@@ -1355,8 +1551,8 @@
     }
   }
 
-  /* Touch screens never hover: there each site brightens as it crosses the
-     middle of the screen instead (the script on the page). */
+  /* Touch screens never hover: there the site nearest the middle of the
+     screen brightens instead (the script on the page). */
   @media (hover: none) {
     .code-print.is-lit {
       & img {
@@ -1477,8 +1673,116 @@
     margin-block-start: var(--section-gap);
   }
 
+  /* A family's label holds at the top while its species pass, a running head
+     like the year beside the poems, so in the long families (42 ducks, 42
+     waders: two screens on a phone) the reader always knows where in the list
+     they are. It stands on the wall itself, the light fixed to the window as
+     body::before is, so it has no edge of its own: the names slide under it
+     and fade at its foot, with no rule and no box. It sits below the header,
+     and moves up to the top edge while the header is away. Its padding
+     reaches into the gap above, and the negative margin gives that back, so
+     at rest the label sits where it always did: 0.6 + 0.5 keeps 1.1rem from
+     the label to its first row. */
   .bird-group .section-label {
-    margin-block-end: 1.1rem;
+    position: sticky;
+    top: calc(var(--header-h) + env(safe-area-inset-top));
+    z-index: 1;
+    padding-block: 1.25rem 0.6rem;
+    margin-block: -1.25rem 0.5rem;
+    background-image: var(--wall-light);
+    background-attachment: fixed;
+    transition: top 0.4s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset-inline: 0;
+      top: 100%;
+      height: 0.9rem;
+      background-image: var(--wall-light);
+      background-attachment: fixed;
+      mask-image: linear-gradient(#000, transparent);
+      pointer-events: none;
+    }
+  }
+
+  /* iOS Safari paints a fixed background as if it scrolled, which would set
+     the glow behind every label at rest. There the label takes the plain wall
+     instead: invisible at rest, a faint shade when held in the light at the
+     top, like the header's own. */
+  @supports (-webkit-touch-callout: none) {
+    .bird-group .section-label,
+    .bird-group .section-label::after {
+      background-image: none;
+      background-color: var(--wall-bg);
+    }
+  }
+
+  body:has(.site-header.is-hidden:not(:focus-within)) .bird-group .section-label {
+    top: env(safe-area-inset-top);
+  }
+
+  /* Each family and each bird has an anchor (/birds/#apus-apus), so a poem,
+     a print or a message can point at one. A bird lands clear of the header
+     and of its family's held label; it takes the underline that means "you
+     are here" in the nav, and for a moment the others step back, as the poems
+     do around the one being read. */
+  .bird-group {
+    scroll-margin-block-start: calc(var(--header-h) + env(safe-area-inset-top) + 1.5rem);
+  }
+
+  /* 314 entries: the browser lays out only the families near the screen and
+     holds the rest at an estimated height (on a mid-range phone this halves
+     the page's layout time and brings its first paint ~150ms sooner). The
+     estimate is the family's own rows, from its count (--n, in the markup)
+     and the columns the wall usually has at that width; once a family has
+     been shown, its real height is kept (`auto`). Find in page still reaches
+     the skipped ones. */
+  .bird-group {
+    --cols: 4;
+    content-visibility: auto;
+    contain-intrinsic-block-size: auto calc(1rem + round(up, var(--n) / var(--cols), 1) * 6.5rem);
+
+    @media (width <= 700px) {
+      --cols: 3;
+    }
+
+    @media (width <= 520px) {
+      --cols: 2;
+    }
+
+    @media (width >= 1800px) {
+      --cols: 5;
+    }
+
+    /* Filtered to the 52 rarities the page is short, and a held height would
+       still be the family's full one. */
+    body:has(#rarities-only:checked) & {
+      content-visibility: visible;
+    }
+  }
+
+  .bird {
+    scroll-margin-block-start: calc(var(--header-h) + env(safe-area-inset-top) + 5rem);
+  }
+
+  .bird:target .bird-sv {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: color-mix(in oklab, currentColor 55%, transparent);
+    text-underline-offset: 5px;
+  }
+
+  @keyframes bird-step-back {
+    from {
+      opacity: 0.3;
+    }
+  }
+
+  @media screen and (prefers-reduced-motion: no-preference) and (not (prefers-contrast: more)) {
+    .bird-ledger:has(.bird:target) .bird:not(:target) {
+      animation: bird-step-back 1.6s ease-in 1.2s backwards;
+    }
   }
 
   .bird-group-count {
@@ -1532,6 +1836,19 @@
     & i {
       display: block;
     }
+  }
+
+  /* Where a bird appears elsewhere on the site, a photograph or a poem: a note
+     under its names, set as they are, marked as a link by the lone-link
+     underline. */
+  .bird-elsewhere {
+    align-self: start;
+    margin-block-start: 0.15rem;
+    font-family: var(--font-prose);
+    font-size: var(--fs--1);
+    font-style: italic;
+    color: var(--ink);
+    padding-block: 0.2rem; /* a 24px target (WCAG 2.5.8) */
   }
 
   body:has(#rarities-only:checked) {
@@ -1602,8 +1919,14 @@
     /* Retain the same readable labels on tablets and phones. */
     .site-name {
       font-size: var(--fs--1);
-      letter-spacing: 0.15em;
       white-space: nowrap;
+    }
+
+    /* The name is the same mark at both ends of the page: tracked in a
+       little where the header needs the room, and so the footer's too. */
+    .site-name,
+    .footer-byline {
+      letter-spacing: 0.15em;
     }
 
     .site-nav {

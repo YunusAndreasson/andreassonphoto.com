@@ -1,8 +1,9 @@
 import type { APIRoute } from 'astro';
-import { getFullscreenImage, getGalleryImages } from '../utils/gallery';
+import { getFullscreenImage, getGalleryImages, printSlug } from '../utils/gallery';
 import { SITE_ORIGIN } from '../utils/site';
 
-// A dedicated Google Image sitemap for the single-page gallery.
+// A dedicated Google Image sitemap for the gallery, each print under its own
+// page (/whooper-swan/).
 //
 // @astrojs/sitemap's own sitemap-0.xml lists only the page URLs; it cannot
 // attach <image:image> blocks here because the built, hashed image URLs are
@@ -30,21 +31,22 @@ export const GET: APIRoute = async () => {
   const entries = await Promise.all(
     images.map(async (img) => {
       const loc = new URL((await getFullscreenImage(img.file)).src, origin).href;
+      // Each print under its own page (/whooper-swan/), the wall opened on it.
       return [
+        '  <url>',
+        `    <loc>${origin}/${printSlug(img.id)}/</loc>`,
         '    <image:image>',
         `      <image:loc>${xmlEscape(loc)}</image:loc>`,
         `      <image:title>${xmlEscape(img.title)}</image:title>`,
         '    </image:image>',
+        '  </url>',
       ].join('\n');
     }),
   );
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url>
-    <loc>${origin}/</loc>
 ${entries.join('\n')}
-  </url>
 </urlset>
 `;
 

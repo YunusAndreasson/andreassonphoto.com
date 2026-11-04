@@ -1,0 +1,20 @@
+---
+import { stanzas, type Poem } from '../utils/poems';
+
+// A poem's verse, one stanza to a paragraph and one line to a span; a prose
+// piece runs on in paragraphs. The same on /poems and on each poem's own page.
+interface Props {
+  piece: Poem;
+}
+
+const { piece } = Astro.props;
+const prose = piece.form === 'prose';
+---
+
+<div class:list={['poem-body', { 'is-prose': prose }]}>
+  {stanzas(piece.text).map(({ lines, arabic }) => (
+    <p lang={arabic ? 'ar' : undefined} dir={arabic ? 'rtl' : undefined}>
+      {prose ? lines.join(' ') : lines.map((line) => <span class="poem-line">{line}</span>)}
+    </p>
+  ))}
+</div>

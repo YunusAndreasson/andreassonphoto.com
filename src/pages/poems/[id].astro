@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PoemBody from '../../components/PoemBody.astro';
+import { PERSON_ID, PERSON_NAME, SITE_ORIGIN, pageTitle } from '../../utils/site';
+import { excerpt, getPoems, month, type Poem } from '../../utils/poems';
+
+// Each poem on a page of its own, the address its title links to on /poems:
+// one piece on the wall, with nothing beside it, to read or to send to
+// someone. Its link preview is the poem itself, typeset
+// (scripts/make-og.mjs). At its foot, the poems written just after and just
+// before it, and the way back to its place in the collection.
+export async function getStaticPaths() {
+  const poems = await getPoems();
+  return poems.map((piece, i) => ({
+    params: { id: piece.id },
+    props: { piece, newer: poems[i - 1], older: poems[i + 1] },
+  }));
+}
+
+interface Props {
+  piece: Poem;
+  newer?: Poem;
+  older?: Poem;
+}
+
+const { piece, newer, older } = Astro.props;
+const year = piece.date.slice(0, 4);
+const when = `${month(piece.date)} ${year}`;
+
+const poemSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  genre: 'Poetry',
+  name: piece.title,
+  text: piece.text,
+  dateCreated: piece.date,
+  inLanguage: 'en',
+  url: `${SITE_ORIGIN}/poems/${piece.id}/`,
+  author: { '@id': PERSON_ID },
+  isPartOf: { '@type': 'CollectionPage', url: `${SITE_ORIGIN}/poems/` },
+};
+---
+
+<BaseLayout
+  preloadProse
+  title={pageTitle(piece.title)}
+  description={excerpt(piece.text)}
+  ogImage={`/og/poems/${piece.id}.jpg`}
+  ogImageAlt={`The poem ${piece.title}, ${when}, by ${PERSON_NAME}.`}
+>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(poemSchema)} slot="head" />
+  <main id="main-content" class="page-content poem-page" tabindex="-1">
+    <article class="poem">
+      <h1 class="poem-title">{piece.title}</h1>
+      <p class="poem-date"><time datetime={piece.date}>{when}</time></p>
+      <PoemBody piece={piece} />
+    </article>
+
+    <nav class="poem-turns" aria-label="More poems">
+      {newer && (
+        <a class="poem-turn is-newer" href={`/poems/${newer.id}/`} rel="prev">
+          <span class="poem-turn-label">Newer</span>
+          <span class="poem-turn-title">{newer.title}</span>
+        </a>
+      )}
+      {older && (
+        <a class="poem-turn is-older" href={`/poems/${older.id}/`} rel="next">
+          <span class="poem-turn-label">Older</span>
+          <span class="poem-turn-title">{older.title}</span>
+        </a>
+      )}
+    </nav>
+
+    <p class="poem-back"><a href={`/poems/#${piece.id}`}>Back to the poems</a></p>
+  </main>
+
+  <script>
+    // The arrow keys turn the page, as they move between prints in the
+    // viewer: left to the newer poem, right to the older, where the two turns
+    // stand at the foot. Not while typing, and not with a modifier, which
+    // belongs to the browser.
+    let controller: AbortController;
+
+    document.addEventListener('astro:page-load', () => {
+      controller?.abort();
+      const turns = document.querySelector('.poem-turns');
+      if (!turns) return;
+      controller = new AbortController();
+      document.addEventListener('keydown', (event) => {
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.defaultPrevented) return;
+        if ((event.target as Element).closest('input, textarea, select, [contenteditable]')) return;
+        const turn = event.key === 'ArrowLeft' ? '.is-newer' : event.key === 'ArrowRight' ? '.is-older' : null;
+        const link = turn && turns.querySelector<HTMLAnchorElement>(turn);
+        if (!link) return;
+        event.preventDefault();
+        link.click();
+      }, { signal: controller.signal });
+    });
+  </script>
+</BaseLayout>

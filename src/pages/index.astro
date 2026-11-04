@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import GalleryView from '../components/GalleryView.astro';
+import HomeIntro from '../components/HomeIntro.astro';
 import { getGalleryImages } from '../utils/gallery';
-import { PERSON_ID, PERSON_NAME } from '../utils/site';
+import { PERSON_ID, PERSON_NAME, WALL_TITLE } from '../utils/site';
 
 // The intro below is where Yunus says who he is, so the home page is the hub
 // for his identity: a ProfilePage whose mainEntity is the canonical Person
@@ -17,16 +18,11 @@ const profilePageSchema = {
 
 <BaseLayout
   preloadProse
-  title={`${PERSON_NAME} — Black-and-white photography`}
+  title={WALL_TITLE}
   description={`Black-and-white photographs by ${PERSON_NAME}, mostly of landscapes and the small things people walk past.`}
 >
   <script type="application/ld+json" is:inline set:html={JSON.stringify(profilePageSchema)} slot="head" />
   <GalleryView images={await getGalleryImages()}>
-    {/* Decomposed accents use the combining glyphs in our Latin font subset. */}
-    <p class="gallery-intro">
-      I’m {'Yūnus'.normalize('NFD')}. These are my black-and-white photographs, mostly of
-      landscapes and the small things people walk past.
-      There are also <a href="/poems/">poems</a>, <a href="/birds/">birds</a> and <a href="/code/">code</a>.
-    </p>
+    <HomeIntro />
   </GalleryView>
 </BaseLayout>
