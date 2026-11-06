@@ -7,4 +7,11 @@ onlyBuiltDependencies:
   - esbuild
   - sharp
   - workerd
+# astro2tsx 0.1.3 (used by @astrojs/check) pins @emnapi/core 1.11.3 but leaves
+# @emnapi/runtime to pnpm, which picks the 2.0 beta that rolldown 1.3 brings in.
+# The mismatched pair makes `astro check` crash. Remove once astro2tsx declares it.
+packageExtensions:
+  '@astrojs/astro2tsx@0.1.3':
+    dependencies:
+      '@emnapi/runtime': 1.11.3
 verifyDepsBeforeRun: false
