@@ -96,7 +96,7 @@
     "featured": true,
     "order": 9,
     "row": 5,
-    "edgeColor": "#404040"
+    "edgeColor": "#373737"
   },
   {
     "id": "02_the_reader",
@@ -206,7 +206,7 @@
     "featured": true,
     "order": 19,
     "row": 10,
-    "edgeColor": "#252525"
+    "edgeColor": "#272727"
   },
   {
     "id": "53_black_sand",
@@ -360,7 +360,7 @@
     "featured": true,
     "order": 33,
     "row": 17,
-    "edgeColor": "#2d2d2d"
+    "edgeColor": "#252525"
   },
   {
     "id": "73_cherry_in_blossom",
@@ -558,7 +558,7 @@
     "featured": true,
     "order": 48,
     "row": 25,
-    "edgeColor": "#7f7f7f"
+    "edgeColor": "#828282"
   },
   {
     "id": "14_ethereal_bloom",
@@ -723,7 +723,7 @@
     "featured": true,
     "order": 63,
     "row": 33,
-    "edgeColor": "#121212"
+    "edgeColor": "#171717"
   },
   {
     "id": "39_sea_stones",
