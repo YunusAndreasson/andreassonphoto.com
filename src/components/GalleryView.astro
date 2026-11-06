@@ -131,6 +131,7 @@ const renderRows = rows.map((row, ri) => {
 
 <script>
   import { pageTitle } from '../utils/site';
+  import { onPageLoad, revealOnScroll } from '../scripts/lifecycle';
 
   interface Print {
     item: HTMLButtonElement;
@@ -144,8 +145,6 @@ const renderRows = rows.map((row, ri) => {
     fullWidth: number;
     ar: number;
   }
-
-  let controller: AbortController;
 
   // Firefox (and Zen) sometimes reject decode() with "Invalid image request"
   // for an image that loads fine, so on a rejection trust the load itself.
@@ -187,11 +186,7 @@ const renderRows = rows.map((row, ri) => {
     img.decode().catch(() => {});
   }
 
-  document.addEventListener('astro:page-load', () => {
-    controller?.abort();
-    controller = new AbortController();
-    const { signal } = controller;
-
+  onPageLoad((signal) => {
     const overlay = document.querySelector<HTMLDialogElement>('#detail-view');
     if (!overlay) return;
     const main = document.querySelector<HTMLElement>('.gallery-wall')!;
@@ -206,15 +201,7 @@ const renderRows = rows.map((row, ri) => {
     // scripting off or motion reduced). A fade in time, once, not one tied to
     // the scroll: a scroll-driven fade would leave a print half there for as
     // long as someone scrolls slowly past it.
-    const reveal = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        entry.target.classList.add('is-visible');
-        reveal.unobserve(entry.target);
-      }
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-    for (const el of galleryItems) reveal.observe(el);
-    signal.addEventListener('abort', () => reveal.disconnect());
+    revealOnScroll(galleryItems, signal);
 
     // Two stacked <img>s: the next print decodes in the hidden one, then the
     // two crossfade.
@@ -257,6 +244,7 @@ const renderRows = rows.map((row, ri) => {
     // Bumped whenever the print changes, so a decode that finishes after the
     // user has moved on can't swap a stale image in.
     let loadToken = 0;
+    signal.addEventListener('abort', () => { ++loadToken; }, { once: true });
 
     // Load the print's right-sized source into a hidden <img>.
     function load(img: HTMLImageElement, print: Print) {

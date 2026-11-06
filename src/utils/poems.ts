@@ -16,9 +16,11 @@ export async function getPoems() {
 
 export type Poem = Awaited<ReturnType<typeof getPoems>>[number];
 
+const monthFormatter = new Intl.DateTimeFormat('en-GB', { month: 'long', timeZone: 'UTC' });
+
 // "2015-11" → "November". UTC so the build machine's zone can't shift it.
 export const month = (date: string) =>
-  new Date(`${date}-01T00:00:00Z`).toLocaleDateString('en-GB', { month: 'long', timeZone: 'UTC' });
+  monthFormatter.format(new Date(`${date}-01T00:00:00Z`));
 
 // A blank line ends a stanza. A stanza in Arabic script is set right to left.
 // Transliteration (Ẓuhr, Muḥammad, Allāh) is set as written: the faces carry

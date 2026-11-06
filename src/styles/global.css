@@ -74,7 +74,7 @@
     (100% - env(safe-area-inset-left) - env(safe-area-inset-right) - var(--wall-max)) / 2 + var(--gap)
   );
   /* Room the fixed header takes; every page's content starts below it. */
-  --header-h: 72px;
+  --header-h: 4.5rem;
   --page-top: calc(var(--header-h) + env(safe-area-inset-top) + var(--gap));
   /* The air between a page's lead and its body, and before its closing line. */
   --section-gap: 4.5rem;
@@ -90,14 +90,14 @@
 
 @media (width <= 768px) {
   :root {
-    --header-h: 56px;
+    --header-h: 3.5rem;
   }
 }
 
 /* On phones the nav gets its own line, preserving readable serif labels. */
 @media (width <= 600px) {
   :root {
-    --header-h: 100px;
+    --header-h: 6.25rem;
   }
 }
 
@@ -481,15 +481,19 @@
     z-index: 100;
     /* max()/env(): with viewport-fit=cover a fixed bar ignores the body's
        safe-area padding, so it keeps the name clear of a landscape notch itself. */
-    padding-block: calc(1.4rem + env(safe-area-inset-top)) 2.2rem;
+    padding-block: calc(0.875rem + env(safe-area-inset-top)) 0.875rem;
     padding-inline: calc(env(safe-area-inset-left) + var(--bar-inset))
       calc(env(safe-area-inset-right) + var(--bar-inset));
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
+    column-gap: 2rem; /* keep the name clear of expanded navigation targets */
     transition: opacity 0.4s ease;
 
     & a {
+      display: inline-flex;
+      align-items: center;
+      min-block-size: 2.75rem;
       text-shadow: 0 1px 1.5px rgb(0 0 0 / 0.45);
     }
 
@@ -547,7 +551,10 @@
     & a {
       color: var(--prose-ink);
       opacity: 0.92;
-      padding-block: 0.4rem; /* ≥24px touch target (WCAG 2.5.8) */
+      /* Enlarge the target into the gap without moving the lettering off
+         the wall's edges. Header links are at least 44px tall at default size. */
+      padding: 0.4rem 0.5rem;
+      margin-inline: -0.5rem;
 
       /* "You are here" (with the underline above) reads at full strength so
          the active section is unambiguous (Nielsen #1). */
@@ -597,14 +604,16 @@
   .gallery-row.is-hero {
     margin-block: calc(var(--gap) * 0.5);
 
-    & .gallery-item,
-    & img {
-      max-height: none;
+    & .gallery-cell {
+      --wall-print-width: 100%;
     }
   }
 
   /* Holds a print and its label. The row shares its width out by flex-grow. */
   .gallery-cell {
+    /* Constrain the frame's width as well as its height. Capping only the
+       height leaves coloured side bands around a contained portrait. */
+    --wall-print-width: min(100%, 80svh * var(--ar));
     position: relative;
     flex: 1 1 0;
     min-width: 0;
@@ -614,12 +623,12 @@
   .gallery-item {
     appearance: none;
     display: block;
-    width: 100%;
+    width: var(--wall-print-width);
+    margin-inline: auto;
     /* The print's true shape reserves its height at every width, before it
        loads or while content-visibility skips it, so the page never changes
        length under the reader (and a link to a print lands exactly on it). */
     aspect-ratio: var(--ar);
-    max-height: 80svh;
     border: 0;
     padding: 0;
     font: inherit;
@@ -639,7 +648,6 @@
     & img {
       display: block;
       width: 100%;
-      max-height: 80svh;
       height: auto;
       object-fit: contain;
       transition: opacity 0.6s ease;
@@ -681,7 +689,8 @@
   .gallery-label {
     position: absolute;
     inset-block-start: 100%;
-    inset-inline-start: 0;
+    /* Follow the print when the height limit makes it narrower than its cell. */
+    inset-inline-start: calc((100% - var(--wall-print-width)) / 2);
     margin-block-start: min(0.6rem, var(--gap) * 0.25);
     color: var(--ink);
     white-space: nowrap;
@@ -1813,6 +1822,10 @@
   .bird-sv {
     line-height: 1.25;
     text-wrap: balance;
+    /* Swedish compounds can exceed a phone column. Use the element's lang
+       for hyphenation, with wrapping as a fallback when no dictionary exists. */
+    hyphens: auto;
+    overflow-wrap: anywhere;
   }
 
   /* An open circle, set like a footnote mark, on the rarities. */
@@ -1911,7 +1924,7 @@
 
   @media (width <= 768px) {
     .site-header {
-      padding-block: calc(1rem + env(safe-area-inset-top)) 1rem;
+      padding-block: calc(0.375rem + env(safe-area-inset-top)) 0.375rem;
       flex-wrap: wrap;
       row-gap: 0.2rem;
     }
@@ -1919,7 +1932,6 @@
     /* Retain the same readable labels on tablets and phones. */
     .site-name {
       font-size: var(--fs--1);
-      white-space: nowrap;
     }
 
     /* The name is the same mark at both ends of the page: tracked in a
@@ -1930,7 +1942,8 @@
     }
 
     .site-nav {
-      gap: clamp(0.5rem, 2.4vw, 1.2rem);
+      /* Keep expanded touch targets separate at the tablet breakpoint. */
+      gap: 1.5rem;
 
       & a {
         font-size: var(--fs--2);
@@ -2020,7 +2033,7 @@
     .site-header {
       flex-direction: column;
       align-items: stretch;
-      row-gap: 0.5rem;
+      row-gap: 0;
     }
 
     .site-name {
@@ -2028,10 +2041,24 @@
     }
 
     .site-nav {
-      justify-content: space-between;
+      gap: 0.5rem;
 
       & a {
+        /* Share the full row as touch targets; keep the outside labels on
+           the wall edges and the middle label centred, even with larger text. */
+        flex: 1;
+        justify-content: center;
         padding-block: 0.5rem;
+        padding-inline: 0;
+        margin-inline: 0;
+
+        &:first-child {
+          justify-content: flex-start;
+        }
+
+        &:last-child {
+          justify-content: flex-end;
+        }
       }
     }
   }

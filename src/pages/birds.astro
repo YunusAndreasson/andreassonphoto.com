@@ -12,18 +12,23 @@ const species = (await getCollection('birds'))
   .sort((a, b) => a.order - b.order);
 
 const total = species.length;
-const rarities = species.filter((b) => !b.regular).length;
+let rarities = 0;
 
 // Families in order of first appearance; species keep their list order within.
 const groups: { name: string; birds: typeof species; rare: number }[] = [];
+const byFamily = new Map<string, (typeof groups)[number]>();
 for (const bird of species) {
-  let group = groups.find((g) => g.name === bird.group);
+  let group = byFamily.get(bird.group);
   if (!group) {
     group = { name: bird.group, birds: [], rare: 0 };
     groups.push(group);
+    byFamily.set(bird.group, group);
   }
   group.birds.push(bird);
-  if (!bird.regular) group.rare += 1;
+  if (!bird.regular) {
+    group.rare += 1;
+    rarities += 1;
+  }
 }
 
 // Anchors for linking straight to a family or a bird: "Herons, Storks &

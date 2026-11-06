@@ -65,23 +65,14 @@ const printWidths = [column, Math.round(column * 1.5), column * 2, 1440];
   </main>
 
   <script>
-    let controller: AbortController;
+    import { onPageLoad, frameQueue, revealOnScroll } from '../scripts/lifecycle';
 
-    document.addEventListener('astro:page-load', () => {
-      controller?.abort();
+    onPageLoad((signal) => {
       const prints = document.querySelectorAll<HTMLElement>('.code-print');
       if (!prints.length) return;
-      controller = new AbortController();
 
       // The same scroll-in reveal as the gallery prints (see GalleryView).
-      const reveal = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          entry.target.classList.add('is-visible');
-          reveal.unobserve(entry.target);
-        }
-      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-      for (const el of prints) if (!el.classList.contains('is-early')) reveal.observe(el);
+      revealOnScroll(prints, signal);
 
       // A touch screen never hovers, so there the site nearest the middle of
       // the screen takes its colours, one at a time, the way the poem at the
@@ -91,7 +82,6 @@ const printWidths = [column, Math.round(column * 1.5), column * 2, 1440];
       const touch = matchMedia('(hover: none)');
       const frames = Array.from(prints, (print) => print.querySelector<HTMLElement>('.code-frame')!);
       let lit: HTMLElement[] = [];
-      let queued = false;
 
       const light = (next: HTMLElement[]) => {
         for (const print of lit) if (!next.includes(print)) print.classList.remove('is-lit');
@@ -100,7 +90,6 @@ const printWidths = [column, Math.round(column * 1.5), column * 2, 1440];
       };
 
       const update = () => {
-        queued = false;
         if (!touch.matches) return light([]);
         // A link to one site (/code/#zuhd-news) keeps it lit while it is
         // whole on the screen, though it lands near the top.
@@ -118,19 +107,13 @@ const printWidths = [column, Math.round(column * 1.5), column * 2, 1440];
         light([...prints].filter((_, i) => distances[i] - nearest < 1));
       };
 
-      const queue = () => {
-        if (!queued) requestAnimationFrame(update);
-        queued = true;
-      };
+      const schedule = frameQueue(update, signal);
+      const queue = () => { if (touch.matches) schedule(); };
 
       update();
-      window.addEventListener('scroll', queue, { passive: true, signal: controller.signal });
-      window.addEventListener('resize', queue, { passive: true, signal: controller.signal });
-      touch.addEventListener('change', queue, { signal: controller.signal });
-
-      controller.signal.addEventListener('abort', () => {
-        reveal.disconnect();
-      });
+      window.addEventListener('scroll', queue, { passive: true, signal });
+      window.addEventListener('resize', queue, { passive: true, signal });
+      touch.addEventListener('change', schedule, { signal });
     });
   </script>
 </BaseLayout>

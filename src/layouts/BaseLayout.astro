@@ -131,33 +131,64 @@ const personSchema = {
 
     <script>
       import '../scripts/poem-travel';
+      import { frameQueue, onPageLoad } from '../scripts/lifecycle';
 
-      let controller: AbortController;
-
-      document.addEventListener('astro:page-load', () => {
-        // `window` survives ClientRouter navigations, so drop the previous
-        // page's scroll listener before adding one for the new header.
-        controller?.abort();
-        controller = new AbortController();
-
+      onPageLoad((signal) => {
         const header = document.querySelector<HTMLElement>('.site-header');
         if (!header) return;
 
+        // Keep page starts and anchor offsets clear of the real header even
+        // when larger text makes its name or navigation wrap. The CSS tokens
+        // provide the first-paint/no-JS size; the header itself does not depend
+        // on this variable, so observing it cannot create a resize loop.
+        const root = document.documentElement;
+        let headerHeight = 0;
+        const measure = () => {
+          headerHeight = header.getBoundingClientRect().height;
+          root.style.setProperty('--header-h', `calc(${headerHeight}px - env(safe-area-inset-top))`);
+        };
+        measure();
+        const resize = new ResizeObserver(measure);
+        resize.observe(header);
+        signal.addEventListener('abort', () => {
+          resize.disconnect();
+          root.style.removeProperty('--header-h');
+        }, { once: true });
+
         // At the top of a page the header rests on the bare wall; its shade
-        // comes in once something is passing beneath it. It hides while
-        // scrolling down past the top, and a real scroll up brings it back:
-        // the few pixels a trackpad drifts when it settles don't count.
-        let lastY = window.scrollY;
+        // comes in once something is passing beneath it. Require deliberate
+        // travel in one direction, rather than flickering on trackpad jitter.
+        // Clamp Safari's rubber-band overscroll so bouncing at an edge cannot
+        // be mistaken for a change of direction.
+        const scrollPosition = () => Math.max(0, Math.min(
+          window.scrollY, document.documentElement.scrollHeight - window.innerHeight,
+        ));
+        let lastY = scrollPosition();
+        let travel = 0;
+        let direction = 0;
         const update = () => {
-          const y = window.scrollY;
-          header.classList.toggle('is-scrolled', y > 16);
-          if (Math.abs(y - lastY) < 6) return;
-          header.classList.toggle('is-hidden', y > lastY && y > 80);
+          const y = scrollPosition();
+          const delta = y - lastY;
           lastY = y;
+          header.classList.toggle('is-scrolled', y > 16);
+          if (y <= headerHeight) {
+            header.classList.remove('is-hidden');
+            travel = direction = 0;
+            return;
+          }
+          if (!delta) return;
+          const nextDirection = Math.sign(delta);
+          if (nextDirection !== direction) travel = 0;
+          direction = nextDirection;
+          travel += delta;
+          if (travel >= 24 || travel <= -12) {
+            header.classList.toggle('is-hidden', travel > 0);
+            travel = 0;
+          }
         };
         header.classList.remove('is-hidden');
         update();
-        window.addEventListener('scroll', update, { passive: true, signal: controller.signal });
+        window.addEventListener('scroll', frameQueue(update, signal), { passive: true, signal });
       });
 
       // Each page loads only the faces it sets, so the next page could open in

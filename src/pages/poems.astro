@@ -13,12 +13,14 @@ const pieces = await getPoems();
 const titles = new Map((await getCollection('poemYears')).map((entry) => [entry.data.id, entry.data.title]));
 
 const years: { year: string; title?: string; pieces: typeof pieces }[] = [];
+const byYear = new Map<string, (typeof years)[number]>();
 for (const piece of pieces) {
   const year = piece.date.slice(0, 4);
-  let group = years.find((y) => y.year === year);
+  let group = byYear.get(year);
   if (!group) {
     group = { year, title: titles.get(year), pieces: [] };
     years.push(group);
+    byYear.set(year, group);
   }
   group.pieces.push(piece);
 }
@@ -66,23 +68,19 @@ const last = pieces[0].date.slice(0, 4);
   </main>
 
   <script>
-    let controller: AbortController;
+    import { onPageLoad, frameQueue } from '../scripts/lifecycle';
 
-    document.addEventListener('astro:page-load', () => {
-      controller?.abort();
+    onPageLoad((signal) => {
       // The poem nearest the reading line, two fifths down the window, is the
       // one being read; the rest step back until the reader reaches them.
       // Where CSS can tie the fade to the scroll itself, it does this alone.
       const main = document.querySelector<HTMLElement>('main.poems');
       if (!main || CSS.supports('animation-timeline: view()')) return;
-      controller = new AbortController();
 
       const poems = Array.from(main.querySelectorAll<HTMLElement>('.poem'));
       let current: HTMLElement | undefined;
-      let queued = false;
 
       const update = () => {
-        queued = false;
         const line = window.innerHeight * 0.4;
         let nearest: HTMLElement | undefined;
         let distance = Infinity;
@@ -98,15 +96,12 @@ const last = pieces[0].date.slice(0, 4);
         current = nearest;
       };
 
-      const queue = () => {
-        if (!queued) requestAnimationFrame(update);
-        queued = true;
-      };
+      const queue = frameQueue(update, signal);
 
       update();
       main.dataset.focus = '';
-      window.addEventListener('scroll', queue, { passive: true, signal: controller.signal });
-      window.addEventListener('resize', queue, { passive: true, signal: controller.signal });
+      window.addEventListener('scroll', queue, { passive: true, signal });
+      window.addEventListener('resize', queue, { passive: true, signal });
     });
   </script>
 </BaseLayout>

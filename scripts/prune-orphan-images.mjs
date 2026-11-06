@@ -38,7 +38,9 @@ function walk(dir) {
   return out;
 }
 
-const files = walk(DIST);
+// Most builds have no originals. Avoid reading every page in that case.
+const candidates = walk(ASTRO_DIR).filter((f) => PRUNABLE.has(extname(f).toLowerCase()));
+const files = candidates.length ? walk(DIST) : [];
 
 // One haystack of all textual output; membership test is by exact filename.
 let haystack = '';
@@ -50,9 +52,7 @@ for (const f of files) {
 
 let removed = 0;
 let bytes = 0;
-for (const f of files) {
-  if (!f.startsWith(ASTRO_DIR)) continue;
-  if (!PRUNABLE.has(extname(f).toLowerCase())) continue;
+for (const f of candidates) {
   if (haystack.includes(basename(f))) continue; // referenced somewhere — keep
   bytes += statSync(f).size;
   rmSync(f);
