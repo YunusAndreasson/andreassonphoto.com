@@ -35,7 +35,7 @@ copy, publish, sell or adapt it without written permission
 - The poems and their year titles in src/content/poems/, and their link
   previews in public/og/poems/ and public/og/poems.jpg.
 - The list of birds seen in src/content/birds/species.json. The names and
-  their order follow the Swedish national list.
+  their order follow the Swedish list, as the Birds page says.
 - The name Andrèasson Photo and its icons: public/favicon.svg,
   public/apple-touch-icon.png, public/icon-192.png and public/icon-512.png.
 
