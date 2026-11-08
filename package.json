@@ -5,7 +5,7 @@
   "homepage": "https://andreassonphoto.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YunusAndreasson/andreassonphoto.git"
+    "url": "git+https://github.com/YunusAndreasson/andreassonphoto.com.git"
   },
   "license": "MIT",
   "type": "module",

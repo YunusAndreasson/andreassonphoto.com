@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Report a security vulnerability
-    url: https://github.com/YunusAndreasson/andreassonphoto/security/advisories/new
+    url: https://github.com/YunusAndreasson/andreassonphoto.com/security/advisories/new
     about: Privately, please, never in a public issue (SECURITY.md).
   - name: Visit the site
     url: https://andreassonphoto.com

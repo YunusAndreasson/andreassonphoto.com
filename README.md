@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/YunusAndreasson/andreassonphoto/actions/workflows/verify.yml"><img src="https://github.com/YunusAndreasson/andreassonphoto/actions/workflows/verify.yml/badge.svg" alt="verify"></a>
+  <a href="https://github.com/YunusAndreasson/andreassonphoto.com/actions/workflows/verify.yml"><img src="https://github.com/YunusAndreasson/andreassonphoto.com/actions/workflows/verify.yml/badge.svg" alt="verify"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/code-MIT-blue" alt="Code: MIT license"></a>
   <a href="NOTICE.md"><img src="https://img.shields.io/badge/photographs-all%20rights%20reserved-lightgrey" alt="Photographs: all rights reserved"></a>
 </p>
@@ -77,8 +77,8 @@ print with its own link preview, so a clone builds and runs with each print in
 its place, small and landscape. It never overwrites a file that's there.
 
 ```sh
-git clone https://github.com/YunusAndreasson/andreassonphoto.git
-cd andreassonphoto
+git clone https://github.com/YunusAndreasson/andreassonphoto.com.git
+cd andreassonphoto.com
 pnpm install --frozen-lockfile
 pnpm stand-ins
 pnpm dev
