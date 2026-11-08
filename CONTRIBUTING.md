@@ -52,4 +52,5 @@ Not in issues or pull requests: see [SECURITY.md](SECURITY.md).
 
 Everyone here follows the [Code of Conduct](CODE_OF_CONDUCT.md). By
 contributing code, you agree it's released under the
-[MIT license](LICENSE). The content isn't, as LICENSE explains.
+[MIT license](LICENSE). The content isn't, as [NOTICE.md](NOTICE.md)
+explains.

@@ -19,7 +19,7 @@
 <p align="center">
   <a href="https://github.com/YunusAndreasson/andreassonphoto/actions/workflows/verify.yml"><img src="https://github.com/YunusAndreasson/andreassonphoto/actions/workflows/verify.yml/badge.svg" alt="verify"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/code-MIT-blue" alt="Code: MIT license"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/photographs-all%20rights%20reserved-lightgrey" alt="Photographs: all rights reserved"></a>
+  <a href="NOTICE.md"><img src="https://img.shields.io/badge/photographs-all%20rights%20reserved-lightgrey" alt="Photographs: all rights reserved"></a>
 </p>
 
 <br>
@@ -111,4 +111,4 @@ Wrangler, from the owner's machine. Pull requests:
 
 The code is [MIT](LICENSE). The photographs, poems, link previews and the
 name Andrèasson Photo are all rights reserved, and the fonts keep the SIL
-Open Font License; [LICENSE](LICENSE) names the paths.
+Open Font License; [NOTICE.md](NOTICE.md) names the paths.
