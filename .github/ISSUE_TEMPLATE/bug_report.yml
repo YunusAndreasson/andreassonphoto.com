@@ -1,0 +1,40 @@
+name: Bug report
+description: A page on andreassonphoto.com that doesn't look or work the way it should.
+labels: [bug]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Page
+      description: The address where it happens.
+      placeholder: https://andreassonphoto.com/whooper-swan/
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what the page did instead. A screenshot helps.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to reproduce it
+      placeholder: |
+        1. Open the print from the wall
+        2. Swipe to the next one
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      description: The browser and its version, the OS, and the device if it's a phone or tablet.
+      placeholder: Safari 19 on an iPhone 15, iOS 26
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors
+      description: Anything red in the browser's developer console, if you looked.
+      render: text

@@ -1,0 +1,21 @@
+name: Suggestion
+description: Something the site should do, or do differently.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        The photographs, poems and copy are the owner's and aren't open to
+        suggestions here. How the site shows them is.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What you were trying to do, and where the site got in the way. A real situation helps more than a feature name.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you'd like
+      description: How you picture it working.
