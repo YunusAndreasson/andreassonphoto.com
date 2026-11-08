@@ -1,13 +1,23 @@
 {
   "name": "andreassonphoto",
+  "private": true,
+  "description": "Black-and-white photographs by Jonas Yūnus Andrèasson, mostly of landscapes and the small things people walk past.",
+  "homepage": "https://andreassonphoto.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YunusAndreasson/andreassonphoto.com.git"
+  },
+  "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && node scripts/prune-orphan-images.mjs",
     "check": "astro check",
-    "verify": "pnpm check && pnpm build",
+    "test": "node --test tests/",
+    "verify": "pnpm check && pnpm test && pnpm build",
     "preview": "astro preview",
+    "stand-ins": "node scripts/stand-in-prints.mjs",
     "capture-sites": "node scripts/capture-sites.mjs",
     "deploy": "pnpm build && wrangler pages deploy --branch main",
     "icons": "node scripts/make-icons.mjs"
@@ -20,5 +30,6 @@
     "@astrojs/check": "^0.9.12",
     "typescript": "^6.0.3",
     "wrangler": "^4.158.0"
-  }
+  },
+  "packageManager": "pnpm@11.28.4"
 }
