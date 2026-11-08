@@ -3,3 +3,5 @@ dist/
 .astro/
 .wrangler/
 photos/
+# Agent notes kept on this machine; CLAUDE.md has what the repository needs.
+MEMORY.md
