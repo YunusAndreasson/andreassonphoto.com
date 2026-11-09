@@ -41,3 +41,14 @@ pnpm run deploy    # Build + wrangler pages deploy (see Deploy)
 pnpm's own workspace command. CI (`.github/workflows/verify.yml`) only runs
 `pnpm verify` on stand-ins; deploys are direct uploads from this machine.
 Requires wrangler auth (`wrangler login`).
+
+## Open source
+
+The repository is public. MIT covers the code; the photographs, poems and marks
+are all rights reserved ([NOTICE.md](NOTICE.md)).
+
+- New photographs and writing fall under that notice. Anything by someone else
+  needs a licence that lets it be redistributed here, and a line in NOTICE.md.
+- Dependabot opens grouped pull requests weekly. `.github/dependabot.yml` holds
+  TypeScript back until `astro check` supports its native compiler. A merge
+  deploys nothing; `pnpm run deploy` does.
