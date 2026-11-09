@@ -24,7 +24,7 @@ const printSizes = wallSizes(column);
 const printWidths = [column, Math.round(column * 1.5), column * 2, 1440];
 ---
 
-<BaseLayout preloadProse title={pageTitle('Code')} description={`Code by ${PERSON_NAME}, most of it for the web: sites for prayer and reading, the news, a town in Kosovo and the birds of Markaryd.`}
+<BaseLayout preloadProse title={pageTitle('Code')} description={`Code by ${PERSON_NAME}, most of it for the web: sites for prayer and reading, the news, a town in Kosovo and the birds of Markaryd, and two apps, for Kubernetes and for writing.`}
   ogImage="/og/code.jpg"
   ogImageAlt="zuhd.news hung in black and white beside the words: I also write code, mostly for the web.">
   <script type="application/ld+json" is:inline set:html={JSON.stringify(collectionSchema)} slot="head" />
@@ -35,7 +35,8 @@ const printWidths = [column, Math.round(column * 1.5), column * 2, 1440];
       mostly for the web.<br>
       A few sites for prayer and reading.<br>
       One for the news, one for a town in Kosovo,<br>
-      and one for the birds of Markaryd.
+      and one for the birds of Markaryd.<br>
+      Two apps, too: one for Kubernetes, one for writing.
     </p>
 
     {/* Each site hangs as a print: in black and white on the wall, in its
@@ -59,6 +60,11 @@ const printWidths = [column, Math.round(column * 1.5), column * 2, 1440];
             <span class="code-desc">{site.desc}</span>
             <span class="sr-only"> (opens in a new tab)</span>
           </a>
+          {site.repo && (
+            <a class="code-source" href={site.repo} rel="noopener noreferrer" target="_blank">
+              <span>Source</span><span class="sr-only"> of {new URL(site.url).hostname} on GitHub (opens in a new tab)</span>
+            </a>
+          )}
         </li>
       ))}
     </ul>

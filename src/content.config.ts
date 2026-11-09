@@ -90,6 +90,9 @@ const code = defineCollection({
     // Where to photograph the site when that differs from the link, e.g. a
     // new version not yet live at `url`.
     capture: z.url().optional(),
+    // The public repository, when there is one; it hangs as "Source" on the
+    // name's line, right-aligned.
+    repo: z.url().optional(),
     desc: z.string(),
     image: image(),
     order: z.number(),

@@ -1528,6 +1528,48 @@
     text-wrap: pretty;
   }
 
+  /* "Source": the repository, a label at the right end of the name's line,
+     so the label keeps one line and the note below stays whole. It sits
+     outside the print's link (links don't nest), placed on that line: the
+     frame is 1440/900, so its height is the column times 0.625. The box
+     carries the name's face, size and leading, so the small caps inside share the
+     name's baseline. It fades in with its print. */
+  .code-source {
+    position: absolute;
+    inset-block-start: calc(100cqi * 900 / 1440 + 1.2rem);
+    inset-inline-end: 0;
+    font-family: var(--font);
+    font-size: var(--fs-1);
+    line-height: normal;
+    color: var(--ink);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+
+    & > span:first-child {
+      font-size: var(--fs--2);
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-feature-settings: 'case';
+      text-decoration-line: underline;
+      text-decoration-thickness: 1px;
+      text-decoration-color: transparent;
+      text-underline-offset: 0.3em;
+      transition: color 0.3s, text-decoration-color 0.3s;
+    }
+
+    &:hover > span:first-child,
+    &:focus-visible > span:first-child {
+      color: var(--ink-bright);
+      text-decoration-color: currentColor;
+    }
+  }
+
+  .code-print:is(.is-visible, .is-early) + .code-source {
+    opacity: 1;
+  }
+
   .code-print:focus-visible img {
     filter: none;
   }
@@ -1536,6 +1578,8 @@
      link can land on its print: clear of the header, and, where a pointer
      would otherwise have to reach for it, already in its colours. */
   .code-wall > li {
+    position: relative;
+    container-type: inline-size;
     scroll-margin-block-start: calc(var(--header-h) + env(safe-area-inset-top) + 1.5rem);
   }
 
@@ -1908,7 +1952,8 @@
      scripting off, motion reduced, or on paper, every print is simply there. */
   @media (prefers-reduced-motion: reduce), (scripting: none), print {
     .gallery-item,
-    .code-print {
+    .code-print,
+    .code-source {
       opacity: 1;
     }
   }
