@@ -452,7 +452,7 @@
 
   /* A link already in prose ink can brighten only six steps on hover, too
      little to see, so there the nav's faint underline fades in as well: the
-     poem titles, the turns at a poem's foot, the email in the footer. The
+     poem titles, the turns at a poem's foot, the links in the footer. The
      maker's name is left plain; it is the site's mark. */
   .poem-title a,
   .poem-turn-title,
@@ -1036,7 +1036,8 @@
 
   /* ── Site footer ──
      A plain signature closing every page, the header's mirror: the maker's
-     name (home) on the wall's left edge, the email link on its right.
+     name (home) on the wall's left edge, the email and GitHub links on its
+     right.
      Restraint from size + tracking + whitespace — no badges or icons. */
   .site-footer {
     display: flex;

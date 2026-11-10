@@ -2,7 +2,7 @@
 import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
-import { NAV, PERSON_ID, PERSON_NAME, SAME_AS, SITE_NAME, SITE_ORIGIN } from '../utils/site';
+import { GITHUB_URL, NAV, PERSON_ID, PERSON_NAME, SAME_AS, SITE_NAME, SITE_ORIGIN } from '../utils/site';
 
 interface Props {
   title?: string;
@@ -126,6 +126,7 @@ const personSchema = {
       <a href="/" class="footer-byline">{PERSON_NAME}</a>
       <nav class="footer-social" aria-label="Contact">
         <a href="mailto:yunus@edenmind.com">Email</a>
+        <a href={GITHUB_URL} rel="me noopener noreferrer">GitHub</a>
       </nav>
     </footer>
 
