@@ -19,6 +19,10 @@ gallery ordering and fullscreen transforms live in `src/utils/gallery.ts`.
 Use the existing warm grey wall, Garamond faces and restrained spacing
 consistently.
 
+Cloudflare Web Analytics (cookieless, no personal data) is the one
+third-party script: a single beacon tag in `src/layouts/BaseLayout.astro`,
+persisted across `<ClientRouter />` navigations.
+
 ## Commands
 
 ```bash

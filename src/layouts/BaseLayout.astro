@@ -105,6 +105,16 @@ const personSchema = {
     {/* Page transitions via startViewTransition (same-document). Kept over
         native cross-document @view-transition, which Firefox/Zen lack. */}
     <ClientRouter />
+    {/* Cloudflare Web Analytics: cookieless, stores no personal data.
+        transition:persist keeps the one tag in <head> across ClientRouter
+        navigations (never dropped or duplicated); the beacon counts those
+        soft navigations itself from history.pushState. */}
+    <script
+      is:inline
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "fed5fbf501914a92af0e890ca0705e46"}'
+      transition:persist="cf-web-analytics"></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
