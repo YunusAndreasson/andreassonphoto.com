@@ -21,7 +21,8 @@ consistently.
 
 Cloudflare Web Analytics (cookieless, no personal data) is the one
 third-party script: a single beacon tag in `src/layouts/BaseLayout.astro`,
-persisted across `<ClientRouter />` navigations.
+persisted across `<ClientRouter />` navigations. Disclosed by one quiet `.footer-note` line
+in the footer; keep it that low-key.
 
 ## Commands
 

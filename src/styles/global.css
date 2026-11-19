@@ -1072,6 +1072,15 @@
     }
   }
 
+  /* The beacon's disclosure: one plain line on its own row under the
+     signature, the smallest size in the secondary ink, never caps or a link. */
+  .footer-note {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: var(--fs--2);
+    color: var(--ink);
+  }
+
   /* ── Text pages (/poems, /code, /birds, 404) ── */
 
   /* Every page hangs on the gallery's wall: the same box and side padding as
